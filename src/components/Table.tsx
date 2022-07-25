@@ -1,28 +1,36 @@
 import React from 'react';
+import './Table.css';
 
-function Table() {
+interface Column {
+  name: string,
+}
+
+interface Row {
+  id: number,
+  values: string[],
+}
+
+interface Props {
+  columns: Column[],
+  rows: Row[],
+  onClick: (id: number) => void,
+}
+
+function Table({ columns, rows, onClick } : Props) {
   return (
     <table>
     <tr>
-      <th>Name</th>
-      <th>Age</th>
-      <th>Gender</th>
+      {columns.map(c => 
+        <th>{c.name}</th> 
+      )}
     </tr>
-    <tr>
-      <td>Anom</td>
-      <td>19</td>
-      <td>Male</td>
-    </tr>
-    <tr>
-      <td>Megha</td>
-      <td>19</td>
-      <td>Female</td>
-    </tr>
-    <tr>
-      <td>Subham</td>
-      <td>25</td>
-      <td>Male</td>
-    </tr>
+    {rows.map(r => 
+      <tr className='clickable' onClick={() => onClick(r.id)}>
+        {r.values.map(val => 
+          <td>{val}</td>
+        )}
+      </tr> 
+    )}
   </table>
   );
 }
