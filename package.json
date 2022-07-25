@@ -11,6 +11,7 @@
     "@types/node": "^16.11.45",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "jsonwebtoken": "^8.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
@@ -41,5 +42,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/cookie": "^0.5.1",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/ms": "^0.7.31"
   }
 }
