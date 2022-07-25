@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Connect from './pages/Connect';
-import SelectProfile from './pages/SelectProfile';
+import Connect from './pages/connect/Connect';
+import SelectProfile from './pages/select-profile/SelectProfile';
 import Claimer from './pages/Claimer';
 import Attester from './pages/Attester';
 

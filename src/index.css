@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.wrapper {
+  min-height: 100vh;
+  position: relative;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+}

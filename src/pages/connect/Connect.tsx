@@ -1,24 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useUser from '../hooks/user';
+import useUser from '../../hooks/user';
+import './Connect.css'
 
 function Connect() {
   const { user, login } = useUser()
   const navigate = useNavigate();
   
   const connect = async () => {
-    await login();
+    //await login();
     navigate('/select-profile');
   }
 
   return (
-    <div>
-      <div>
-        user: {user}
+    <div className='wrapper'>
+      <div className='center'>
+        <button className='connect-btn' onClick={connect}>
+          Connect
+        </button>
       </div>
-      <button onClick={connect}>
-        Connect
-      </button>
     </div>
   );
 }
