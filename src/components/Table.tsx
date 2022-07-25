@@ -7,7 +7,7 @@ interface Column {
 
 interface Row {
   id: number,
-  values: string[],
+  values: (string | JSX.Element)[],
 }
 
 interface Props {

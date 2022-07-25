@@ -11,9 +11,9 @@ function AttesterCtypes() {
   ];
 
   const rows = [
-    {id: 1, values: ['CType 1', '30 KILT', 'Action 1']},
-    {id: 2, values: ['CType 2', '10 KILT', 'Action 2']},
-    {id: 3, values: ['CType 3', '12 kilt', 'Action 3']},
+    {id: 1, values: ['CType 1', '30 KILT', <button>delete</button>]},
+    {id: 2, values: ['CType 2', '10 KILT', <button>delete</button>]},
+    {id: 3, values: ['CType 3', '12 kilt', <button>delete</button>]},
   ];
 
   const onClick = (id: number) => {}
