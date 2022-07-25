@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 function SelectProfile() {
   const navigate = useNavigate();
+  
   const toClaimer = () => navigate('/claimer');
   const toAttester = () => navigate('/attester');
   
