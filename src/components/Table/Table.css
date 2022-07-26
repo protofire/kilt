@@ -5,3 +5,11 @@
 .clickable:hover {
   color: gray;
 }
+
+hr {
+  width: 300%;
+}
+
+table {
+  margin: 20px;
+}

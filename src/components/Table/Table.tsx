@@ -25,13 +25,18 @@ function Table({ columns, rows, onClick } : Props) {
       )}
     </tr>
     {rows.map(r => 
-      <tr className='clickable' onClick={() => onClick(r.id)}>
-        {r.values.map(val => 
-          <td>{val}</td>
-        )}
-      </tr> 
+      <>
+        <div>
+          <hr/>
+        </div>
+        <tr className='clickable' onClick={() => onClick(r.id)}>
+          {r.values.map(val => 
+            <td>{val}</td>
+          )}
+        </tr> 
+      </>
     )}
-  </table>
+    </table>
   );
 }
 

@@ -12,6 +12,39 @@ code {
     monospace;
 }
 
+.primary {
+  padding: 14px 20px;
+  background: gray;
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.secondary {
+  padding: 14px 20px;
+  background: transparent;
+  color: #db4b4b;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.action {
+  padding: 6px 10px;
+  background: #eeeaea;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 2px;
+}
+
+.secondary:hover {
+  background: #eeeaea;
+}
+
 .wrapper {
   min-height: 100vh;
   position: relative;
