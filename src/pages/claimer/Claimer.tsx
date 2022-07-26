@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Table from '../../components/Table';
 
 function Claimer() {
+  const navigate = useNavigate();
 
   const columns = [
     {name: 'CType'},
@@ -15,15 +17,15 @@ function Claimer() {
     {id: 3, values: ['CType 3', 'Attester 3','Unverified']},
   ];
 
-  const onClick = (id: number) => {};
+  const onClick = (id: number) => navigate(`detail/${id}`);
+
+  const onAdd = () => navigate('attester-list');
 
   return (
-    <div>
-      <div>
-        Credentials
-      </div>
-      <div>
+    <div className='wrapper'>
+      <div className='center'>
         <Table {...{columns, rows, onClick}}></Table>
+        <button onClick={onAdd}>Add</button>
       </div>
     </div>
   );

@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Table from '../../../components/Table';
 import './AttesterRequests.css'
 
 function AttesterRequests() {
+
+  const navigate = useNavigate();
 
   const columns = [
     {name: 'Address'},
@@ -16,7 +19,7 @@ function AttesterRequests() {
     {id:3, values: ['0xCase2SD..ASD','CType 1', 'Unverified']},
   ];
 
-  const onClick = (id: number) => {}
+  const onClick = (id: number) => navigate(`${id}`);
   
   return (
     <div className='wrapper'>

@@ -26,3 +26,8 @@ code {
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
 }
+
+.column {
+  display: flex;
+  flex-direction: column;
+}

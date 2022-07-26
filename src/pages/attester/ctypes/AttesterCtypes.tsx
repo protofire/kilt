@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Table from '../../../components/Table';
 import './AttesterCtypes.css'
 
 function AttesterCtypes() {
+  const navigate = useNavigate();
 
   const columns = [
     {name: 'Name'},
@@ -17,11 +19,14 @@ function AttesterCtypes() {
   ];
 
   const onClick = (id: number) => {}
+
+  const onAdd = () => navigate('create')
   
   return (
     <div className='wrapper'>
       <div className='center'>
       <Table {...{columns, rows, onClick}}></Table>
+      <button className='' onClick={onAdd}>Add</button>
       </div>
     </div>
   );
