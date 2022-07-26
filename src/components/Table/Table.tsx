@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import './Table.css';
 
 interface Column {
@@ -13,28 +13,30 @@ interface Row {
 interface Props {
   columns: Column[],
   rows: Row[],
-  onClick: (id: number) => void,
+  onClick?: (id: number) => void,
+  disabled?: boolean,
 }
 
-function Table({ columns, rows, onClick } : Props) {
+function Table({ columns, rows, onClick = () => {}, disabled = false } : Props) {
   return (
     <table>
     <tr>
       {columns.map(c => 
-        <th>{c.name}</th> 
+        <th key={c.name}>{c.name}</th> 
       )}
     </tr>
     {rows.map(r => 
-      <>
+      <Fragment key={r.id}>
         <div>
           <hr/>
         </div>
-        <tr className='clickable' onClick={() => onClick(r.id)}>
-          {r.values.map(val => 
-            <td>{val}</td>
-          )}
+        <tr className={disabled ? '' : 'clickable'} 
+          onClick={() => !disabled && onClick(r.id)}>
+            {r.values.map(val => 
+              <td>{val}</td>
+            )}
         </tr> 
-      </>
+      </Fragment>
     )}
     </table>
   );
