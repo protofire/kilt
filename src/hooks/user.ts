@@ -9,14 +9,14 @@ export default function useUser() {
   useEffect(() => {
     (async () => {
       if (!!user) return
-      const result = await (await fetch('/api/user')).text()
+      const result = await (await fetch('https://someapi.com/api/user')).text()
       _user = !!result ? result : null
       setUser(_user)
     })()
   }, [ session ]);
 
   async function logout() {
-    const loggedOut = (await fetch('/api/logout')).ok
+    const loggedOut = (await fetch('https://someapi.com/api/logout')).ok
     if (!loggedOut) return
     _user = null
      setUser(null)
@@ -26,7 +26,7 @@ export default function useUser() {
     if (!sporran) return
     if (!session) return await startSession()
     await presentCredential()
-    const result = await (await fetch('/api/user')).text()
+    const result = await (await fetch('https://someapi.com/api/user')).text()
     _user = !!result ? result : null
     setUser(_user)
     return _user

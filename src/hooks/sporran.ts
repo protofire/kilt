@@ -11,11 +11,11 @@ export default function useSporran () {
     if (!session) throw Error('startSession first');
 
     const { sessionId } = session;
-    const result = await fetch(`/api/verify?sessionId=${sessionId}`);
+    const result = await fetch(`https://someapi.com/api/verify?sessionId=${sessionId}`);
     const message = await result.json();
 
     session.listen(async (message: any) => {
-      const result = await fetch('/api/verify', {
+      const result = await fetch('https://someapi.com/api/verify', {
         method: 'POST',
         headers: { ContentType: 'application/json' },
         body: JSON.stringify({ sessionId, message }),
