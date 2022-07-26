@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '../../../components/Table';
+import Table from '../../../components/Table/Table';
 import './AttesterRequests.css'
 
 function AttesterRequests() {

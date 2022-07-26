@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import EmojiButton from '../../components/EmojiButton';
+import EmojiButton from '../../components/EmojiButton/EmojiButton';
 import useUser from '../../hooks/user';
 import './SelectProfile.css'
 
