@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Table, { Row } from '../../components/Table/Table';
 import Topbar from '../../components/Topbar/Topbar';
-import useClaimerCredentials from '../../hooks/claimer-credentials';
+import useClaimer from '../../hooks/claimer';
 
 function Claimer() {
   const navigate = useNavigate();
-  const { onLoad, loading } = useClaimerCredentials();
+  const { onLoadCredentials, loading } = useClaimer();
   const [ rows, setRows ] = useState<Row[]>([]);
 
   useEffect(() => {
-    onLoad().then((rows: Row[]) => setRows(rows));
+    onLoadCredentials().then((rows: Row[]) => setRows(rows));
   }, []);
 
   const columns = [
@@ -19,9 +19,7 @@ function Claimer() {
     {name: 'Status'},
   ];
 
-
   const onClick = (id: number) => navigate(`detail/${id}`);
-
   const onAdd = () => navigate('attester-list');
 
   return (

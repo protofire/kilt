@@ -2,12 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmojiButton from '../../components/EmojiButton/EmojiButton';
 import Topbar from '../../components/Topbar/Topbar';
-import useUser from '../../hooks/user';
 import './Attester.css'
 
 function Attester() {
   const navigate = useNavigate();
-  
   const toCTypes = () => navigate('/attester/ctypes');
   const toRequests = () => navigate('/attester/requests');
   
