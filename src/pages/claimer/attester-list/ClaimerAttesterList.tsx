@@ -19,7 +19,7 @@ function ClaimerAttesterList() {
     {name: 'Quote'},
   ];
 
-  const onClick = (id: number) => navigate(`attester/${id}`);
+  const onClick = (id: number) => navigate(`claim/${id}`);
 
   return (
     <div className='wrapper'>

@@ -10,7 +10,7 @@ import AttesterRequests from './pages/attester/requests/AttesterRequests';
 import AttesterCtypeCreate from './pages/attester/ctypes/create/AttesterCtypeCreate';
 import AttesterRequestDetail from './pages/attester/requests/detail/AttesterRequestDetail';
 import ClaimerAttesterList from './pages/claimer/attester-list/ClaimerAttesterList';
-import ClaimCreate from './pages/claimer/attester-list/create/ClaimCreate';
+import ClaimForm from './pages/claimer/attester-list/claim-form/ClaimForm';
 import ClaimDetail from './pages/claimer/detail/ClaimDetail';
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
         <Route path="/claimer" element={<Claimer />}> </Route>
         <Route path="/claimer/detail/:id" element={<ClaimDetail />}> </Route>
         <Route path="/claimer/attester-list" element={<ClaimerAttesterList />}> </Route>
-        <Route path="/claimer/attester-list/attester/:id" element={<ClaimCreate />}> </Route>
+        <Route path="/claimer/attester-list/claim/:id" element={<ClaimForm />}> </Route>
         <Route path="/attester" element={<Attester />}> </Route>
         <Route path="/attester/ctypes" element={<AttesterCtypes />}> </Route>
         <Route path="/attester/ctypes/create" element={<AttesterCtypeCreate />}> </Route>
