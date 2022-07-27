@@ -27,11 +27,13 @@ function Claimer() {
   return (
     <div className='wrapper'>
       <Topbar />
-      <div className='center'>
-        <span className='title'>Credentials</span>
-        <Table { ...{ columns, rows, onClick } }></Table>
-        <button className='primary' onClick={onAdd}>Add</button>
-      </div>
+      {loading ? 
+        <div> Loading... </div> :
+        <div className='center'>
+          <span className='title'>Credentials</span>
+          <Table { ...{ columns, rows, onClick } }></Table>
+          <button className='primary' onClick={onAdd}>Add</button>
+        </div>}
     </div>
   );
 }
