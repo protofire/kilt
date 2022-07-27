@@ -5,7 +5,7 @@ interface Column {
   name: string,
 }
 
-interface Row {
+export interface Row {
   id: number,
   values: (string | JSX.Element)[],
 }

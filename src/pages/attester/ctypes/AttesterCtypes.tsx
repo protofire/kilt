@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '../../../components/Table/Table';
+import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useAttesterCtypes from '../../../hooks/attester-ctypes';
 import './AttesterCtypes.css'
-
-interface IRow {
-  id: number;
-  values: (string | JSX.Element)[];
-}
 
 function AttesterCtypes() {
   const navigate = useNavigate();
   const { onLoad, onDelete, loading } = useAttesterCtypes();
 
-  const [rows, setRows] = useState<IRow[]>([]);
+  const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    onLoad().then((rows: IRow[]) => {
+    onLoad().then((rows: Row[]) => {
       const rowsWithActions = rows.map(r => 
         ({...r, values: [...r.values, 
           <button onClick={() => onDelete(r.id)} 
