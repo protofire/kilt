@@ -14,7 +14,7 @@ function AttesterCtypes() {
   useEffect(() => {
     onLoad().then((rows: Row[]) => {
       const rowsWithActions = rows.map(r => 
-        ({...r, values: [...r.values, 
+        ({...r, values: [...r.values,
           {value: <button onClick={() => onDelete(r.id)} 
             className='action'>Delete</button>}]}));
       setRows(rowsWithActions);
@@ -34,7 +34,7 @@ function AttesterCtypes() {
     <div className='wrapper'>
       <Topbar />
       {loading ? 
-        'Loading...' : 
+        <div>'Loading...'</div>  : 
         <div className='center'>
           <span className='title'>CTypes & Quotes</span>
           <Table {...{columns, rows }} disabled></Table>
