@@ -12,9 +12,9 @@ function Claimer() {
   ];
 
   const rows = [
-    {id: 1, values: ['CType 1', 'Attester 1','Unverified']},
-    {id: 2, values: ['CType 2', 'Attester 2','Unverified']},
-    {id: 3, values: ['CType 3', 'Attester 3','Unverified']},
+    {id: 1, values: [{value:'CType 1'}, {value:'Attester 1'},{value:'Unverified'}]},
+    {id: 2, values: [{value:'CType 2'}, {value:'Attester 2'},{value:'Unverified'}]},
+    {id: 3, values: [{value:'CType 3'}, {value:'Attester 3'},{value:'Unverified'}]},
   ];
 
   const onClick = (id: number) => navigate(`detail/${id}`);
