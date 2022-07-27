@@ -2,20 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
-import useAttesterCtypes from '../../../hooks/attester-ctypes';
+import useAttester from '../../../hooks/attester';
 import './AttesterCtypes.css'
 
 function AttesterCtypes() {
   const navigate = useNavigate();
-  const { onLoad, onDelete, loading } = useAttesterCtypes();
+  const { onLoadCtypes, onDeleteCtype, loading } = useAttester();
 
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    onLoad().then((rows: Row[]) => {
+    onLoadCtypes().then((rows: Row[]) => {
       const rowsWithActions = rows.map(r => 
-        ({...r, values: [...r.values, 
-          {value: <button onClick={() => onDelete(r.id)} 
+        ({...r, values: [...r.values,
+          {value: <button onClick={() => onDeleteCtype(r.id)} 
             className='action'>Delete</button>}]}));
       setRows(rowsWithActions);
     });
@@ -34,7 +34,7 @@ function AttesterCtypes() {
     <div className='wrapper'>
       <Topbar />
       {loading ? 
-        'Loading...' : 
+        <div>Loading...</div>  : 
         <div className='center'>
           <span className='title'>CTypes & Quotes</span>
           <Table {...{columns, rows }} disabled></Table>

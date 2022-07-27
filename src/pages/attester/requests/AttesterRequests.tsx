@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Table, { Row } from '../../../components/Table/Table';
-import useAttesterRequests from '../../../hooks/attester-requests';
+import Topbar from '../../../components/Topbar/Topbar';
+import useAttester from '../../../hooks/attester';
 import './AttesterRequests.css'
 
 function AttesterRequests() {
-
   const navigate = useNavigate();
-
-  const { onLoad, loading } = useAttesterRequests();
-
+  const { onLoadRequests, loading } = useAttester();
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    onLoad().then((rows: Row[]) => setRows(rows));
+    onLoadRequests().then((rows: Row[]) => setRows(rows));
   }, []);
 
   const columns = [
@@ -26,10 +24,12 @@ function AttesterRequests() {
   
   return (
     <div className='wrapper'>
+      <Topbar />
       <div className='center'>
-      {loading ? 
-        'Loading...' : 
-        <Table {...{columns, rows, onClick}}></Table>}
+        <span className='title'>Claimer requests</span>
+        {loading ? 
+          <div> Loading... </div> : 
+          <Table {...{columns, rows, onClick}}></Table>}
       </div>
     </div>
   );
