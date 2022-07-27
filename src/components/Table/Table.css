@@ -6,10 +6,11 @@
   color: gray;
 }
 
-hr {
-  width: 300%;
-}
-
 table {
   margin: 20px;
+}
+
+td {
+  min-width: 150px;
+  max-width: 150px;
 }

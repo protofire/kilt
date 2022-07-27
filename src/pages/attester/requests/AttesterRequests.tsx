@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '../../../components/Table/Table';
+import Table, { Row } from '../../../components/Table/Table';
+import useAttesterRequests from '../../../hooks/attester-requests';
 import './AttesterRequests.css'
 
 function AttesterRequests() {
 
   const navigate = useNavigate();
+
+  const { onLoad, loading } = useAttesterRequests();
+
+  const [rows, setRows] = useState<Row[]>([]);
+
+  useEffect(() => {
+    onLoad().then((rows: Row[]) => setRows(rows));
+  }, []);
 
   const columns = [
     {name: 'Address'},
@@ -13,18 +22,14 @@ function AttesterRequests() {
     {name: 'Status'},
   ];
 
-  const rows = [
-    {id:1, values: ['0xCase2SD..ASD','CType 1', 'Unverified']},
-    {id:2, values: ['0xCase2SD..ASD','CType 1', 'Unverified']},
-    {id:3, values: ['0xCase2SD..ASD','CType 1', 'Unverified']},
-  ];
-
   const onClick = (id: number) => navigate(`${id}`);
   
   return (
     <div className='wrapper'>
       <div className='center'>
-        <Table {...{columns, rows, onClick}}></Table>
+      {loading ? 
+        'Loading...' : 
+        <Table {...{columns, rows, onClick}}></Table>}
       </div>
     </div>
   );

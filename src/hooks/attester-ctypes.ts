@@ -13,9 +13,9 @@ export default function useAttesterCtypes() {
     });
     setLoading(false);
     return [
-      {id: 1, values: ['CType 1', '30 KILT']},
-      {id: 2, values: ['CType 2', '10 KILT']},
-      {id: 3, values: ['CType 3', '12 kilt']},
+      {id: 1, values: [{value: 'CType 1'}, {value:'30 KILT'}]},
+      {id: 2, values: [{value: 'CType 2'}, {value:'10 KILT'}]},
+      {id: 3, values: [{value: 'CType 3'}, {value: '12 kilt'}]},
     ];
   }
 

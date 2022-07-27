@@ -12,9 +12,9 @@ function ClaimerAttesterList() {
   ];
 
   const rows = [
-    {id: 1, values: ['Attester 1', 'CType 1', '30 KILT']},
-    {id: 2, values: ['Attester 2', 'CType 2', '20 KILT']},
-    {id: 3, values: ['Attester 3', 'CType 3', '25 KILT']},
+    {id: 1, values: [{value:'Attester 1'}, {value:'CType 1'}, {value:'30 KILT'}]},
+    {id: 2, values: [{value:'Attester 2'}, {value:'CType 2'}, {value:'20 KILT'}]},
+    {id: 3, values: [{value:'Attester 3'}, {value:'CType 3'}, {value:'25 KILT'}]},
   ];
 
   const onClick = (id: number) => navigate(`attester/${id}`);

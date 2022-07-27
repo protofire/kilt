@@ -15,8 +15,8 @@ function AttesterCtypes() {
     onLoad().then((rows: Row[]) => {
       const rowsWithActions = rows.map(r => 
         ({...r, values: [...r.values, 
-          <button onClick={() => onDelete(r.id)} 
-            className='action'>Delete</button>]}));
+          {value: <button onClick={() => onDelete(r.id)} 
+            className='action'>Delete</button>}]}));
       setRows(rowsWithActions);
     });
   }, []);

@@ -5,9 +5,14 @@ interface Column {
   name: string,
 }
 
+interface Cell {
+  value: string | JSX.Element,
+  color?: string,
+}
+
 export interface Row {
   id: number,
-  values: (string | JSX.Element)[],
+  values: Cell[],
 }
 
 interface Props {
@@ -27,13 +32,13 @@ function Table({ columns, rows, onClick = () => {}, disabled = false } : Props) 
     </tr>
     {rows.map(r => 
       <Fragment key={r.id}>
-        <div>
-          <hr/>
+        <div style={{width: (rows.length * 100)+'%'}}>
+          <hr />
         </div>
         <tr className={disabled ? '' : 'clickable'} 
           onClick={() => !disabled && onClick(r.id)}>
             {r.values.map(val => 
-              <td>{val}</td>
+              <td style={val.color ? {color: val.color}:{}}>{val.value}</td>
             )}
         </tr> 
       </Fragment>
