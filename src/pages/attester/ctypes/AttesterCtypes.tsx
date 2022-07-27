@@ -34,7 +34,7 @@ function AttesterCtypes() {
     <div className='wrapper'>
       <Topbar />
       {loading ? 
-        <div>'Loading...'</div>  : 
+        <div>Loading...</div>  : 
         <div className='center'>
           <span className='title'>CTypes & Quotes</span>
           <Table {...{columns, rows }} disabled></Table>

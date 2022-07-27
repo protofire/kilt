@@ -4,6 +4,7 @@ import useSporran from './sporran';
 let _user: string | null
 export default function useUser() {
   const [ user, setUser ] = useState(_user);
+  const [ isAttester, setIsAttester ] = useState(false);
   const { sporran, session, startSession, presentCredential } = useSporran();
   
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function useUser() {
 
   return {
     user,
+    isAttester,
     connected: !!user || !!session,
     login, 
     logout,

@@ -31,7 +31,7 @@ function AttesterRequests() {
       <div className='center'>
         <span className='title'>Claimer requests</span>
         {loading ? 
-          <div>'Loading...'</div> : 
+          <div> Loading... </div> : 
           <Table {...{columns, rows, onClick}}></Table>}
       </div>
     </div>

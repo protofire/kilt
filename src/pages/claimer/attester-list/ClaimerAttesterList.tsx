@@ -22,7 +22,7 @@ function ClaimerAttesterList() {
   return (
     <div className='wrapper'>
       <div className='center'>
-        <Table {...{columns, rows, onClick}}></Table>
+        <Table { ...{ columns, rows, onClick } }></Table>
       </div>
     </div>
   );
