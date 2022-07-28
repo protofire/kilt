@@ -6,11 +6,11 @@ import useClaimer from '../../hooks/claimer';
 
 function Claimer() {
   const navigate = useNavigate();
-  const { onLoadCredentials, loading } = useClaimer();
+  const { onListCredentials, loading } = useClaimer();
   const [ rows, setRows ] = useState<Row[]>([]);
 
   useEffect(() => {
-    onLoadCredentials().then((rows: Row[]) => setRows(rows));
+    onListCredentials().then((rows: Row[]) => setRows(rows));
   }, []);
 
   const columns = [

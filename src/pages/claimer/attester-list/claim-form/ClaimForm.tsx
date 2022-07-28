@@ -7,21 +7,21 @@ import { IAttester } from '../../../../interfaces/attester-ctype';
 function ClaimForm() {
   const params = useParams();
   const navigate = useNavigate();
-  const { submitClaim, loadAttesterCtype, loading } = useClaimer();
+  const { submitClaim, onLoadAttesterCtype, loading } = useClaimer();
 
   const [files, setFiles] = useState<FileList | null>(null);
   const [text, setText] = useState<string>('');
-
   const [attester, setAttester] = useState<IAttester | null>(null);
 
   useEffect(() => {
-    loadAttesterCtype(Number(params.id)).then(setAttester);
+    onLoadAttesterCtype(Number(params.id)).then(setAttester);
   }, []);
+
+  const onFileChange = (files: FileList | null) => setFiles(files);
+  const onTextChange = (text: string) => setText(text);
 
   const goBack = () => navigate('/claimer', {replace: true});
   const onSubmit = () => submitClaim(text, files).then(goBack);
-  const onFileChange = (files: FileList | null) => setFiles(files);
-  const onTextChange = (text: string) => setText(text);
   
   return (
     <div className='wrapper'>
