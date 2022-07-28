@@ -11,7 +11,7 @@ function AttesterRequests() {
 
   useEffect(() => {
     onListRequests().then(setRows);
-  }, [ onListRequests ]);
+  }, []);
 
   const columns = [
     {name: 'Address'},

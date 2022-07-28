@@ -14,7 +14,7 @@ export default function useUser() {
       _user = !!result ? result : null
       setUser(_user)
     })()
-  }, [ session, user ]);
+  }, [ session ]);
 
   async function logout() {
     const loggedOut = (await fetch('https://someapi.com/api/logout')).ok

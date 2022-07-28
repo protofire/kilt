@@ -11,7 +11,7 @@ function ClaimerAttesterList() {
 
   useEffect(() => {
     onListAttesters().then((rows: Row[]) => setRows(rows));
-  }, [ onListAttesters ]);
+  }, []);
 
   const columns = [
     {name: 'Name'},

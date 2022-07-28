@@ -71,7 +71,7 @@ export default function useSporran () {
         } 
       })
     }
-  }, [sporran]);
+  }, []);
 
   return { 
     sporran, 

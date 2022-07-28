@@ -11,7 +11,7 @@ function ClaimDetail() {
 
   useEffect(() => {
     onLoadCredential(Number(params.id)).then(setCredential);
-  }, [ onLoadCredential, params ]);
+  }, []);
 
   return (
     <div className='wrapper'>
