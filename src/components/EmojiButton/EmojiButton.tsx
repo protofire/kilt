@@ -1,5 +1,3 @@
-import React from 'react';
-import './EmojiButton.css';
 
 interface Props {
   text: string,

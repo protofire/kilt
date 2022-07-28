@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useAttester from '../../../hooks/attester';
-import './AttesterCtypes.css'
 
 function AttesterCtypes() {
   const navigate = useNavigate();

@@ -1,7 +1,5 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/user';
-import './Connect.css'
 
 function Connect() {
   const { user, login } = useUser()

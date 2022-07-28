@@ -1,8 +1,6 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmojiButton from '../../components/EmojiButton/EmojiButton';
 import useUser from '../../hooks/user';
-import './SelectProfile.css'
 
 function SelectProfile() {
   const navigate = useNavigate();
@@ -14,7 +12,7 @@ function SelectProfile() {
   return (
     <div className='wrapper'>
       <div className='center'>
-        <div className='title' style={{textAlign: 'start'}}>
+        <div className='title' >
           <span>
             Hi {user} <br />
             Select your profile

@@ -1,8 +1,7 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmojiButton from '../../components/EmojiButton/EmojiButton';
 import Topbar from '../../components/Topbar/Topbar';
-import './Attester.css'
+
 
 function Attester() {
   const navigate = useNavigate();

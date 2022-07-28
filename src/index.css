@@ -7,9 +7,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+input, select, textarea {
+  padding: 10px;
+  margin: 5px;
+}
+
+table {
+  margin: 20px;
+}
+
+td {
+  min-width: 150px;
+  max-width: 150px;
+}
+
+li {
+  list-style: none;
+  color: #44449b;
+  text-align: start;
+  font-weight: 500;
+  padding: 10px;
+  cursor: pointer;
 }
 
 .primary {
@@ -91,4 +109,67 @@ code {
   padding: 20px;
   font-size: 40px;
   width: 80px;
+}
+
+.emoji-btn {
+  background-color: gray;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  color: gray;
+}
+
+.topbar {
+  width: 100vw;
+}
+
+.topbar-content {
+  text-align: end;
+  margin: 20px;
+}
+
+.margin-left {
+  margin-left: 10px;
+}
+
+.connect-btn {
+  background-color: gray;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.profile-btn {
+  background-color: gray;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.margin-left {
+  margin-left: 10px;
 }

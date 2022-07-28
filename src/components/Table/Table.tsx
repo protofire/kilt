@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react';
-import './Table.css';
+import { Fragment } from 'react';
 
 interface Column {
   name: string,

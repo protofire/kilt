@@ -1,11 +1,7 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './AttesterCtypeCreate.css';
 
 function AttesterCtypeCreate() {
-
   const navigate = useNavigate();
-
   const onSubmit = () => navigate(-1)
   
   return (
