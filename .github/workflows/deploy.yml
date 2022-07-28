@@ -20,8 +20,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install & build
+      - name: install
         run: npm install
+      - name: build
         run: npm run build
       - name: deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
