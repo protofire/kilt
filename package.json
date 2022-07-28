@@ -2,6 +2,7 @@
   "name": "kilt-cookbook-ui",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://protofire.github.io/kilt",
   "dependencies": {
     "@kiltprotocol/sdk-js": "^0.28.0",
     "@testing-library/jest-dom": "^5.16.4",
@@ -19,6 +20,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -43,9 +46,10 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "^5.0.1",
     "@types/cookie": "^0.5.1",
     "@types/jsonwebtoken": "^8.5.8",
-    "@types/ms": "^0.7.31"
+    "@types/ms": "^0.7.31",
+    "gh-pages": "^4.0.0",
+    "react-scripts": "^5.0.1"
   }
 }
