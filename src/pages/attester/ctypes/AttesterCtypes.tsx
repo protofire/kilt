@@ -7,12 +7,12 @@ import './AttesterCtypes.css'
 
 function AttesterCtypes() {
   const navigate = useNavigate();
-  const { onLoadCtypes, onDeleteCtype, loading } = useAttester();
+  const { onListCtypes, onDeleteCtype, loading } = useAttester();
 
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    onLoadCtypes().then((rows: Row[]) => {
+    onListCtypes().then((rows: Row[]) => {
       const rowsWithActions = rows.map(r => 
         ({...r, values: [...r.values,
           {value: <button onClick={() => onDeleteCtype(r.id)} 

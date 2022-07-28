@@ -7,11 +7,11 @@ import './AttesterRequests.css'
 
 function AttesterRequests() {
   const navigate = useNavigate();
-  const { onLoadRequests, loading } = useAttester();
+  const { onListRequests, loading } = useAttester();
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    onLoadRequests().then((rows: Row[]) => setRows(rows));
+    onListRequests().then(setRows);
   }, []);
 
   const columns = [
