@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ISporran } from '../types/sporran';
+import { ISporran } from '../interfaces/sporran';
 
 export default function useSporran () {
   const [ sporran, setSporran ] = useState<ISporran | null>(null);

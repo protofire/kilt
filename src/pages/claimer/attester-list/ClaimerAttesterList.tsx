@@ -6,11 +6,11 @@ import useClaimer from '../../../hooks/claimer';
 
 function ClaimerAttesterList() {
   const navigate = useNavigate();
-  const { onLoadAttesters, loading } = useClaimer();
+  const { onListAttesters, loading } = useClaimer();
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    onLoadAttesters().then((rows: Row[]) => setRows(rows));
+    onListAttesters().then((rows: Row[]) => setRows(rows));
   }, []);
 
   const columns = [
@@ -19,7 +19,7 @@ function ClaimerAttesterList() {
     {name: 'Quote'},
   ];
 
-  const onClick = (id: number) => navigate(`attester/${id}`);
+  const onClick = (id: number) => navigate(`claim/${id}`);
 
   return (
     <div className='wrapper'>

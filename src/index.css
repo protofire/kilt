@@ -63,12 +63,22 @@ code {
   flex-direction: column;
 }
 
+.page {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
 .text {
+  text-align: start;
   font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .subtitle {
-  font-size: 24px;
+  text-align: start;
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .title {

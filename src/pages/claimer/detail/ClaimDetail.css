@@ -1,0 +1,8 @@
+li {
+  list-style: none;
+  color: #44449b;
+  text-align: start;
+  font-weight: 500;
+  padding: 10px;
+  cursor: pointer;
+}
