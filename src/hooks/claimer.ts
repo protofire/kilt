@@ -1,23 +1,21 @@
-import { ICredential } from '@kiltprotocol/sdk-js';
 import { useState } from 'react';
 import { statusInfo, Status } from '../constants/claim-status';
-import { IAttester } from '../interfaces/attester-ctype';
-import useUser from './user'; 
 
 export default function useClaimer() {
   const [ loading, setLoading ] = useState(false);
-  const { user } = useUser();
-
-  const getStatusByName = (name: string) => {
-    Object.keys(statusInfo).find(key => key === name);
-  };
 
   const getValueByStatus = (current: number) => ({
     value: statusInfo[current].label, 
     color: statusInfo[current].color
   });
   
+  // list all the credentials for the claimer.
   const onListCredentials = async () => {
+    /* get credentials for claimer
+     * method: GET
+     * endpoint: /claimer/credential/:claimer_address
+     * returns: [{ id: number, ctypeName: string, attesterAddress: string, status: string }, ...]
+     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -30,7 +28,21 @@ export default function useClaimer() {
     ];
   }
 
+  // load credential details for claimer
   const onLoadCredential = async (id: number) => {
+    /* get credential details for claimer
+     * method: GET
+     * endpoint: /claimer/credential/:claimer_address/:credential_id
+     * returns: {
+     *  id: number, 
+     *  ctypeName: string, 
+     *  attesterAddress: string, 
+     *  status: string,
+     *  terms: string,
+     *  claimerText: string,
+     *  files: [{name: string, url: string}, ...] 
+     * }
+     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -51,7 +63,18 @@ export default function useClaimer() {
     };
   }
 
+  // list all the attesters for claimer
   const onListAttesters = async () => {
+    /* get list of attesters
+     * method: GET
+     * endpoint: /attester/ctype
+     * returns: [{
+     *  attester_ctype_id: number,
+     *  attesterName: string,
+     *  ctypeName: string,
+     *  quote: number,
+     * }, ...]
+     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -64,8 +87,19 @@ export default function useClaimer() {
     ]
   }
 
-
+  // load the attester ctype details for claimer
   const onLoadAttesterCtype = async (id: number) => {
+    /* get attester ctype details
+     * method: GET
+     * endpoint: /attester/ctype/:attester_ctype_id
+     * returns: {
+     *  attester_ctype_id: number,
+     *  attesterName: string,
+     *  ctypeName: string,
+     *  quote: number,
+     *  terms: string,
+     * }
+     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -81,7 +115,20 @@ export default function useClaimer() {
     };
   }
 
+  // creates a new claim request for the attesters
   const submitClaim = async (text: string, files: FileList | null) => {
+    /* creates a new request for attesters. 
+     * Will be added as a new message to the websocket - pub/sub connection
+     * method: POST
+     * endpoint: /attester/request/
+     * body: {
+     *  claimerAddress: string,
+     *  ctype_id: number,
+     *  claimerText: string,
+     *  files: [File, ...],
+     * }
+     * returns: -
+     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -89,7 +136,6 @@ export default function useClaimer() {
     setLoading(false);
     return { success: true };
   }
-
 
   return {
     onListCredentials,

@@ -15,7 +15,7 @@ export default function useSporran () {
     const message = await result.json();
 
     session.listen(async (message: any) => {
-      const result = await fetch('https://someapi.com/api/verify', {
+      await fetch('https://someapi.com/api/verify', {
         method: 'POST',
         headers: { ContentType: 'application/json' },
         body: JSON.stringify({ sessionId, message }),
@@ -71,7 +71,7 @@ export default function useSporran () {
         } 
       })
     }
-  });
+  }, [sporran]);
 
   return { 
     sporran, 

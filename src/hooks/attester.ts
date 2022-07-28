@@ -6,7 +6,14 @@ export default function useAttester() {
   const [ loading, setLoading ] = useState(false);
   const { user } = useUser();
 
+  // List all the CTypes with Quotes that the
+  // attester is allowed to verify.
   const onListCtypes = async () => {
+    /* get ctypes for attester
+     * method: GET
+     * endpoint: /attester/ctyes/:attester_address
+     * returns: [{ id: number, ctypeName: string, quote: number }, ...]
+     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -19,8 +26,13 @@ export default function useAttester() {
     ];
   }
 
-  // Delete the CType quote
+  // Delete the CType quote for the attester.
   const onDeleteCtype = async (id: number) => {
+    /* Delete ctype for attester
+     * method: DELETE
+     * endpoint: /attester/ctyes/:attester_address/:ctype_id
+     * returns: -
+     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -34,8 +46,21 @@ export default function useAttester() {
     value: statusInfo[current].label, 
     color: statusInfo[current].color
   });
-  
+
+  // List the requests created by claimers for
+  // attestation.
   const onListRequests = async () => {
+    /* uses the attester address to fetch the claim requests in real time.
+     * method: Web socket - pub/sub connection
+     * endpoint: /attester/request/:attester_address
+     * returns: 
+     * [{
+     *  id: number, 
+     *  claimer_address: string, 
+     *  ctype_name: string, 
+     *  status: string
+     * }, ...]
+     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -48,7 +73,22 @@ export default function useAttester() {
     ];
   }
 
+  // Loads detailed information about 
+  // the claim request for attestation
   const onLoadRequest = async (id: number) => {
+    /* 
+     * method: GET
+     * endpoint: /attester/request/:claim_id
+     * returns: { 
+     *  id: number, 
+     *  claimerAddress: string, 
+     *  status: string,
+     *  ctypeName: string,
+     *  ctypeTerms: string,
+     *  claimerText: string,
+     *  files: [{name: string, url: string}, ...]
+     * }
+     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);

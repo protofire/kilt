@@ -11,7 +11,7 @@ function Claimer() {
 
   useEffect(() => {
     onListCredentials().then((rows: Row[]) => setRows(rows));
-  }, []);
+  }, [ onListCredentials ]);
 
   const columns = [
     {name: 'CType'},

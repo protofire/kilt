@@ -13,7 +13,7 @@ function AttesterRequestDetail() {
 
   useEffect(() => {
     onLoadRequest(Number(params.id)).then(setRequest);
-  }, []);
+  }, [ onLoadRequest, params]);
 
   const goBack = () => navigate(-1)
   

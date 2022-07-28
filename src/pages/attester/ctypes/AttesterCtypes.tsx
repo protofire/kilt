@@ -18,7 +18,7 @@ function AttesterCtypes() {
             className='action'>Delete</button>}]}));
       setRows(rowsWithActions);
     });
-  }, []);
+  }, [onListCtypes, onDeleteCtype]);
 
   const columns = [
     {name: 'Name'},

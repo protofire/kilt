@@ -15,7 +15,7 @@ function ClaimForm() {
 
   useEffect(() => {
     onLoadAttesterCtype(Number(params.id)).then(setAttester);
-  }, []);
+  }, [ onLoadAttesterCtype, params ]);
 
   const onFileChange = (files: FileList | null) => setFiles(files);
   const onTextChange = (text: string) => setText(text);

@@ -4,7 +4,7 @@ import useSporran from './sporran';
 let _user: string | null
 export default function useUser() {
   const [ user, setUser ] = useState(_user);
-  const [ isAttester, setIsAttester ] = useState(false);
+  const [ isAttester ] = useState(false);
   const { sporran, session, startSession, presentCredential } = useSporran();
   
   useEffect(() => {
@@ -14,7 +14,7 @@ export default function useUser() {
       _user = !!result ? result : null
       setUser(_user)
     })()
-  }, [ session ]);
+  }, [ session, user ]);
 
   async function logout() {
     const loggedOut = (await fetch('https://someapi.com/api/logout')).ok
