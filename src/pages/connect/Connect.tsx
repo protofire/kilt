@@ -4,10 +4,9 @@ import useUser from '../../hooks/user';
 
 function Connect() {
   const navigate = useNavigate();
-  const [did, setDid] = useState<string>('');
+  const { login, user } = useUser();
   
-  const { login } = useUser();
-  const { user } = useUser();
+  const [did, setDid] = useState<string>('');
   
   const connect = async () => {
     await login(did);

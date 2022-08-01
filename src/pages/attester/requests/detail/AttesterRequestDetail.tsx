@@ -35,7 +35,7 @@ function AttesterRequestDetail() {
         </label>
         <div>
           <div className='subtitle'>Files</div>
-          <ul> {request?.files.map(f => <li>{f}</li>)} </ul>
+          <ul> {request?.files.map(f => <li key={f}>{f}</li>)} </ul>
         </div>
         <div>
             <button className='secondary' onClick={goBack}>Reject</button>
