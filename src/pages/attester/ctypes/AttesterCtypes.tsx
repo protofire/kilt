@@ -6,30 +6,13 @@ import useAttester from '../../../hooks/attester';
 
 function AttesterCtypes() {
   const navigate = useNavigate();
-  const { onListCtypes, onDeleteCtype, loading } = useAttester();
+  const { onListCtypes, onDeleteCtype, loading, ctypes } = useAttester();
 
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    onListCtypes().then((rows: Row[]) => {
-      const rowsWithActions = rows.map(r =>
-        (
-          {
-            ...r,
-            values: [
-              ...r.values,
-              {
-                value:
-                <button
-                  onClick={() => onDeleteCtype(r.id)}
-                  className='action'>Delete</button>
-              }
-            ]
-          }
-        ));
-      setRows(rowsWithActions);
-    });
-  }, []);
+    onListCtypes().then(setRows);
+  }, [ ctypes ]);
 
   const columns = [
     { name: 'Name' },
@@ -37,7 +20,6 @@ function AttesterCtypes() {
     { name: 'Actions' }
   ];
 
-  // creates new quote
   const onAdd = () => navigate('create');
 
   return (
@@ -47,7 +29,7 @@ function AttesterCtypes() {
         ? <div>Loading...</div>
         : <div className='center'>
           <span className='title'>CTypes & Quotes</span>
-          <Table {...{ columns, rows }} disabled></Table>
+          <Table {...{ columns, rows, onDelete: onDeleteCtype }} disabled></Table>
           <button className='primary' onClick={onAdd}>Add</button>
         </div>
       }

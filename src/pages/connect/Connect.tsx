@@ -9,9 +9,10 @@ function Connect() {
   const [did, setDid] = useState<string>('');
 
   const connect = async () => {
-    await login(did);
-    if (!user) return;
-    if (user.isAttester) navigate('/select-profile');
+    const currentUser = user ?? await login(did);
+    if (!currentUser) throw Error('Could not login user');
+
+    if (currentUser.isAttester) navigate('/select-profile');
     else navigate('/claimer');
   };
 

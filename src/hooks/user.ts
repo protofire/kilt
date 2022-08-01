@@ -25,6 +25,7 @@ export default function useUser() {
     const userData: IUser = { did, signature, didKeyUri, isAttester: true };
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
+    return userData;
   }
 
   return {

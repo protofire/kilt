@@ -3,6 +3,11 @@ import { Status, statusInfo } from '../constants/claim-status';
 
 export default function useAttester() {
   const [ loading, setLoading ] = useState(false);
+  const [ ctypes, setCtypes ] = useState<any[]>([
+    { id: 1, values: [{ value: 'CType 1' }, { value: '30 KILT' }] },
+    { id: 2, values: [{ value: 'CType 2' }, { value: '10 KILT' }] },
+    { id: 3, values: [{ value: 'CType 3' }, { value: '12 kilt' }] }
+  ]);
 
   // List all the CTypes with Quotes that the
   // attester is allowed to verify.
@@ -17,11 +22,7 @@ export default function useAttester() {
       setTimeout(resolve, 500);
     });
     setLoading(false);
-    return [
-      { id: 1, values: [{ value: 'CType 1' }, { value: '30 KILT' }] },
-      { id: 2, values: [{ value: 'CType 2' }, { value: '10 KILT' }] },
-      { id: 3, values: [{ value: 'CType 3' }, { value: '12 kilt' }] }
-    ];
+    return ctypes;
   };
 
   // Delete the CType quote for the attester.
@@ -35,6 +36,7 @@ export default function useAttester() {
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
     });
+    setCtypes([...ctypes.filter(c => c.id !== id)]);
     setLoading(false);
     throw Error('not implemented');
   };
@@ -111,6 +113,7 @@ export default function useAttester() {
     onDeleteCtype,
     onListRequests,
     onLoadRequest,
-    loading
+    loading,
+    ctypes
   };
 }

@@ -5,7 +5,7 @@ interface Column {
 }
 
 interface Cell {
-  value: string | JSX.Element,
+  value: string,
   color?: string,
 }
 
@@ -18,10 +18,11 @@ interface Props {
   columns: Column[],
   rows: Row[],
   onClick?: (id: number) => void,
+  onDelete?: (id: number) => void,
   disabled?: boolean,
 }
 
-function Table({ columns, rows, onClick = () => {}, disabled = false } : Props) {
+function Table({ columns, rows, onClick = () => {}, onDelete, disabled = false } : Props) {
   return (
     <table>
       <thead>
@@ -41,11 +42,17 @@ function Table({ columns, rows, onClick = () => {}, disabled = false } : Props) 
               onClick={() => !disabled && onClick(r.id)}>
                 {r.values.map(val =>
                   <td
-                    key={r.id + '' + val.value}
+                    key={r.id + val.value}
                     style={val.color ? { color: val.color } : {}}>
                       {val.value}
                   </td>
                 )}
+                {onDelete &&
+                <td key={r.id}>
+                  <button onClick={() => onDelete(r.id)} className='action'>
+                    Delete
+                  </button></td>
+                }
             </tr>
           </Fragment>
         )}

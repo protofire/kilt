@@ -29,7 +29,8 @@
     "react/prop-types": "error",
     "react/react-in-jsx-scope": "off",
     "space-before-function-paren": "off",
-    "array-bracket-spacing": "off"
+    "array-bracket-spacing": "off",
+    "react-hooks/exhaustive-deps": "off"
   },
   "overrides": [
     {
