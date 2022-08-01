@@ -16,10 +16,11 @@ function ClaimDetail() {
   return (
     <div className='wrapper'>
       <Topbar />
-      {loading ? <div> Loading ... </div> : 
-        <div className='column page'>
+      {loading
+        ? <div> Loading ... </div>
+        : <div className='column page'>
           <span className='title'>Claim</span>
-          <span className='subtitle'> 
+          <span className='subtitle'>
             Attester: <strong>{credential?.attester}</strong><em> </em>
             Status: <strong>{credential?.status}</strong>
           </span>
@@ -31,7 +32,7 @@ function ClaimDetail() {
           </label>
           <div>
             <div className='subtitle'>Files</div>
-            <ul> {credential?.files.map(f => <li>{f}</li>)} </ul>
+            <ul> {credential?.files.map(f => <li key={f}>{f}</li>)} </ul>
           </div>
         </div>}
     </div>

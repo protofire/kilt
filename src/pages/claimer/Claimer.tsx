@@ -14,9 +14,9 @@ function Claimer() {
   }, []);
 
   const columns = [
-    {name: 'CType'},
-    {name: 'Attester'},
-    {name: 'Status'},
+    { name: 'CType' },
+    { name: 'Attester' },
+    { name: 'Status' }
   ];
 
   const onClick = (id: number) => navigate(`detail/${id}`);
@@ -25,9 +25,9 @@ function Claimer() {
   return (
     <div className='wrapper'>
       <Topbar />
-      {loading ? 
-        <div> Loading... </div> :
-        <div className='center'>
+      {loading
+        ? <div> Loading... </div>
+        : <div className='center'>
           <span className='title'>Credentials</span>
           <Table { ...{ columns, rows, onClick } }></Table>
           <button className='primary' onClick={onAdd}>Add</button>

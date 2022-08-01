@@ -2,12 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import EmojiButton from '../../components/EmojiButton/EmojiButton';
 import Topbar from '../../components/Topbar/Topbar';
 
-
 function Attester() {
   const navigate = useNavigate();
   const toCTypes = () => navigate('/attester/ctypes');
   const toRequests = () => navigate('/attester/requests');
-  
+
   return (
     <div className='wrapper'>
       <Topbar />

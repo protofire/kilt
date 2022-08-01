@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 
 function AttesterCtypeCreate() {
   const navigate = useNavigate();
-  const onSubmit = () => navigate(-1)
-  
+  const onSubmit = () => navigate(-1);
+
   return (
     <div className='wrapper'>
       <div className='center'>

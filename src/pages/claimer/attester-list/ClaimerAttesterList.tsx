@@ -14,9 +14,9 @@ function ClaimerAttesterList() {
   }, []);
 
   const columns = [
-    {name: 'Name'},
-    {name: 'CType'},
-    {name: 'Quote'},
+    { name: 'Name' },
+    { name: 'CType' },
+    { name: 'Quote' }
   ];
 
   const onClick = (id: number) => navigate(`claim/${id}`);
@@ -24,8 +24,9 @@ function ClaimerAttesterList() {
   return (
     <div className='wrapper'>
       <Topbar />
-      {loading ? <div> Loading... </div> :
-        <div className='center'>
+      {loading
+        ? <div> Loading... </div>
+        : <div className='center'>
           <span className='title'> Attesters </span>
           <Table { ...{ columns, rows, onClick } }></Table>
         </div>}

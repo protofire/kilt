@@ -5,16 +5,16 @@ import { IUser } from '../interfaces/user';
 export default function useUser() {
   const [ user, setUser ] = useState<null | IUser>(null);
   const { sporran } = useSporran();
-  
+
   useEffect(() => {
-    if (!!user) return;
+    if (user) return;
     const userString = localStorage.getItem('user');
-    const storedUser: IUser = userString ? JSON.parse(userString): null;
+    const storedUser: IUser = userString ? JSON.parse(userString) : null;
     setUser(storedUser);
   }, []);
 
   async function logout() {
-    localStorage.removeItem('user')
+    localStorage.removeItem('user');
     setUser(null);
   }
 
@@ -31,6 +31,6 @@ export default function useUser() {
     user,
     connected: !!user,
     login,
-    logout,
-  }
+    logout
+  };
 }

@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 declare global {
+  // eslint-disable-next-line
   interface Window {
     kilt: any;
   }

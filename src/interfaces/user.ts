@@ -1,4 +1,4 @@
-import { DidResourceUri } from "@kiltprotocol/types";
+import { DidResourceUri } from '@kiltprotocol/types';
 
 export interface IUser {
   did: string;

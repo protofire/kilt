@@ -14,21 +14,21 @@ function AttesterRequests() {
   }, []);
 
   const columns = [
-    {name: 'Address'},
-    {name: 'CType'},
-    {name: 'Status'},
+    { name: 'Address' },
+    { name: 'CType' },
+    { name: 'Status' }
   ];
 
   const onClick = (id: number) => navigate(`${id}`);
-  
+
   return (
     <div className='wrapper'>
       <Topbar />
       <div className='center'>
         <span className='title'>Claimer requests</span>
-        {loading ? 
-          <div> Loading... </div> : 
-          <Table {...{columns, rows, onClick}}></Table>}
+        {loading
+          ? <div> Loading... </div>
+          : <Table {...{ columns, rows, onClick }}></Table>}
       </div>
     </div>
   );

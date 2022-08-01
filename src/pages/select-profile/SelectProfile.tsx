@@ -6,10 +6,10 @@ import { formatDid } from '../../utils/string';
 function SelectProfile() {
   const navigate = useNavigate();
   const { user } = useUser();
-  
+
   const toClaimer = () => navigate('/claimer');
   const toAttester = () => navigate('/attester');
-  
+
   return (
     <div className='wrapper'>
       <div className='center'>

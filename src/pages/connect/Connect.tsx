@@ -7,13 +7,13 @@ function Connect() {
   const { login, logout, user } = useUser();
 
   const [did, setDid] = useState<string>('');
-  
+
   const connect = async () => {
     await login(did);
     if (!user) return;
     if (user.isAttester) navigate('/select-profile');
     else navigate('/claimer');
-  }
+  };
 
   useEffect(() => {
     setDid(user?.did ?? '');

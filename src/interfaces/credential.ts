@@ -1,5 +1,3 @@
-import { Status } from "../constants/claim-status";
-
 export interface ICredential {
   id: number;
   attester: string;

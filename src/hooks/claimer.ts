@@ -5,10 +5,10 @@ export default function useClaimer() {
   const [ loading, setLoading ] = useState(false);
 
   const getValueByStatus = (current: number) => ({
-    value: statusInfo[current].label, 
+    value: statusInfo[current].label,
     color: statusInfo[current].color
   });
-  
+
   // list all the credentials for the claimer.
   const onListCredentials = async () => {
     /* get credentials for claimer
@@ -22,11 +22,11 @@ export default function useClaimer() {
     });
     setLoading(false);
     return [
-      {id: 1, values: [{value:'CType 1'}, {value:'Attester 1'}, getValueByStatus(Status.VERIFIED)]},
-      {id: 2, values: [{value:'CType 2'}, {value:'Attester 2'}, getValueByStatus(Status.VERIFIED)]},
-      {id: 3, values: [{value:'CType 3'}, {value:'Attester 3'}, getValueByStatus(Status.VERIFIED)]},
+      { id: 1, values: [{ value: 'CType 1' }, { value: 'Attester 1' }, getValueByStatus(Status.VERIFIED)] },
+      { id: 2, values: [{ value: 'CType 2' }, { value: 'Attester 2' }, getValueByStatus(Status.VERIFIED)] },
+      { id: 3, values: [{ value: 'CType 3' }, { value: 'Attester 3' }, getValueByStatus(Status.VERIFIED)] }
     ];
-  }
+  };
 
   // load credential details for claimer
   const onLoadCredential = async (id: number) => {
@@ -34,13 +34,13 @@ export default function useClaimer() {
      * method: GET
      * endpoint: /claimer/credential/:claimer_address/:credential_id
      * returns: {
-     *  id: number, 
-     *  ctypeName: string, 
-     *  attesterAddress: string, 
+     *  id: number,
+     *  ctypeName: string,
+     *  attesterAddress: string,
      *  status: string,
      *  terms: string,
      *  claimerText: string,
-     *  files: [{name: string, url: string}, ...] 
+     *  files: [{name: string, url: string}, ...]
      * }
      */
     setLoading(true);
@@ -49,7 +49,7 @@ export default function useClaimer() {
     });
     setLoading(false);
     return {
-      id: id, 
+      id,
       attester: 'Attester 1',
       ctype: 'CType 1',
       status: 'verified',
@@ -61,7 +61,7 @@ export default function useClaimer() {
       claimerText: 'some text from claimer',
       files: ['file1.jpeg', 'some_other_file.png', 'file3.pdf']
     };
-  }
+  };
 
   // list all the attesters for claimer
   const onListAttesters = async () => {
@@ -81,11 +81,11 @@ export default function useClaimer() {
     });
     setLoading(false);
     return [
-      {id: 1, values: [{value:'Attester 1'}, {value:'CType 1'}, {value:'30 KILT'}]},
-      {id: 2, values: [{value:'Attester 2'}, {value:'CType 2'}, {value:'20 KILT'}]},
-      {id: 3, values: [{value:'Attester 3'}, {value:'CType 3'}, {value:'25 KILT'}]},
-    ]
-  }
+      { id: 1, values: [{ value: 'Attester 1' }, { value: 'CType 1' }, { value: '30 KILT' }] },
+      { id: 2, values: [{ value: 'Attester 2' }, { value: 'CType 2' }, { value: '20 KILT' }] },
+      { id: 3, values: [{ value: 'Attester 3' }, { value: 'CType 3' }, { value: '25 KILT' }] }
+    ];
+  };
 
   // load the attester ctype details for claimer
   const onLoadAttesterCtype = async (id: number) => {
@@ -105,7 +105,7 @@ export default function useClaimer() {
       setTimeout(resolve, 500);
     });
     setLoading(false);
-    return { 
+    return {
       terms: `Lorem ipsum dolor sit amet, consectetur adipiscing elit,
           sed do eiusmod tempor incididunt ut labore et dolore 
           magna aliqua. Ut enim ad minim veniam, quis nostrud 
@@ -113,11 +113,11 @@ export default function useClaimer() {
           commodo consequat.`,
       name: `Attester ${id}`
     };
-  }
+  };
 
   // creates a new claim request for the attesters
   const submitClaim = async (text: string, files: FileList | null) => {
-    /* creates a new request for attesters. 
+    /* creates a new request for attesters.
      * Will be added as a new message to the websocket - pub/sub connection
      * method: POST
      * endpoint: /attester/request/
@@ -135,7 +135,7 @@ export default function useClaimer() {
     });
     setLoading(false);
     return { success: true };
-  }
+  };
 
   return {
     onListCredentials,
@@ -144,5 +144,5 @@ export default function useClaimer() {
     onLoadCredential,
     submitClaim,
     loading
-  }
+  };
 }

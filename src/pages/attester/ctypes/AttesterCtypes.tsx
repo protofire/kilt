@@ -12,31 +12,42 @@ function AttesterCtypes() {
 
   useEffect(() => {
     onListCtypes().then((rows: Row[]) => {
-      const rowsWithActions = rows.map(r => 
-        ({...r, values: [...r.values,
-          {value: <button onClick={() => onDeleteCtype(r.id)} 
-            className='action'>Delete</button>}]}));
+      const rowsWithActions = rows.map(r =>
+        (
+          {
+            ...r,
+            values: [
+              ...r.values,
+              {
+                value:
+                <button
+                  onClick={() => onDeleteCtype(r.id)}
+                  className='action'>Delete</button>
+              }
+            ]
+          }
+        ));
       setRows(rowsWithActions);
     });
   }, []);
 
   const columns = [
-    {name: 'Name'},
-    {name: 'Quote'},
-    {name: 'Actions'},
+    { name: 'Name' },
+    { name: 'Quote' },
+    { name: 'Actions' }
   ];
 
   // creates new quote
-  const onAdd = () => navigate('create')
-  
+  const onAdd = () => navigate('create');
+
   return (
     <div className='wrapper'>
       <Topbar />
-      {loading ? 
-        <div>Loading...</div>  : 
-        <div className='center'>
+      {loading
+        ? <div>Loading...</div>
+        : <div className='center'>
           <span className='title'>CTypes & Quotes</span>
-          <Table {...{columns, rows }} disabled></Table>
+          <Table {...{ columns, rows }} disabled></Table>
           <button className='primary' onClick={onAdd}>Add</button>
         </div>
       }

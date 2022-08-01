@@ -8,22 +8,23 @@ function AttesterRequestDetail() {
   const params = useParams();
   const navigate = useNavigate();
   const { onLoadRequest, loading } = useAttester();
-  
+
   const [request, setRequest] = useState<IRequest | null>(null);
 
   useEffect(() => {
     onLoadRequest(Number(params.id)).then(setRequest);
   }, []);
 
-  const goBack = () => navigate(-1)
-  
+  const goBack = () => navigate(-1);
+
   return (
     <div className='wrapper'>
     <Topbar />
-    {loading ? <div> Loading ... </div> : 
-      <div className='column page'>
+    {loading
+      ? <div> Loading ... </div>
+      : <div className='column page'>
         <span className='title'>Claim</span>
-        <span className='subtitle'> 
+        <span className='subtitle'>
           Claimer: <strong>{request?.address}</strong><em> </em>
           Status: <strong>{request?.status}</strong>
         </span>

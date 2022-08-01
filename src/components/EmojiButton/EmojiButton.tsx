@@ -7,7 +7,7 @@ interface Props {
 
 function EmojiButton({ text, emoji, onClick } : Props) {
   return (
-    <button className='emoji-btn' onClick={onClick}>          
+    <button className='emoji-btn' onClick={onClick}>
       <div className='emoji'>
         {emoji}
       </div>

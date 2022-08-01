@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route, HashRouter, Navigate } from "react-router-dom";
+import { Routes, Route, HashRouter, Navigate } from 'react-router-dom';
 import Connect from './pages/connect/Connect';
 import SelectProfile from './pages/select-profile/SelectProfile';
 import Claimer from './pages/claimer/Claimer';

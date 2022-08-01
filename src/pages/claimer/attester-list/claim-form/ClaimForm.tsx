@@ -20,14 +20,15 @@ function ClaimForm() {
   const onFileChange = (files: FileList | null) => setFiles(files);
   const onTextChange = (text: string) => setText(text);
 
-  const goBack = () => navigate('/claimer', {replace: true});
+  const goBack = () => navigate('/claimer', { replace: true });
   const onSubmit = () => submitClaim(text, files).then(goBack);
-  
+
   return (
     <div className='wrapper'>
       <Topbar />
-      {loading ? <div> Loading ... </div> : 
-        <div className='column page'>
+      {loading
+        ? <div> Loading ... </div>
+        : <div className='column page'>
           <span className='title'>Claim Your Identity</span>
           <span className='subtitle'> Attester: <strong>{attester?.name}</strong></span>
           <span className='subtitle'>Terms and Conditions</span>
@@ -39,7 +40,7 @@ function ClaimForm() {
           </div>
           <label className='subtitle'>Include all the relevant information and/or files for the attester.
             <br />
-            <textarea name="introduction" placeholder='Introduce yourself' 
+            <textarea name="introduction" placeholder='Introduce yourself'
               onChange={(e) => onTextChange(e.target.value)} cols={40}></textarea>
           </label>
           <div>
