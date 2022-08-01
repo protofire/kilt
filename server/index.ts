@@ -3,10 +3,16 @@ import dotenv from "dotenv";
 import { userRouter } from "./routes/user";
 import { logoutRouter } from "./routes/logout";
 import { secretRouter } from "./routes/secret";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 dotenv.config();
 
 const app = express();
+app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
 const port = process.env.PORT;
 
 app.get("/", (req: Request, res: Response) => {
