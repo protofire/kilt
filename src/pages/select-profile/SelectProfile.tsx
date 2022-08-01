@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import EmojiButton from '../../components/EmojiButton/EmojiButton';
 import useUser from '../../hooks/user';
+import { formatDid } from '../../utils/string';
 
 function SelectProfile() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ function SelectProfile() {
       <div className='center'>
         <div className='title' >
           <span>
-            Hi {user} <br />
+            Hi {formatDid(user ? user.did : '')}<br />
             Select your profile
           </span>
         </div>

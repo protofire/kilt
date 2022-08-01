@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route, HashRouter } from "react-router-dom";
+import { Routes, Route, HashRouter, Navigate } from "react-router-dom";
 import Connect from './pages/connect/Connect';
 import SelectProfile from './pages/select-profile/SelectProfile';
 import Claimer from './pages/claimer/Claimer';
@@ -28,6 +28,7 @@ function App() {
         <Route path="/attester/ctypes/create" element={<AttesterCtypeCreate />}> </Route>
         <Route path="/attester/requests" element={<AttesterRequests />}> </Route>
         <Route path="/attester/requests/:id" element={<AttesterRequestDetail />}> </Route>
+        <Route path='/.well-known/did-configuration.json' element={ <Navigate to="/didConfiguration.json" /> }/>
       </Routes>
     </HashRouter>
     </div>

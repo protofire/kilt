@@ -38,7 +38,6 @@ export default function useAttester() {
       setTimeout(resolve, 500);
     });
     setLoading(false);
-    console.log('deleting id:', id, ' fromuser:', user);
     throw Error('not implemented');
   }
 
