@@ -19,15 +19,12 @@ export default function useUser() {
   }
 
   async function login(did: string) {
-    if(!sporran) return;
+    if (!sporran) return;
     const { signature, didKeyUri }: IUser = await sporran.signWithDid(did);
 
-    localStorage.setItem('user', JSON.stringify({ 
-      did,
-      signature,
-      didKeyUri, 
-      isAttester: true
-    }));
+    const userData: IUser = { did, signature, didKeyUri, isAttester: true };
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
   }
 
   return {
