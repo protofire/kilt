@@ -1,41 +1,70 @@
-# KILT Cookbook application
+# KILT Attestation workflow recipe 🧬
+Recipe application that shows an attestation process in order to verify CTypes for DiDs on the **KILT** blockchain.
+
+Learn more about attestation [here](https://docs.kilt.io/docs/develop/workshop/attestation).
+
+> :warning: **Disclaimer:** This code is not for production use. It serves as an example workflow for dids CTypes attestation.
+
+## About this project
+This is a monorepo project containing a frontend application built using `create-react-app` at the root folder of the project and a server `node.js` application under the `server` forlder.
+
+## Sporran wallet setup
+In order to run and debug the app you will need to setup the `Sporran` testing wallet.
+
+#### Steps
+1. Create testing KILT credentials using the Distillery CLI app. Follow the Setup claimer flow from the following link: [Kilt distillery app](https://github.com/KILTprotocol/kilt-distillery-cli).
+   
+2. Install Sporran testing wallet following the Readme file from the following link: [Sporran wallet setup](https://github.com/BTE-Trusted-Entity/sporran-extension)
+
+3. Finally: 
+   1. go to the Sporran wallet and create a new identity. 
+   2. Once you have created the identity, you will need credentials in order to get your ***on-chain DiD***. Select the **+ import credentials** button.
+   3. Drag and drop one of the previous `.json` files (credentials) created from the distillery app (see step 1).
+
+<img src="./docs/import_identity.png?raw=true" alt="Step 3 Image 1" width="30%"/>
+<img src="./docs/import_credential.png?raw=true" alt="Step 3 Image 2" width="30%"/>
+<img src="./docs/drop_json.png?raw=true" alt="Step 3 Image 3" width="30%"/>
+
+## Frontend Available Scripts
+List of available scripts under the root folder.
 
 1. `yarn install`
+
+Installs required dependencies for running the app.
+
 2. `yarn start`
 
-## Available Scripts
+Launches the application in `localhost:3000`
 
-### `yarn test`
+3. `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in the interactive watch mode.
 
-### `yarn build`
+4. `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the app for production to the `build` folder
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn deploy`
+5. `yarn deploy`
 
 Runs `yarn build` to update `/build` folder, copies the content to `gh-pages` branch and pushes the app in github pages.
 
-[see deployed app](https://protofire.github.io/kilt/)
+[Link to app](https://protofire.github.io/kilt/)
 
-### `yarn eject`
+## Server Available Scripts
+List of available scripts under the `server` forlder.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1. `yarn install`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Installs required dependencies for running the app.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+2. `yarn build`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Builds the app for production to the `dist` folder
 
-## Learn More
+2. `yarn start`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Builds and runs the application under the `dist` folder. 
+
+1. `yarn dev`
+
+Builds and runs the app in watch mode using `nodemon`, any change reloads the app.
