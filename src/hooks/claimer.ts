@@ -1,34 +1,23 @@
 import { useState } from 'react';
-import { statusInfo, Status } from '../constants/claim-status';
 import { IAttesterCtype } from '../interfaces/attester-ctype';
+import { FileURL, IAttestedCredential, ICredential } from '../interfaces/credential';
 import useFetch from './fetch';
+import useUser from './user';
 
 export default function useClaimer() {
   const [ loading, setLoading ] = useState(false);
+  const { user } = useUser();
   const { appFetch } = useFetch();
-
-  const getValueByStatus = (current: number) => ({
-    value: statusInfo[current].label,
-    color: statusInfo[current].color
-  });
 
   // list all the credentials for the claimer.
   const onListCredentials = async () => {
-    /* get credentials for claimer
-     * method: GET
-     * endpoint: /claimer/credential/:claimer_address
-     * returns: [{ id: number, ctypeName: string, attesterAddress: string, status: string }, ...]
-     */
     setLoading(true);
-    await new Promise((resolve) => {
-      setTimeout(resolve, 500);
-    });
+    if (!user) throw Error('Must be logged in');
+    const response = await appFetch(`/api/claimer/credential/${user.did}`);
+    const { data } = await response.json();
+    const credentials: ICredential[] = data.credentials;
     setLoading(false);
-    return [
-      { id: 1, values: [{ value: 'CType 1' }, { value: 'Attester 1' }, getValueByStatus(Status.VERIFIED)] },
-      { id: 2, values: [{ value: 'CType 2' }, { value: 'Attester 2' }, getValueByStatus(Status.VERIFIED)] },
-      { id: 3, values: [{ value: 'CType 3' }, { value: 'Attester 3' }, getValueByStatus(Status.VERIFIED)] }
-    ];
+    return credentials;
   };
 
   // load credential details for claimer
@@ -52,9 +41,10 @@ export default function useClaimer() {
     });
     setLoading(false);
     return {
-      id,
-      attester: 'Attester 1',
-      ctype: 'CType 1',
+      id: 'someid',
+      attesterDid: 'some did',
+      attesterName: 'Attester 1',
+      ctypeName: 'CType 1',
       status: 'verified',
       terms: `Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         sed do eiusmod tempor incididunt ut labore et dolore 
@@ -62,8 +52,8 @@ export default function useClaimer() {
         exercitation ullamco laboris nisi ut aliquip ex ea 
         commodo consequat.`,
       claimerText: 'some text from claimer',
-      files: ['file1.jpeg', 'some_other_file.png', 'file3.pdf']
-    };
+      files: [{ name: 'file1.jpeg', url: 'http://something' }] as FileURL[]
+    } as IAttestedCredential;
   };
 
   // list all the attesters for claimer

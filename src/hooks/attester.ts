@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Status, statusInfo } from '../constants/claim-status';
+import { statusToCeil } from '../constants/claim-status';
 import useFetch from './fetch';
 
 export default function useAttester() {
@@ -43,11 +43,6 @@ export default function useAttester() {
     throw Error('not implemented');
   };
 
-  const getValueByStatus = (current: number) => ({
-    value: statusInfo[current].label,
-    color: statusInfo[current].color
-  });
-
   // List the requests created by claimers for
   // attestation.
   const onListRequests = async () => {
@@ -68,9 +63,9 @@ export default function useAttester() {
     });
     setLoading(false);
     return [
-      { id: 1, values: [{ value: '0xCase2SD..ASD' }, { value: 'CType 1' }, getValueByStatus(Status.VERIFIED)] },
-      { id: 2, values: [{ value: '0xCase2SD..ASD' }, { value: 'CType 1' }, getValueByStatus(Status.PENDING_PAYMENT)] },
-      { id: 3, values: [{ value: '0xCase2SD..ASD' }, { value: 'CType 1' }, getValueByStatus(Status.UNVERIFIED)] }
+      { id: 1, values: [{ value: '0xCase2SD..ASD' }, { value: 'CType 1' }, statusToCeil.verified] },
+      { id: 2, values: [{ value: '0xCase2SD..ASD' }, { value: 'CType 1' }, statusToCeil.pending_payment] },
+      { id: 3, values: [{ value: '0xCase2SD..ASD' }, { value: 'CType 1' }, statusToCeil.unverified] }
     ];
   };
 

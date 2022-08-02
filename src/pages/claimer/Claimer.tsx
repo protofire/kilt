@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Table, { Row } from '../../components/Table/Table';
 import Topbar from '../../components/Topbar/Topbar';
 import useClaimer from '../../hooks/claimer';
+import { credentialToRow, ICredential } from '../../interfaces/credential';
 
 function Claimer() {
   const navigate = useNavigate();
@@ -10,7 +11,8 @@ function Claimer() {
   const [ rows, setRows ] = useState<Row[]>([]);
 
   useEffect(() => {
-    onListCredentials().then((rows: Row[]) => setRows(rows));
+    onListCredentials().then((credentials: ICredential[]) =>
+      setRows([...credentials.map(credentialToRow)]));
   }, []);
 
   const columns = [

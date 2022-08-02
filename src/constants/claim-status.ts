@@ -1,17 +1,8 @@
-/* eslint-disable */
-enum Status {
-  UNCLAIMED,
-  UNVERIFIED,
-  PENDING_PAYMENT,
-  VERIFIED,
-}
-
-const statusInfo: Record<number, {label: string, color: string}> = {
-  0: { label: 'Unclaimed', color: '#db4b4b' },
-  1: { label: 'Unverified', color: '#CED118' },
-  2: { label: 'Pending payment', color: '#1B5BFF' },
-  3: { label: 'Verified', color: '#429441' }
+const statusToCeil: Record<string, {value: string, color: string}> = {
+  unclaimed: { value: 'Unclaimed', color: '#db4b4b' },
+  unverified: { value: 'Unverified', color: '#CED118' },
+  pending_payment: { value: 'Pending payment', color: '#1B5BFF' },
+  verified: { value: 'Verified', color: '#429441' }
 };
 
-export { statusInfo, Status };
-/* eslint-enable */
+export { statusToCeil };
