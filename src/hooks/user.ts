@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import useSporran from './sporran';
 import { IUser } from '../interfaces/user';
+import useAttester from './attester';
 
 export default function useUser() {
   const [ user, setUser ] = useState<null | IUser>(null);
   const { sporran } = useSporran();
+  const { checkDidAttester } = useAttester();
 
   useEffect(() => {
     if (user) return;
@@ -21,8 +23,8 @@ export default function useUser() {
   async function login(did: string) {
     if (!sporran) return;
     const { signature, didKeyUri }: IUser = await sporran.signWithDid(did);
-
-    const userData: IUser = { did, signature, didKeyUri, isAttester: true };
+    const isAttester = await checkDidAttester(did);
+    const userData: IUser = { did, signature, didKeyUri, isAttester };
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
     return userData;
