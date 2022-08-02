@@ -20,11 +20,11 @@ In order to run and debug the app you will need to setup the `Sporran` testing w
    1. go to the Sporran wallet and create a new identity. 
    2. Once you have created the identity, you will need credentials in order to get your ***on-chain DiD***. Select the **+ import credentials** button.
    3. Drag and drop one of the previous `.json` files (credentials) created from the distillery app (see step 1).
-
+<div>
 <img src="./docs/import_identity.png?raw=true" alt="Step 3 Image 1" width="30%"/>
 <img src="./docs/import_credential.png?raw=true" alt="Step 3 Image 2" width="30%"/>
 <img src="./docs/drop_json.png?raw=true" alt="Step 3 Image 3" width="30%"/>
-
+</div>
 ## Frontend Available Scripts
 List of available scripts under the root folder.
 
