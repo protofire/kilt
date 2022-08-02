@@ -3,16 +3,16 @@ Recipe application that shows an attestation process in order to verify CTypes f
 
 Learn more about attestation [here](https://docs.kilt.io/docs/develop/workshop/attestation).
 
-> :warning: **Disclaimer:** This code is not for production use. It serves as an example workflow for dids CTypes attestation.
+> :warning: **Disclaimer:** This code is not for production use. It serves as an example workflow for DiDs CTypes attestation.
 
 ## About this project
-This is a monorepo project containing a frontend application built using `create-react-app` at the root folder of the project and a server `node.js` application under the `server` forlder.
+This is a monorepo project containing a frontend application built using `create-react-app` at the root folder and a backend `node.js` application under the `server` folder.
 
 ## Sporran wallet setup
 In order to run and debug the app you will need to setup the `Sporran` testing wallet.
 
 #### Steps
-1. Create testing KILT credentials using the Distillery CLI app. Follow the Setup claimer flow from the following link: [Kilt distillery app](https://github.com/KILTprotocol/kilt-distillery-cli).
+1. Create testing KILT credentials using the Distillery CLI app. Follow the `Setup claimer flow` from the following link: [Kilt distillery app](https://github.com/KILTprotocol/kilt-distillery-cli).
    
 2. Install Sporran testing wallet following the Readme file from the following link: [Sporran wallet setup](https://github.com/BTE-Trusted-Entity/sporran-extension)
 
@@ -25,6 +25,7 @@ In order to run and debug the app you will need to setup the `Sporran` testing w
 <img src="./docs/import_credential.png?raw=true" alt="Step 3 Image 2" width="30%"/>
 <img src="./docs/drop_json.png?raw=true" alt="Step 3 Image 3" width="30%"/>
 </div>
+
 ## Frontend Available Scripts
 List of available scripts under the root folder.
 
