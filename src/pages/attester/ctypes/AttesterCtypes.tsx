@@ -1,33 +1,38 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '../../../components/Table';
-import './AttesterCtypes.css'
+import Table, { Row } from '../../../components/Table/Table';
+import Topbar from '../../../components/Topbar/Topbar';
+import useAttester from '../../../hooks/attester';
 
 function AttesterCtypes() {
   const navigate = useNavigate();
+  const { onListCtypes, onDeleteCtype, loading, ctypes } = useAttester();
+
+  const [rows, setRows] = useState<Row[]>([]);
+
+  useEffect(() => {
+    onListCtypes().then(setRows);
+  }, [ ctypes ]);
 
   const columns = [
-    {name: 'Name'},
-    {name: 'Quote'},
-    {name: 'Actions'},
+    { name: 'Name' },
+    { name: 'Quote' },
+    { name: 'Actions' }
   ];
 
-  const rows = [
-    {id: 1, values: ['CType 1', '30 KILT', <button>delete</button>]},
-    {id: 2, values: ['CType 2', '10 KILT', <button>delete</button>]},
-    {id: 3, values: ['CType 3', '12 kilt', <button>delete</button>]},
-  ];
+  const onAdd = () => navigate('create');
 
-  const onClick = (id: number) => {}
-
-  const onAdd = () => navigate('create')
-  
   return (
     <div className='wrapper'>
-      <div className='center'>
-      <Table {...{columns, rows, onClick}}></Table>
-      <button className='' onClick={onAdd}>Add</button>
-      </div>
+      <Topbar />
+      {loading
+        ? <div>Loading...</div>
+        : <div className='center'>
+          <span className='title'>CTypes & Quotes</span>
+          <Table {...{ columns, rows, onDelete: onDeleteCtype }} disabled></Table>
+          <button className='primary' onClick={onAdd}>Add</button>
+        </div>
+      }
     </div>
   );
 }

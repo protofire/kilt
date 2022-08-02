@@ -20,6 +20,12 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### `yarn deploy`
+
+Runs `yarn build` to update `/build` folder, copies the content to `gh-pages` branch and pushes the app in github pages.
+
+[see deployed app](https://protofire.github.io/kilt/)
+
 ### `yarn eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**

@@ -1,41 +1,37 @@
 import { useState, useEffect } from 'react';
 import useSporran from './sporran';
+import { IUser } from '../interfaces/user';
 
-let _user: string | null
 export default function useUser() {
-  const [ user, setUser ] = useState(_user);
-  const { sporran, session, startSession, presentCredential } = useSporran();
-  
+  const [ user, setUser ] = useState<null | IUser>(null);
+  const { sporran } = useSporran();
+
   useEffect(() => {
-    (async () => {
-      if (!!user) return
-      const result = await (await fetch('/api/user')).text()
-      _user = !!result ? result : null
-      setUser(_user)
-    })()
-  }, [ session ]);
+    if (user) return;
+    const userString = localStorage.getItem('user');
+    const storedUser: IUser = userString ? JSON.parse(userString) : null;
+    setUser(storedUser);
+  }, []);
 
   async function logout() {
-    const loggedOut = (await fetch('/api/logout')).ok
-    if (!loggedOut) return
-    _user = null
-     setUser(null)
+    localStorage.removeItem('user');
+    setUser(null);
   }
 
-  async function login() {
-    if (!sporran) return
-    if (!session) return await startSession()
-    await presentCredential()
-    const result = await (await fetch('/api/user')).text()
-    _user = !!result ? result : null
-    setUser(_user)
-    return _user
+  async function login(did: string) {
+    if (!sporran) return;
+    const { signature, didKeyUri }: IUser = await sporran.signWithDid(did);
+
+    const userData: IUser = { did, signature, didKeyUri, isAttester: true };
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    return userData;
   }
 
   return {
     user,
-    connected: !!user || !!session,
-    login, 
-    logout,
-  }
+    connected: !!user,
+    login,
+    logout
+  };
 }

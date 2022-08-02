@@ -1,32 +1,37 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '../../components/Table';
+import Table, { Row } from '../../components/Table/Table';
+import Topbar from '../../components/Topbar/Topbar';
+import useClaimer from '../../hooks/claimer';
 
 function Claimer() {
   const navigate = useNavigate();
+  const { onListCredentials, loading } = useClaimer();
+  const [ rows, setRows ] = useState<Row[]>([]);
+
+  useEffect(() => {
+    onListCredentials().then((rows: Row[]) => setRows(rows));
+  }, []);
 
   const columns = [
-    {name: 'CType'},
-    {name: 'Attester'},
-    {name: 'Status'},
-  ];
-
-  const rows = [
-    {id: 1, values: ['CType 1', 'Attester 1','Unverified']},
-    {id: 2, values: ['CType 2', 'Attester 2','Unverified']},
-    {id: 3, values: ['CType 3', 'Attester 3','Unverified']},
+    { name: 'CType' },
+    { name: 'Attester' },
+    { name: 'Status' }
   ];
 
   const onClick = (id: number) => navigate(`detail/${id}`);
-
   const onAdd = () => navigate('attester-list');
 
   return (
     <div className='wrapper'>
-      <div className='center'>
-        <Table {...{columns, rows, onClick}}></Table>
-        <button onClick={onAdd}>Add</button>
-      </div>
+      <Topbar />
+      {loading
+        ? <div> Loading... </div>
+        : <div className='center'>
+          <span className='title'>Credentials</span>
+          <Table { ...{ columns, rows, onClick } }></Table>
+          <button className='primary' onClick={onAdd}>Add</button>
+        </div>}
     </div>
   );
 }

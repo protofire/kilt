@@ -1,22 +1,18 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Attester.css'
+import EmojiButton from '../../components/EmojiButton/EmojiButton';
+import Topbar from '../../components/Topbar/Topbar';
 
 function Attester() {
   const navigate = useNavigate();
-  
   const toCTypes = () => navigate('/attester/ctypes');
   const toRequests = () => navigate('/attester/requests');
-  
+
   return (
     <div className='wrapper'>
+      <Topbar />
       <div className='center'>
-        <button className='profile-btn' onClick={toCTypes}>
-          CTypes & quotes
-        </button>
-        <button className='profile-btn margin-left' onClick={toRequests}>
-          Requests
-        </button>
+        <EmojiButton emoji='👌' text='CTypes & quotes' onClick={toCTypes}/>
+        <EmojiButton emoji='👏' text='Requests' onClick={toRequests}/>
       </div>
     </div>
   );
