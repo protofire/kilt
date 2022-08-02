@@ -19,7 +19,7 @@ function AttesterRequests() {
     { name: 'Status' }
   ];
 
-  const onClick = (id: number) => navigate(`${id}`);
+  const onClick = (id: string | number) => navigate(`${id}`);
 
   return (
     <div className='wrapper'>

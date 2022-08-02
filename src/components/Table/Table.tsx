@@ -10,19 +10,19 @@ interface Cell {
 }
 
 export interface Row {
-  id: number,
+  id: string | number,
   values: Cell[],
 }
 
 interface Props {
   columns: Column[],
   rows: Row[],
-  onClick?: (id: number) => void,
-  onDelete?: (id: number) => void,
+  onClick?: (id: string | number) => void,
+  onDelete?: (id: string | number) => void,
   disabled?: boolean,
 }
 
-function Table({ columns, rows, onClick = () => {}, onDelete, disabled = false } : Props) {
+function Table({ columns, rows, onClick, onDelete, disabled = false } : Props) {
   return (
     <table>
       <thead>
@@ -39,7 +39,7 @@ function Table({ columns, rows, onClick = () => {}, onDelete, disabled = false }
               <hr />
             </div>
             <tr className={disabled ? '' : 'clickable'}
-              onClick={() => !disabled && onClick(r.id)}>
+              onClick={() => !disabled && onClick && onClick(r.id)}>
                 {r.values.map(val =>
                   <td
                     key={r.id + val.value}

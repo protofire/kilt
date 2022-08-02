@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { statusInfo, Status } from '../constants/claim-status';
+import { IAttesterCtype } from '../interfaces/attester-ctype';
+import useFetch from './fetch';
 
 export default function useClaimer() {
   const [ loading, setLoading ] = useState(false);
+  const { appFetch } = useFetch();
 
   const getValueByStatus = (current: number) => ({
     value: statusInfo[current].label,
@@ -64,31 +67,17 @@ export default function useClaimer() {
   };
 
   // list all the attesters for claimer
-  const onListAttesters = async () => {
-    /* get list of attesters
-     * method: GET
-     * endpoint: /attester/ctype
-     * returns: [{
-     *  attester_ctype_id: number,
-     *  attesterName: string,
-     *  ctypeName: string,
-     *  quote: number,
-     * }, ...]
-     */
+  const onListAttesters = async (): Promise<IAttesterCtype[]> => {
     setLoading(true);
-    await new Promise((resolve) => {
-      setTimeout(resolve, 500);
-    });
+    const response = await appFetch('/api/attester/ctype');
+    const { data } = await response.json();
+    const attesters: IAttesterCtype[] = data.attesters;
     setLoading(false);
-    return [
-      { id: 1, values: [{ value: 'Attester 1' }, { value: 'CType 1' }, { value: '30 KILT' }] },
-      { id: 2, values: [{ value: 'Attester 2' }, { value: 'CType 2' }, { value: '20 KILT' }] },
-      { id: 3, values: [{ value: 'Attester 3' }, { value: 'CType 3' }, { value: '25 KILT' }] }
-    ];
+    return attesters;
   };
 
   // load the attester ctype details for claimer
-  const onLoadAttesterCtype = async (id: number) => {
+  const onLoadAttesterCtype = async (did: string) => {
     /* get attester ctype details
      * method: GET
      * endpoint: /attester/ctype/:attester_ctype_id
@@ -106,12 +95,13 @@ export default function useClaimer() {
     });
     setLoading(false);
     return {
+      attesterDid: did,
       terms: `Lorem ipsum dolor sit amet, consectetur adipiscing elit,
           sed do eiusmod tempor incididunt ut labore et dolore 
           magna aliqua. Ut enim ad minim veniam, quis nostrud 
           exercitation ullamco laboris nisi ut aliquip ex ea 
           commodo consequat.`,
-      name: `Attester ${id}`
+      attesterName: `Attester ${did}`
     };
   };
 

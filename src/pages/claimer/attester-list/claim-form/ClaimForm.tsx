@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Topbar from '../../../../components/Topbar/Topbar';
 import useClaimer from '../../../../hooks/claimer';
-import { IAttester } from '../../../../interfaces/attester-ctype';
+import { IAttesterCtype } from '../../../../interfaces/attester-ctype';
 
 function ClaimForm() {
   const params = useParams();
@@ -11,10 +11,11 @@ function ClaimForm() {
 
   const [files, setFiles] = useState<FileList | null>(null);
   const [text, setText] = useState<string>('');
-  const [attester, setAttester] = useState<IAttester | null>(null);
+  const [attester, setAttester] = useState<IAttesterCtype | null>(null);
 
   useEffect(() => {
-    onLoadAttesterCtype(Number(params.id)).then(setAttester);
+    if (!params.id) return goBack();
+    onLoadAttesterCtype(params.id).then(setAttester);
   }, []);
 
   const onFileChange = (files: FileList | null) => setFiles(files);
@@ -30,7 +31,7 @@ function ClaimForm() {
         ? <div> Loading ... </div>
         : <div className='column page'>
           <span className='title'>Claim Your Identity</span>
-          <span className='subtitle'> Attester: <strong>{attester?.name}</strong></span>
+          <span className='subtitle'> Attester: <strong>{attester?.attesterName}</strong></span>
           <span className='subtitle'>Terms and Conditions</span>
           <span className='text'>
             {attester?.terms}
