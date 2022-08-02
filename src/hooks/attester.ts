@@ -28,7 +28,7 @@ export default function useAttester() {
   };
 
   // Delete the CType quote for the attester.
-  const onDeleteCtype = async (id: number) => {
+  const onDeleteCtype = async (id: string | number) => {
     /* Delete ctype for attester
      * method: DELETE
      * endpoint: /attester/ctyes/:attester_address/:ctype_id

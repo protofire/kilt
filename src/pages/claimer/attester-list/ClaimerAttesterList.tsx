@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useClaimer from '../../../hooks/claimer';
+import { attesterCtypeToRow, IAttesterCtype } from '../../../interfaces/attester-ctype';
 
 function ClaimerAttesterList() {
   const navigate = useNavigate();
@@ -10,7 +11,9 @@ function ClaimerAttesterList() {
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
-    onListAttesters().then((rows: Row[]) => setRows(rows));
+    onListAttesters().then((attesters: IAttesterCtype[]) => {
+      setRows([...attesters.map(attesterCtypeToRow)]);
+    });
   }, []);
 
   const columns = [
@@ -19,7 +22,7 @@ function ClaimerAttesterList() {
     { name: 'Quote' }
   ];
 
-  const onClick = (id: number) => navigate(`claim/${id}`);
+  const onClick = (id: string | number) => navigate(`claim/${id}`);
 
   return (
     <div className='wrapper'>

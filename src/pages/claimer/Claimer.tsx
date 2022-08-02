@@ -19,7 +19,7 @@ function Claimer() {
     { name: 'Status' }
   ];
 
-  const onClick = (id: number) => navigate(`detail/${id}`);
+  const onClick = (id: number | string) => navigate(`detail/${id}`);
   const onAdd = () => navigate('attester-list');
 
   return (
