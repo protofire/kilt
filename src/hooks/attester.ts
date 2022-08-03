@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { statusToCeil } from '../constants/claim-status';
-import useFetch from './fetch';
 
 export default function useAttester() {
   const [ loading, setLoading ] = useState(false);
@@ -9,7 +8,6 @@ export default function useAttester() {
     { id: 2, values: [{ value: 'CType 2' }, { value: '10 KILT' }] },
     { id: 3, values: [{ value: 'CType 3' }, { value: '12 kilt' }] }
   ]);
-  const { appFetch } = useFetch();
 
   // List all the CTypes with Quotes that the
   // attester is allowed to verify.
@@ -106,7 +104,7 @@ export default function useAttester() {
   };
 
   const checkDidAttester = async (did: string) => {
-    const response = await appFetch(`/api/attester/isAttester/${did}`);
+    const response = await fetch(`${process.env.SERVER_URL}/api/attester/isAttester/${did}`);
     const { data } = await response.json();
     return data?.isAttester;
   };

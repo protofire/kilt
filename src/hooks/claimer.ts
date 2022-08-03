@@ -1,21 +1,20 @@
 import { useState } from 'react';
 import { IAttesterCtype } from '../interfaces/attester-ctype';
 import { FileURL, IAttestedCredential, ICredential } from '../interfaces/credential';
-import useFetch from './fetch';
-import useUser from './user';
 
 export default function useClaimer() {
   const [ loading, setLoading ] = useState(false);
-  const { user } = useUser();
-  const { appFetch } = useFetch();
 
   // list all the credentials for the claimer.
   const onListCredentials = async () => {
     setLoading(true);
-    if (!user) throw Error('Must be logged in');
-    const response = await appFetch(`/api/claimer/credential/${user.did}`);
-    const { data } = await response.json();
-    const credentials: ICredential[] = data.credentials;
+    const credentials: ICredential[] = [{
+      attesterDid: 'did:test',
+      attesterName: 'marcos',
+      ctypeName: 'email',
+      id: 'test',
+      status: 'verified'
+    }];
     setLoading(false);
     return credentials;
   };
@@ -59,9 +58,13 @@ export default function useClaimer() {
   // list all the attesters for claimer
   const onListAttesters = async (): Promise<IAttesterCtype[]> => {
     setLoading(true);
-    const response = await appFetch('/api/attester/ctype');
-    const { data } = await response.json();
-    const attesters: IAttesterCtype[] = data.attesters;
+    const attesters: IAttesterCtype[] = [{
+      attesterDid: 'test',
+      attesterName: 'test',
+      ctypeName: 'test',
+      quote: 10,
+      terms: 'test'
+    }];
     setLoading(false);
     return attesters;
   };
