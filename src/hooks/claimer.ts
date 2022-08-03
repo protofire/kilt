@@ -1,22 +1,21 @@
 import { useState } from 'react';
 import { IAttesterCtype } from '../interfaces/attester-ctype';
-import { FileURL, IAttestedCredential, ICredential } from '../interfaces/credential';
+import { FileURL, IAttestedCredential } from '../interfaces/credential';
+import useUser from './user';
 
 export default function useClaimer() {
   const [ loading, setLoading ] = useState(false);
+  const { user, loadUser } = useUser();
 
   // list all the credentials for the claimer.
   const onListCredentials = async () => {
     setLoading(true);
-    const credentials: ICredential[] = [{
-      attesterDid: 'did:test',
-      attesterName: 'marcos',
-      ctypeName: 'email',
-      id: 'test',
-      status: 'verified'
-    }];
+    const currentUser = user ?? loadUser();
+    if (!currentUser) return [];
+    const response = await fetch(`http://localhost:8000/api/claimer/credential/${currentUser.did}`);
+    const { data } = await response.json();
     setLoading(false);
-    return credentials;
+    return data;
   };
 
   // load credential details for claimer

@@ -8,11 +8,15 @@ export default function useUser() {
   const { sporran } = useSporran();
   const { checkDidAttester } = useAttester();
 
-  useEffect(() => {
-    if (user) return;
+  function loadUser () {
     const userString = localStorage.getItem('user');
     const storedUser: IUser = userString ? JSON.parse(userString) : null;
     setUser(storedUser);
+    return storedUser;
+  };
+
+  useEffect(() => {
+    loadUser();
   }, []);
 
   async function logout() {
@@ -33,6 +37,7 @@ export default function useUser() {
   return {
     user,
     connected: !!user,
+    loadUser,
     login,
     logout
   };
