@@ -5,19 +5,28 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import { claimerRoute } from "./routes/claimerRoutes";
 import { attesterRoute } from "./routes/attesterRoutes";
+import * as Kilt from '@kiltprotocol/sdk-js';
 
-dotenv.config();
-const app = express();
+async function main() {
+  // ensures Kilt connected before running the app
+  await Kilt.init({ address: 'wss://peregrine.kilt.io/parachain-public-ws' });
+  await Kilt.connect();
 
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+  dotenv.config();
+  const app = express();
 
-app.use('/api/claimer', claimerRoute)
-app.use("/api/attester", attesterRoute);
+  app.use(cors());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
 
-const port = process.env.PORT ?? 8000;
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
- 
+  app.use('/api/claimer', claimerRoute)
+  app.use("/api/attester", attesterRoute);
+
+  const port = process.env.PORT ?? 8000;
+  app.listen(port, () => {
+    console.log(`[server]: Server is running at http://localhost:${port}`);
+  });
+}
+
+main();
+
