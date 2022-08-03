@@ -106,9 +106,9 @@ export default function useAttester() {
   };
 
   const checkDidAttester = async (did: string) => {
-    const response = await appFetch(`/api/attesters/${did}`);
+    const response = await appFetch(`/api/attester/isAttester/${did}`);
     const { data } = await response.json();
-    return data.did === did;
+    return data?.isAttester;
   };
 
   return {
