@@ -9,6 +9,8 @@ export default function useAttester() {
     { id: 3, values: [{ value: 'CType 3' }, { value: '12 kilt' }] }
   ]);
 
+  const endpoint = process.env.REACT_APP_SERVER_URL ?? 'http://localhost:8000';
+
   // List all the CTypes with Quotes that the
   // attester is allowed to verify.
   const onListCtypes = async () => {
@@ -104,7 +106,7 @@ export default function useAttester() {
   };
 
   const checkDidAttester = async (did: string) => {
-    const response = await fetch(`${process.env.SERVER_URL}/api/attester/isAttester/${did}`);
+    const response = await fetch(`${endpoint}/api/attester/isAttester/${did}`);
     const { data } = await response.json();
     return data?.isAttester;
   };

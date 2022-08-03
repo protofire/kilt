@@ -7,12 +7,14 @@ export default function useClaimer() {
   const [ loading, setLoading ] = useState(false);
   const { user, loadUser } = useUser();
 
+  const endpoint = process.env.REACT_APP_SERVER_URL ?? 'http://localhost:8000';
+
   // list all the credentials for the claimer.
   const onListCredentials = async () => {
     setLoading(true);
     const currentUser = user ?? loadUser();
     if (!currentUser) return [];
-    const response = await fetch(`http://localhost:8000/api/claimer/credential/${currentUser.did}`);
+    const response = await fetch(`${endpoint}/api/claimer/credential/${currentUser.did}`);
     const { data } = await response.json();
     setLoading(false);
     return data;
