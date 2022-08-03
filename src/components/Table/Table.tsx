@@ -33,26 +33,26 @@ function Table({ columns, rows, onClick, onDelete, disabled = false } : Props) {
         </tr>
       </thead>
       <tbody>
-        {rows.map(r =>
-          <Fragment key={r.id}>
+        {rows.map((r, i) =>
+          <Fragment key={i}>
             <div style={{ width: (columns.length * 100) + '%' }}>
               <hr />
             </div>
             <tr className={disabled ? '' : 'clickable'}
               onClick={() => !disabled && onClick && onClick(r.id)}>
-                {r.values.map(val =>
+                {r.values.map((val, i) =>
                   <td
-                    key={r.id + val.value}
+                    key={i}
                     style={val.color ? { color: val.color } : {}}>
                       {val.value}
                   </td>
                 )}
                 {onDelete &&
-                <td key={r.id}>
-                  <button onClick={() => onDelete(r.id)} className='action'>
-                    Delete
-                  </button></td>
-                }
+                  <td key={r.id}>
+                    <button onClick={() => onDelete(r.id)} className='action'>
+                      Delete
+                    </button>
+                  </td>}
             </tr>
           </Fragment>
         )}
