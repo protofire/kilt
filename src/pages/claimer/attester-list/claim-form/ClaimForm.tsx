@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Topbar from '../../../../components/Topbar/Topbar';
 import useClaimer from '../../../../hooks/claimer';
 import { IAttesterCtype } from '../../../../interfaces/attester-ctype';
+import { formatDid } from '../../../../utils/string';
 
 function ClaimForm() {
   const params = useParams();
@@ -31,7 +32,7 @@ function ClaimForm() {
         ? <div> Loading ... </div>
         : <div className='column page'>
           <span className='title'>Claim Your Identity</span>
-          <span className='subtitle'> Attester: <strong>{attester?.attesterName}</strong></span>
+          <span className='subtitle'> Attester: <strong>{formatDid(attester?.attesterDid ?? '')}</strong></span>
           <span className='subtitle'>Terms and Conditions</span>
           <span className='text'>
             {attester?.terms}

@@ -1,30 +1,31 @@
 import { useState } from 'react';
 import { statusToCeil } from '../constants/claim-status';
+import { IAttesterCtype } from '../interfaces/attester-ctype';
 
 export default function useAttester() {
   const [ loading, setLoading ] = useState(false);
-  const [ ctypes, setCtypes ] = useState<any[]>([
-    { id: 1, values: [{ value: 'CType 1' }, { value: '30 KILT' }] },
-    { id: 2, values: [{ value: 'CType 2' }, { value: '10 KILT' }] },
-    { id: 3, values: [{ value: 'CType 3' }, { value: '12 kilt' }] }
-  ]);
 
   const endpoint = process.env.REACT_APP_SERVER_URL ?? 'http://localhost:8000';
 
+  const createCtype = async (ctype: IAttesterCtype) => {
+    setLoading(true);
+    const response = await fetch(`${endpoint}/api/attester/ctypes`, {
+      method: 'POST',
+      body: JSON.stringify(ctype)
+    });
+    const { success } = await response.json();
+    setLoading(false);
+    return success as boolean;
+  };
+
   // List all the CTypes with Quotes that the
   // attester is allowed to verify.
-  const onListCtypes = async () => {
-    /* get ctypes for attester
-     * method: GET
-     * endpoint: /attester/ctyes/:attester_address
-     * returns: [{ id: number, ctypeName: string, quote: number }, ...]
-     */
+  const onListCtypes = async (did: string) => {
     setLoading(true);
-    await new Promise((resolve) => {
-      setTimeout(resolve, 500);
-    });
+    const response = await fetch(`${endpoint}/api/attester/ctypes/${did}`);
+    const { data } = await response.json();
     setLoading(false);
-    return ctypes;
+    return data as IAttesterCtype[];
   };
 
   // Delete the CType quote for the attester.
@@ -38,7 +39,6 @@ export default function useAttester() {
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
     });
-    setCtypes([...ctypes.filter(c => c.id !== id)]);
     setLoading(false);
     throw Error('not implemented');
   };
@@ -112,12 +112,12 @@ export default function useAttester() {
   };
 
   return {
+    createCtype,
     onListCtypes,
     onDeleteCtype,
     onListRequests,
     onLoadRequest,
     checkDidAttester,
-    loading,
-    ctypes
+    loading
   };
 }

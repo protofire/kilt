@@ -1,20 +1,16 @@
 import { useState } from 'react';
 import { IAttesterCtype } from '../interfaces/attester-ctype';
 import { FileURL, IAttestedCredential } from '../interfaces/credential';
-import useUser from './user';
 
 export default function useClaimer() {
   const [ loading, setLoading ] = useState(false);
-  const { user, loadUser } = useUser();
 
   const endpoint = process.env.REACT_APP_SERVER_URL ?? 'http://localhost:8000';
 
   // list all the credentials for the claimer.
-  const onListCredentials = async () => {
+  const onListCredentials = async (did: string) => {
     setLoading(true);
-    const currentUser = user ?? loadUser();
-    if (!currentUser) return [];
-    const response = await fetch(`${endpoint}/api/claimer/credential/${currentUser.did}`);
+    const response = await fetch(`${endpoint}/api/claimer/credential/${did}`);
     const { data } = await response.json();
     setLoading(false);
     return data;
@@ -61,7 +57,6 @@ export default function useClaimer() {
     setLoading(true);
     const attesters: IAttesterCtype[] = [{
       attesterDid: 'test',
-      attesterName: 'test',
       ctypeName: 'test',
       quote: 10,
       terms: 'test'
