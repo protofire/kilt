@@ -7,8 +7,9 @@ import { ctypesList } from "../constants/ctypes";
 const attesterCtypeSchema = new mongoose.Schema({
   attesterDid: String,
   ctypeName: String,
+  ctypeId: String,
   quote: Number,
-  terms: String,
+  terms: String
 });
 const AttesterCtype = mongoose.model('AttesterCtype', attesterCtypeSchema);
 
@@ -28,7 +29,7 @@ export const isAttester = (req: Request, res: Response) => {
  * @returns { data: IAttesterCtype }
  */
 export const createCtype = async (req: Request, res: Response) => {
-  const { attesterDid, ctypeName, terms, quote } = req.body;
+  const { attesterDid, ctypeId, quote, terms } = req.body;
 
   const attester = attesterList.find(a => a === attesterDid);
   if (!attester) {
@@ -38,14 +39,30 @@ export const createCtype = async (req: Request, res: Response) => {
     })
   }
 
-  if (!ctypeName || !terms || !quote) {
+  const ctype = ctypesList.find(c => c.$id === ctypeId);
+  if (!ctype) {
     return res.status(400).json({
       success: false,
-      msg: 'Incomplete query, you must add ctypeName, terms and quote.'
+      msg: 'You must provide a valid ctypeId'
     })
   }
 
-  const attesterCtype = new AttesterCtype({ attesterDid, ctypeName, terms, quote });
+  if (!quote || !terms) {
+    return res.status(400).json({
+      success: false,
+      msg: 'You must provide quote and terms'
+    })
+  }
+
+  const ctypeName = ctype.title;
+
+  const attesterCtype = new AttesterCtype({ 
+    attesterDid, 
+    ctypeName,
+    ctypeId, 
+    quote, 
+    terms 
+  });
   const result = await attesterCtype.save();
   const created: IAttesterCtype = result.toJSON();
   return res.status(200).json({ success: true, data: created });
@@ -85,13 +102,6 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
  export const getCtypes = async (req: Request, res: Response) => {
   const { did } = req.params;
 
-  if (!did) {
-    return res.status(400).json({ 
-      success: false, 
-      msg: 'Must provide DiD parameter' 
-    });
-  }
-
   const attester = attesterList.find(a => a === did);
   if (!attester) {
     return res.status(400).json({
@@ -110,13 +120,6 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
  export const deleteCtype = async (req: Request, res: Response) => {
   const { did, id } = req.params;
 
-  if (!id) {
-    return res.status(400).json({ 
-      success: false, 
-      msg: 'Must provide id parameter.' 
-    });
-  }
-
   const attester = attesterList.find(a => a === did);
   if (!attester) {
     return res.status(400).json({
@@ -125,9 +128,17 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
     })
   }
 
+  const ctype = ctypesList.find(c => c.$id === id);
+  if (!ctype) {
+    return res.status(400).json({ 
+      success: false, 
+      msg: 'Must provide a valid id parameter.' 
+    });
+  }
+
   const result = await AttesterCtype.deleteOne({
     attesterDid: did,
-    _id: new mongoose.Types.ObjectId(id)
+    ctypeId: id
   });
   return res.status(200).json({ success: result.acknowledged });
 }

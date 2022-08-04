@@ -9,12 +9,13 @@ export interface IAttesterCtype {
   _id?: string;
   attesterDid: string;
   ctypeName?: string;
+  ctypeId: string;
   quote?: number;
   terms?: string;
 }
 
 export const attesterCtypeToRow = (attesterCtype: IAttesterCtype) => ({
-  id: attesterCtype._id,
+  id: attesterCtype.ctypeId,
   values: [
     { value: attesterCtype.ctypeName },
     { value: attesterCtype.quote + ' KILT' }

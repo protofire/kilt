@@ -1,3 +1,4 @@
+import { ICTypeSchema } from '@kiltprotocol/sdk-js';
 import { useState } from 'react';
 import { statusToCeil } from '../constants/claim-status';
 import { IAttesterCtype } from '../interfaces/attester-ctype';
@@ -7,7 +8,7 @@ export default function useAttester() {
 
   const endpoint = process.env.REACT_APP_SERVER_URL ?? 'http://localhost:8000';
 
-  const createCtype = async (ctype: IAttesterCtype) => {
+  const createAttesterCtype = async (ctype: IAttesterCtype) => {
     setLoading(true);
     const response = await fetch(`${endpoint}/api/attester/ctypes`, {
       method: 'POST',
@@ -19,7 +20,7 @@ export default function useAttester() {
     return success as boolean;
   };
 
-  const onListCtypes = async (did: string) => {
+  const onListAttesterCtypes = async (did: string) => {
     setLoading(true);
     const response = await fetch(`${endpoint}/api/attester/ctypes/${did}`);
     const { data } = await response.json();
@@ -27,7 +28,15 @@ export default function useAttester() {
     return data as IAttesterCtype[];
   };
 
-  const onDeleteCtype = async (did: string, ctypeId: string) => {
+  const onListCtypes = async (did: string) => {
+    setLoading(true);
+    const response = await fetch(`${endpoint}/api/attester/ctypes/all/${did}`);
+    const { data } = await response.json();
+    setLoading(false);
+    return data as ICTypeSchema[];
+  };
+
+  const onDeleteAttesterCtype = async (did: string, ctypeId: string) => {
     setLoading(true);
     const response = await fetch(
       `${endpoint}/api/attester/ctypes/${did}/${ctypeId}`, {
@@ -107,9 +116,10 @@ export default function useAttester() {
   };
 
   return {
-    createCtype,
+    createAttesterCtype,
+    onListAttesterCtypes,
     onListCtypes,
-    onDeleteCtype,
+    onDeleteAttesterCtype,
     onListRequests,
     onLoadRequest,
     checkDidAttester,

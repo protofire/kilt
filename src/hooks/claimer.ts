@@ -59,7 +59,8 @@ export default function useClaimer() {
       attesterDid: 'test',
       ctypeName: 'test',
       quote: 10,
-      terms: 'test'
+      terms: 'test',
+      ctypeId: 'telegram'
     }];
     setLoading(false);
     return attesters;
@@ -90,7 +91,8 @@ export default function useClaimer() {
           magna aliqua. Ut enim ad minim veniam, quis nostrud 
           exercitation ullamco laboris nisi ut aliquip ex ea 
           commodo consequat.`,
-      attesterName: `Attester ${did}`
+      attesterName: `Attester ${did}`,
+      ctypeId: 'telegram'
     };
   };
 
