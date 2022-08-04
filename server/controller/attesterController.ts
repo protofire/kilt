@@ -1,4 +1,3 @@
-import { CType, DidUri, ICType } from "@kiltprotocol/sdk-js";
 import { Request, Response } from "express";
 import { attestersWhitelist } from "../constants";
 import { IAttesterCtype } from "../interfaces/attesterCtype";
@@ -66,14 +65,43 @@ export const getCtypes = async (req: Request, res: Response) => {
     });
   }
 
-  if (!did.startsWith('did:kilt:')) {
+  const attester = attestersWhitelist.find(a => a === did);
+  if (!attester) {
+    return res.status(400).json({
+      success: false,
+      msg: 'not a valid attester.'
+    })
+  }
+
+  const ctypes: IAttesterCtype[] = await AttesterCtype.find({attesterDid: did});
+  return res.status(200).json({ data: ctypes ?? [] });
+}
+
+/**
+ * Deletes the provided ctype using the id.
+ * @returns { success: boolean }
+ */
+ export const deleteCtype = async (req: Request, res: Response) => {
+  const { did, id } = req.params;
+
+  if (!id) {
     return res.status(400).json({ 
       success: false, 
-      msg: 'Wrong DiD format' 
+      msg: 'Must provide id parameter.' 
     });
   }
 
-  const getCtypesForAttester = async (did: DidUri) => [] as IAttesterCtype[];
-  const ctypes: IAttesterCtype[] = await getCtypesForAttester(did as DidUri);
-  return res.status(200).json({ data: ctypes });
+  const attester = attestersWhitelist.find(a => a === did);
+  if (!attester) {
+    return res.status(400).json({
+      success: false,
+      msg: 'not a valid attester.'
+    })
+  }
+
+  const result = await AttesterCtype.deleteOne({
+    attesterDid: did,
+    _id: new mongoose.Types.ObjectId(id)
+  });
+  return res.status(200).json({ success: result.acknowledged });
 }
