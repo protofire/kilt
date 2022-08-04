@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { attestersWhitelist } from "../constants";
 import { IAttesterCtype } from "../interfaces/attesterCtype";
 import mongoose from 'mongoose';
+import { attesterList } from "../constants/attesters";
+import { ctypesList } from "../constants/ctypes";
 
 const attesterCtypeSchema = new mongoose.Schema({
   attesterDid: String,
@@ -17,7 +18,7 @@ const AttesterCtype = mongoose.model('AttesterCtype', attesterCtypeSchema);
  */
 export const isAttester = (req: Request, res: Response) => {
   const { did } = req.params;
-  const attester = attestersWhitelist.find(a => a === did);
+  const attester = attesterList.find(a => a === did);
   const isAttester = !!attester;
   return res.status(200).json({ data: { isAttester } });
 }
@@ -29,7 +30,7 @@ export const isAttester = (req: Request, res: Response) => {
 export const createCtype = async (req: Request, res: Response) => {
   const { attesterDid, ctypeName, terms, quote } = req.body;
 
-  const attester = attestersWhitelist.find(a => a === attesterDid);
+  const attester = attesterList.find(a => a === attesterDid);
   if (!attester) {
     return res.status(400).json({
       success: false,
@@ -55,7 +56,7 @@ export const createCtype = async (req: Request, res: Response) => {
  * Gets all the ctypes created by
  * @returns { data: IAttesterCtype[] }
  */
-export const getCtypes = async (req: Request, res: Response) => {
+export const getAttesterCtypes = async (req: Request, res: Response) => {
   const { did } = req.params;
 
   if (!did) {
@@ -65,7 +66,7 @@ export const getCtypes = async (req: Request, res: Response) => {
     });
   }
 
-  const attester = attestersWhitelist.find(a => a === did);
+  const attester = attesterList.find(a => a === did);
   if (!attester) {
     return res.status(400).json({
       success: false,
@@ -75,6 +76,31 @@ export const getCtypes = async (req: Request, res: Response) => {
 
   const ctypes: IAttesterCtype[] = await AttesterCtype.find({attesterDid: did});
   return res.status(200).json({ data: ctypes ?? [] });
+}
+
+/**
+ * Gets all the ctypes
+ * @returns { data: ICTypeSchema[] }
+ */
+ export const getCtypes = async (req: Request, res: Response) => {
+  const { did } = req.params;
+
+  if (!did) {
+    return res.status(400).json({ 
+      success: false, 
+      msg: 'Must provide DiD parameter' 
+    });
+  }
+
+  const attester = attesterList.find(a => a === did);
+  if (!attester) {
+    return res.status(400).json({
+      success: false,
+      msg: 'not a valid attester.'
+    })
+  }
+  
+  return res.status(200).json({ data: ctypesList });
 }
 
 /**
@@ -91,7 +117,7 @@ export const getCtypes = async (req: Request, res: Response) => {
     });
   }
 
-  const attester = attestersWhitelist.find(a => a === did);
+  const attester = attesterList.find(a => a === did);
   if (!attester) {
     return res.status(400).json({
       success: false,

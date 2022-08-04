@@ -10,7 +10,7 @@ import { connect } from "mongoose";
 
 async function connectDB() {
   const uri = process.env.DB_URI;
-  if (!uri) throw Error("DB URI not exists")
+  if (!uri) throw Error("DB URI missing env variable")
   await connect(uri);
 }
 
@@ -28,7 +28,7 @@ async function main() {
   await connectDB();
 
   app.use('/api/claimer', claimerRoute)
-  app.use("/api/attester", attesterRoute);
+  app.use('/api/attester', attesterRoute);
 
   const port = process.env.PORT ?? 8000;
   app.listen(port, () => {
