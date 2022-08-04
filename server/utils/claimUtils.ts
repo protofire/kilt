@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ICredentialByDidResponse, ICredentialEndpointResponse } from "../interfaces/credentialEndpointResponse";
+import { ICredentialEndpointResponse } from "../interfaces/credentialEndpointResponse";
 import { Attestation, Did, DidServiceEndpoint, DidUri, Credential } from "@kiltprotocol/sdk-js";
 
 /**
