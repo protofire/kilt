@@ -1,5 +1,12 @@
 import express from 'express';
-import { isAttester, getAttesterCtypes, createCtype, deleteCtype, getCtypes } from '../controller/attesterController';
+import { 
+  isAttester,
+  getAttesterCtypes,
+  createCtype,
+  deleteCtype,
+  getCtypes
+} from '../controller/attesterController';
+
 const attesterRoute = express.Router()
 
 attesterRoute.get('/isAttester/:did', isAttester);

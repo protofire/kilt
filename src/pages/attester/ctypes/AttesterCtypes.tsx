@@ -8,9 +8,14 @@ import { attesterCtypeToRow } from '../../../interfaces/attester-ctype';
 
 function AttesterCtypes() {
   const navigate = useNavigate();
-  const { onListAttesterCtypes, onDeleteAttesterCtype, loading } = useAttester();
-  const [rows, setRows] = useState<Row[]>([]);
   const { user, loadUser } = useUser();
+  const {
+    onListAttesterCtypes,
+    onDeleteAttesterCtype,
+    loading
+  } = useAttester();
+
+  const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
     loadTable();
@@ -20,7 +25,8 @@ function AttesterCtypes() {
     const currentUser = user ?? loadUser();
     if (!currentUser) return;
     onListAttesterCtypes(currentUser.did)
-      .then((ctypes) => ctypes.map((c) => attesterCtypeToRow(c)))
+      .then((ctypes) =>
+        ctypes.map((c) => attesterCtypeToRow(c)))
       .then(setRows);
   };
 
@@ -35,8 +41,14 @@ function AttesterCtypes() {
         ? <div>Loading...</div>
         : <div className='center'>
           <span className='title'>CTypes & Quotes</span>
-          <Table columns={[{ name: 'Name' }, { name: 'Quote' }, { name: 'Actions' }]}
-            {...{ rows, onDelete }} disabled></Table>
+          <Table
+            columns={[
+              { name: 'Name' },
+              { name: 'Quote' },
+              { name: 'Actions' }]}
+            rows={rows}
+            onDelete={onDelete}
+            disabled />
           <button className='primary' onClick={onAdd}>Add</button>
         </div>
       }

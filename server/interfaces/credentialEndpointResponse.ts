@@ -1,4 +1,4 @@
-import { DidUri, IRequestForAttestation } from "@kiltprotocol/sdk-js"
+import { IRequestForAttestation } from "@kiltprotocol/sdk-js"
 
 interface IMetadataDetial {
   label: string;
