@@ -13,12 +13,16 @@ function AttesterCtypes() {
   const { user, loadUser } = useUser();
 
   useEffect(() => {
+    loadTable();
+  }, []);
+
+  const loadTable = () => {
     const currentUser = user ?? loadUser();
     if (!currentUser) return;
     onListCtypes(currentUser.did)
       .then((ctypes) => ctypes.map((c) => attesterCtypeToRow(c)))
       .then(setRows);
-  }, []);
+  };
 
   const columns = [
     { name: 'Name' },
@@ -28,6 +32,9 @@ function AttesterCtypes() {
 
   const onAdd = () => navigate('create');
 
+  const onDelete = async (id: string) => user &&
+    await onDeleteCtype(user.did, id).then(loadTable);
+
   return (
     <div className='wrapper'>
       <Topbar />
@@ -35,7 +42,7 @@ function AttesterCtypes() {
         ? <div>Loading...</div>
         : <div className='center'>
           <span className='title'>CTypes & Quotes</span>
-          <Table {...{ columns, rows, onDelete: onDeleteCtype }} disabled></Table>
+          <Table {...{ columns, rows, onDelete }} disabled></Table>
           <button className='primary' onClick={onAdd}>Add</button>
         </div>
       }

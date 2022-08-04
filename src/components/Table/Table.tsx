@@ -17,8 +17,8 @@ export interface Row {
 interface Props {
   columns: Column[],
   rows: Row[],
-  onClick?: (id: string | number) => void,
-  onDelete?: (id: string | number) => void,
+  onClick?: (...params: any) => void,
+  onDelete?: (...params: any) => void,
   disabled?: boolean,
 }
 

@@ -1,5 +1,4 @@
 import { Row } from '../components/Table/Table';
-import { formatDid } from '../utils/string';
 
 export interface IAttester {
   did: string;
@@ -7,6 +6,7 @@ export interface IAttester {
 }
 
 export interface IAttesterCtype {
+  _id?: string;
   attesterDid: string;
   ctypeName?: string;
   quote?: number;
@@ -14,9 +14,8 @@ export interface IAttesterCtype {
 }
 
 export const attesterCtypeToRow = (attesterCtype: IAttesterCtype) => ({
-  id: attesterCtype.attesterDid,
+  id: attesterCtype._id,
   values: [
-    { value: formatDid(attesterCtype.attesterDid) },
     { value: attesterCtype.ctypeName },
     { value: attesterCtype.quote + ' KILT' }
   ]

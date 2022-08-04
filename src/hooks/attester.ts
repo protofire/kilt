@@ -19,8 +19,6 @@ export default function useAttester() {
     return success as boolean;
   };
 
-  // List all the CTypes with Quotes that the
-  // attester is allowed to verify.
   const onListCtypes = async (did: string) => {
     setLoading(true);
     const response = await fetch(`${endpoint}/api/attester/ctypes/${did}`);
@@ -29,19 +27,15 @@ export default function useAttester() {
     return data as IAttesterCtype[];
   };
 
-  // Delete the CType quote for the attester.
-  const onDeleteCtype = async (id: string | number) => {
-    /* Delete ctype for attester
-     * method: DELETE
-     * endpoint: /attester/ctyes/:attester_address/:ctype_id
-     * returns: -
-     */
+  const onDeleteCtype = async (did: string, ctypeId: string) => {
     setLoading(true);
-    await new Promise((resolve) => {
-      setTimeout(resolve, 500);
-    });
+    const response = await fetch(
+      `${endpoint}/api/attester/ctypes/${did}/${ctypeId}`, {
+        method: 'DELETE'
+      });
+    const { success } = await response.json();
     setLoading(false);
-    throw Error('not implemented');
+    return success as boolean;
   };
 
   // List the requests created by claimers for
