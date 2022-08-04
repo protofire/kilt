@@ -11,7 +11,8 @@ export default function useAttester() {
     setLoading(true);
     const response = await fetch(`${endpoint}/api/attester/ctypes`, {
       method: 'POST',
-      body: JSON.stringify(ctype)
+      body: JSON.stringify(ctype),
+      headers: { 'Content-type': 'application/json; charset=UTF-8' }
     });
     const { success } = await response.json();
     setLoading(false);

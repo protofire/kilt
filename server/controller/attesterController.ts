@@ -32,11 +32,19 @@ export const createCtype = async (req: Request, res: Response) => {
 
   const attester = attestersWhitelist.find(a => a === attesterDid);
   if (!attester) {
-    res.send(400).json({
+    return res.status(400).json({
       success: false,
-      msg: 'not a valid attester'
+      msg: 'not a valid attester.'
     })
   }
+
+  if (!ctypeName || !terms || !quote) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Incomplete query, you must add ctypeName, terms and quote.'
+    })
+  }
+
   const attesterCtype = new AttesterCtype({ attesterDid, ctypeName, terms, quote });
   const result = await attesterCtype.save();
   const created: IAttesterCtype = result.toJSON();
