@@ -1,4 +1,4 @@
-import { IRequestForAttestation } from "@kiltprotocol/sdk-js"
+import { IRequestForAttestation } from '@kiltprotocol/sdk-js';
 
 interface IMetadataDetial {
   label: string;
@@ -10,7 +10,7 @@ export interface ICredentialEndpointResponse {
 }
 
 export interface ICredentialByDidResponse {
-  attesterDid: string, 
-  label: string, 
+  attesterDid: string,
+  label: string,
   status: string
 }

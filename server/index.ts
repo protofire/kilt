@@ -1,16 +1,16 @@
 
-import express, { Request, Response } from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import bodyParser from "body-parser";
-import { claimerRoute } from "./routes/claimerRoutes";
-import { attesterRoute } from "./routes/attesterRoutes";
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import { claimerRoute } from './routes/claimerRoutes';
+import { attesterRoute } from './routes/attesterRoutes';
 import * as Kilt from '@kiltprotocol/sdk-js';
-import { connect } from "mongoose";
+import { connect } from 'mongoose';
 
 async function connectDB() {
   const uri = process.env.DB_URI;
-  if (!uri) throw Error("DB URI missing env variable")
+  if (!uri) throw Error('DB URI missing env variable');
   await connect(uri);
 }
 
@@ -27,7 +27,7 @@ async function main() {
 
   await connectDB();
 
-  app.use('/api/claimer', claimerRoute)
+  app.use('/api/claimer', claimerRoute);
   app.use('/api/attester', attesterRoute);
 
   const port = process.env.PORT ?? 8000;
@@ -37,4 +37,3 @@ async function main() {
 }
 
 main();
-

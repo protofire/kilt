@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import { IAttesterCtype } from "../interfaces/attesterCtype";
+import { Request, Response } from 'express';
+import { IAttesterCtype } from '../interfaces/attesterCtype';
 import mongoose from 'mongoose';
-import { attesterList } from "../constants/attesters";
-import { ctypesList } from "../constants/ctypes";
+import { attesterList } from '../constants/attesters';
+import { ctypesList } from '../constants/ctypes';
 
 const attesterCtypeSchema = new mongoose.Schema({
   attesterDid: String,
@@ -22,7 +22,7 @@ export const isAttester = (req: Request, res: Response) => {
   const attester = attesterList.find(a => a === did);
   const isAttester = !!attester;
   return res.status(200).json({ data: { isAttester } });
-}
+};
 
 /**
  * Creates a new attester ctype relationship in database.
@@ -36,7 +36,7 @@ export const createCtype = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'not a valid attester.'
-    })
+    });
   }
 
   const ctype = ctypesList.find(c => c.$id === ctypeId);
@@ -44,30 +44,29 @@ export const createCtype = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'You must provide a valid ctypeId'
-    })
+    });
   }
 
   if (!quote || !terms) {
     return res.status(400).json({
       success: false,
       msg: 'You must provide quote and terms'
-    })
+    });
   }
 
   const ctypeName = ctype.title;
 
-  const attesterCtype = new AttesterCtype({ 
-    attesterDid, 
+  const attesterCtype = new AttesterCtype({
+    attesterDid,
     ctypeName,
-    ctypeId, 
-    quote, 
-    terms 
+    ctypeId,
+    quote,
+    terms
   });
   const result = await attesterCtype.save();
   const created: IAttesterCtype = result.toJSON();
   return res.status(200).json({ success: true, data: created });
-}
-
+};
 
 /**
  * Gets all the ctypes created by
@@ -77,9 +76,9 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
   const { did } = req.params;
 
   if (!did) {
-    return res.status(400).json({ 
-      success: false, 
-      msg: 'Must provide DiD parameter' 
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide DiD parameter'
     });
   }
 
@@ -88,18 +87,18 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'not a valid attester.'
-    })
+    });
   }
 
-  const ctypes: IAttesterCtype[] = await AttesterCtype.find({attesterDid: did});
+  const ctypes: IAttesterCtype[] = await AttesterCtype.find({ attesterDid: did });
   return res.status(200).json({ data: ctypes ?? [] });
-}
+};
 
 /**
  * Gets all the ctypes
  * @returns { data: ICTypeSchema[] }
  */
- export const getCtypes = async (req: Request, res: Response) => {
+export const getCtypes = async (req: Request, res: Response) => {
   const { did } = req.params;
 
   const attester = attesterList.find(a => a === did);
@@ -107,17 +106,17 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'not a valid attester.'
-    })
+    });
   }
-  
+
   return res.status(200).json({ data: ctypesList });
-}
+};
 
 /**
  * Deletes the provided ctype using the id.
  * @returns { success: boolean }
  */
- export const deleteCtype = async (req: Request, res: Response) => {
+export const deleteCtype = async (req: Request, res: Response) => {
   const { did, id } = req.params;
 
   const attester = attesterList.find(a => a === did);
@@ -125,14 +124,14 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
     return res.status(400).json({
       success: false,
       msg: 'not a valid attester.'
-    })
+    });
   }
 
   const ctype = ctypesList.find(c => c.$id === id);
   if (!ctype) {
-    return res.status(400).json({ 
-      success: false, 
-      msg: 'Must provide a valid id parameter.' 
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide a valid id parameter.'
     });
   }
 
@@ -141,4 +140,4 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
     ctypeId: id
   });
   return res.status(200).json({ success: result.acknowledged });
-}
+};
