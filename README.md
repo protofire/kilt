@@ -5,10 +5,10 @@ Learn more about attestation [here](https://docs.kilt.io/docs/develop/workshop/a
 
 > :warning: **Disclaimer:** This code is not for production use. It serves as an example workflow for DiDs CTypes attestation.
 
-## About this project
+### About this project
 This is a monorepo project containing a frontend application built using `create-react-app` at the root folder and a backend `node.js` application under the `server` folder.
 
-## Sporran wallet setup
+### Sporran wallet setup
 In order to run and debug the app you will need to setup the `Sporran` testing wallet.
 
 #### Steps
@@ -26,7 +26,40 @@ In order to run and debug the app you will need to setup the `Sporran` testing w
 <img src="./docs/drop_json.png?raw=true" alt="Step 3 Image 3" width="30%"/>
 </div>
 
-## Frontend Available Scripts
+### Running this app
+1. Create **MongoDB** database for storing the attesters and claimers information. You can create it for free using https://cloud.mongodb.com/
+   1. Once you finish the account setup, you can create a database (still using the free tier).
+   2.  Go to **databse &rarr; Connect &rarr; Connect your application**.
+   3.  Save the `uri` string from the example code (important for the next step)
+       ```js
+       const uri = "mongodb+srv://..." // <- copy this string
+       ```
+2. Set the enviroment variables in both *client* and *server* applications.
+   1. Create a `.env.local` file in the root folder of the project and add the following variables:
+   ```bash
+   # Just for local env
+   REACT_APP_SERVER_URL=http://localhost:8000
+   ```
+   2. Create a `.env` file inside the `/server` folder and add the following variables:
+   ```bash
+   PORT=8000
+   DAPP_NAME=kilt
+   WSS_ADDRESS=wss://peregrine.kilt.io/parachain-public-ws
+   ENV=DEV
+   DB_URI=mongodb+srv:... # the URI you copied from mongoDB
+   ```
+3. **Running locally:** Open 2 terminals, one for the *server* app and another for the *client* app. In the first one:
+      ```bash
+      cd server
+      yarn install
+      yarn dev # runs the server in watch mode
+      ```
+      In the second one:
+      ```bash
+      yarn install
+      yarn start # runs the frontend in watch mode
+      ```
+### Frontend Available Scripts
 List of available scripts under the root folder.
 
 1. `yarn install`
@@ -52,19 +85,19 @@ Runs `yarn build` to update `/build` folder, copies the content to `gh-pages` br
 [Link to app](https://protofire.github.io/kilt/)
 
 ## Server Available Scripts
-List of available scripts under the `server` forlder.
+List of available scripts under the `server` folder.
 
 1. `yarn install`
 
-Installs required dependencies for running the app.
+Installs the required dependencies for running the app.
 
 2. `yarn build`
 
-Builds the app for production to the `dist` folder
+Builds the app for production into the `dist` folder
 
 2. `yarn start`
 
-Builds and runs the application under the `dist` folder. 
+Builds and runs the application into the `dist` folder. 
 
 1. `yarn dev`
 
