@@ -32,7 +32,9 @@ function ClaimForm() {
         ? <div> Loading ... </div>
         : <div className='column page'>
           <span className='title'>Claim Your Identity</span>
-          <span className='subtitle'> Attester: <strong>{formatDid(attester?.attesterDid ?? '')}</strong></span>
+          <span className='subtitle'>
+            Attester: <strong>{formatDid(attester?.attesterDid ?? '')}</strong>
+          </span>
           <span className='subtitle'>Terms and Conditions</span>
           <span className='text'>
             {attester?.terms}
@@ -40,7 +42,8 @@ function ClaimForm() {
           <div>
             <hr />
           </div>
-          <label className='subtitle'>Include all the relevant information and/or files for the attester.
+          <label className='subtitle'>
+            Include all the relevant information and/or files for the attester.
             <br />
             <textarea name="introduction" placeholder='Introduce yourself'
               onChange={(e) => onTextChange(e.target.value)} cols={40}></textarea>

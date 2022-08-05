@@ -21,7 +21,7 @@ function ClaimerAttesterList() {
   }, [ user ]);
 
   const attesterCtypeToRow = (attesterCtype: IAttesterCtype) => ({
-    id: attesterCtype.ctypeId,
+    id: attesterCtype._id,
     values: [
       { value: formatDid(attesterCtype.attesterDid) },
       { value: attesterCtype.ctypeName },

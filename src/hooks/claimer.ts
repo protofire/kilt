@@ -62,33 +62,12 @@ export default function useClaimer() {
   };
 
   // load the attester ctype details for claimer
-  const onLoadAttesterCtype = async (did: string) => {
-    /* get attester ctype details
-     * method: GET
-     * endpoint: /attester/ctype/:attester_ctype_id
-     * returns: {
-     *  attester_ctype_id: number,
-     *  attesterName: string,
-     *  ctypeName: string,
-     *  quote: number,
-     *  terms: string,
-     * }
-     */
+  const onLoadAttesterCtype = async (id: string) => {
     setLoading(true);
-    await new Promise((resolve) => {
-      setTimeout(resolve, 500);
-    });
+    const response = await fetch(`${endpoint}/api/claimer/attesters/detail/${id}`);
+    const { data } = await response.json();
     setLoading(false);
-    return {
-      attesterDid: did,
-      terms: `Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-          sed do eiusmod tempor incididunt ut labore et dolore 
-          magna aliqua. Ut enim ad minim veniam, quis nostrud 
-          exercitation ullamco laboris nisi ut aliquip ex ea 
-          commodo consequat.`,
-      attesterName: `Attester ${did}`,
-      ctypeId: 'telegram'
-    };
+    return data as IAttesterCtype;
   };
 
   // creates a new claim request for the attesters

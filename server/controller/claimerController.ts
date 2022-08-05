@@ -9,6 +9,7 @@ import { AttesterCtype } from '../schemas/schemas';
  * Fetchs all the credentials for a claimer.
  * First, itlooks to the endpoints created fetching all the
  * data, and then filters this data to build the credentials.
+ * @returns { success: boolean, data: ICredentialByDidResponse[] }
  */
 export async function getCredentialsByDid(req: Request, res: Response) {
   const { did } = req.params;
@@ -41,6 +42,7 @@ export async function getCredentialsByDid(req: Request, res: Response) {
 
 /**
  * Gets all the AttesterCtypes saved on database.
+ * @returns { success: boolean, data: AttesterCtype[] }
  */
 export async function getAttesterCtypes(req: Request, res: Response) {
   const { did } = req.params;
@@ -61,4 +63,29 @@ export async function getAttesterCtypes(req: Request, res: Response) {
   }
 
   return res.status(200).json({ success: true, data: attesterCtypes});
+}
+
+/**
+ * Gets a single AttesterCtype by id.
+ * @returns { success: boolean, data: AttesterCtype }
+ */
+ export async function getAttesterCtypeDetail(req: Request, res: Response) {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      msg: 'You must provide an id.'
+    });
+  }
+
+  const attesterCtype = await AttesterCtype.findById(id);
+  if (!attesterCtype) {
+    return res.status(404).json({
+      success: false,
+      msg: 'Attester Ctype not found.'
+    });
+  }
+
+  return res.status(200).json({ success: true, data: attesterCtype});
 }
