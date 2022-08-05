@@ -3,6 +3,8 @@ import { ICredentialByDidResponse } from '../interfaces/credentialEndpointRespon
 import { DidUri } from '@kiltprotocol/sdk-js';
 import { buildCredential, getEndpointResponse, getEndpointsFromDid } from '../utils/claimUtils';
 import { AttesterCtype } from '../schemas/schemas';
+import { ctypesList } from '../constants/ctypes';
+import { IAttesterCtype } from '../interfaces/attesterCtype';
 
 
 /**
@@ -80,12 +82,36 @@ export async function getAttesterCtypes(req: Request, res: Response) {
   }
 
   const attesterCtype = await AttesterCtype.findById(id);
-  if (!attesterCtype) {
+  const ctype = ctypesList.find(c => c.$id === attesterCtype?.ctypeId);
+  if (!attesterCtype || !ctype) {
     return res.status(404).json({
       success: false,
       msg: 'Attester Ctype not found.'
     });
   }
 
-  return res.status(200).json({ success: true, data: attesterCtype});
+  // sets properties to fill by claimer
+  const attesterCtypeResponse: IAttesterCtype = {
+    ...attesterCtype.toJSON(),
+    properties: ctype.properties
+  };
+  return res.status(200).json({ success: true, data: attesterCtypeResponse});
+}
+
+/**
+ * Creates and submits a new request for attestation.
+ */
+export async function createAttesterRequest(req: Request, res: Response) {
+  const { claimerDid , attesterCtype, form } = req.body;
+
+  if (!claimerDid || !attesterCtype || !form) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide claimerDid, attesterCtype and form.'
+    });
+  }
+
+  return res.status(200).json({
+    success: true
+  });
 }

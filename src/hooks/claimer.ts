@@ -77,7 +77,7 @@ export default function useClaimer() {
     form: any
   ) => {
     setLoading(true);
-    const response = await fetch(`${endpoint}/api/attester/request/`, {
+    const response = await fetch(`${endpoint}/api/claimer/attesters/request/`, {
       method: 'POST',
       body: JSON.stringify({ claimerDid, attesterCtype, form }),
       headers: { 'Content-type': 'application/json; charset=UTF-8' }
