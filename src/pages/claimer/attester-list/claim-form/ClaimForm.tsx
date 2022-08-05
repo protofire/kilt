@@ -2,28 +2,42 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Topbar from '../../../../components/Topbar/Topbar';
 import useClaimer from '../../../../hooks/claimer';
+import useUser from '../../../../hooks/user';
 import { IAttesterCtype } from '../../../../interfaces/attester-ctype';
 import { formatDid } from '../../../../utils/string';
 
 function ClaimForm() {
   const params = useParams();
   const navigate = useNavigate();
+  const { user } = useUser();
   const { submitClaim, onLoadAttesterCtype, loading } = useClaimer();
 
-  const [files, setFiles] = useState<FileList | null>(null);
-  const [text, setText] = useState<string>('');
-  const [attester, setAttester] = useState<IAttesterCtype | null>(null);
+  const [attesterCtype, setAttesterCtype] = useState<IAttesterCtype | null>(null);
+  const [properties, setProperties] = useState<string[]>([]);
+  const [form, setForm] = useState<any>({});
 
   useEffect(() => {
     if (!params.id) return goBack();
-    onLoadAttesterCtype(params.id).then(setAttester);
+    onLoadAttesterCtype(params.id).then((a) => {
+      setAttesterCtype(a);
+      const propertyList = [...Object.keys(a.properties ?? {})];
+      setProperties(propertyList);
+    });
   }, []);
 
-  const onFileChange = (files: FileList | null) => setFiles(files);
-  const onTextChange = (text: string) => setText(text);
-
   const goBack = () => navigate('/claimer', { replace: true });
-  const onSubmit = () => submitClaim(text, files).then(goBack);
+
+  const onSubmit = async () => {
+    if (!user || !attesterCtype) return;
+    await submitClaim(user.did, attesterCtype, form);
+    goBack();
+  };
+
+  const onChangeInput = (property: string, value: string) =>
+    setForm((form: any) => {
+      form[property] = value;
+      return form;
+    });
 
   return (
     <div className='wrapper'>
@@ -32,24 +46,39 @@ function ClaimForm() {
         ? <div> Loading ... </div>
         : <div className='column page'>
           <span className='title'>Claim Your Identity</span>
-          <span className='subtitle'>
-            Attester: <strong>{formatDid(attester?.attesterDid ?? '')}</strong>
-          </span>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span className='subtitle'>
+              Attester:
+              <strong>
+                {attesterCtype &&
+                  ` ${formatDid(attesterCtype.attesterDid)} (${attesterCtype.ctypeName})`}
+              </strong>
+            </span>
+            <span className='subtitle'>
+              Quote: {attesterCtype && ` ${attesterCtype.quote} KILT` }
+            </span>
+          </div>
           <span className='subtitle'>Terms and Conditions</span>
-          <span className='text'>
-            {attester?.terms}
-          </span>
+          <div className='text'>
+            {attesterCtype && attesterCtype.terms}
+          </div>
           <div>
             <hr />
           </div>
-          <label className='subtitle'>
-            Include all the relevant information and/or files for the attester.
-            <br />
-            <textarea name="introduction" placeholder='Introduce yourself'
-              onChange={(e) => onTextChange(e.target.value)} cols={40}></textarea>
-          </label>
-          <div>
-            <input type="file" onChange={(e) => onFileChange(e.target.files)} multiple/>
+          <div className='subtitle'>
+            <span>
+              Fill the required fields to request
+            </span>
+            <br /><br />
+            <span className='text'>
+              {properties.map(k =>
+                <input
+                  key={k}
+                  placeholder={k}
+                  onChange={(e) => onChangeInput(k, e.target.value)}
+                />)}
+            </span>
+            <br /><br />
           </div>
           <div>
             <button className='secondary' onClick={goBack}>Cancel</button>

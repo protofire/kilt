@@ -17,7 +17,8 @@ function Connect() {
   };
 
   useEffect(() => {
-    setDid(user?.did ?? '');
+    if (!user) return;
+    setDid(user.did);
   }, [ user ]);
 
   return (

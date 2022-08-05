@@ -71,25 +71,20 @@ export default function useClaimer() {
   };
 
   // creates a new claim request for the attesters
-  const submitClaim = async (text: string, files: FileList | null) => {
-    /* creates a new request for attesters.
-     * Will be added as a new message to the websocket - pub/sub connection
-     * method: POST
-     * endpoint: /attester/request/
-     * body: {
-     *  claimerAddress: string,
-     *  ctype_id: number,
-     *  claimerText: string,
-     *  files: [File, ...],
-     * }
-     * returns: -
-     */
+  const submitClaim = async (
+    claimerDid: string,
+    attesterCtype: IAttesterCtype,
+    form: any
+  ) => {
     setLoading(true);
-    await new Promise((resolve) => {
-      setTimeout(resolve, 500);
+    const response = await fetch(`${endpoint}/api/attester/request/`, {
+      method: 'POST',
+      body: JSON.stringify({ claimerDid, attesterCtype, form }),
+      headers: { 'Content-type': 'application/json; charset=UTF-8' }
     });
+    const { success } = await response.json();
     setLoading(false);
-    return { success: true };
+    return success as boolean;
   };
 
   return {
