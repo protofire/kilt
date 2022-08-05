@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Table, { Row } from '../../components/Table/Table';
 import Topbar from '../../components/Topbar/Topbar';
+import { statusToCeil } from '../../constants/claim-status';
 import useClaimer from '../../hooks/claimer';
 import useUser from '../../hooks/user';
-import { credentialToRow, ICredential } from '../../interfaces/credential';
+import { ICredential } from '../../interfaces/credential';
+import { formatDid } from '../../utils/string';
 
 function Claimer() {
   const navigate = useNavigate();
@@ -19,6 +21,15 @@ function Claimer() {
       .then((credentials: ICredential[]) =>
         setRows([...credentials.map(credentialToRow)]));
   }, []);
+
+  const credentialToRow = (credential: ICredential) => ({
+    id: credential.id,
+    values: [
+      { value: credential.label },
+      { value: formatDid(credential.attesterDid) },
+      statusToCeil[credential.status]
+    ]
+  }) as Row;
 
   const columns = [
     { name: 'CType' },

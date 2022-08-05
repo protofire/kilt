@@ -1,17 +1,8 @@
 import { Request, Response } from 'express';
 import { IAttesterCtype } from '../interfaces/attesterCtype';
-import mongoose from 'mongoose';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
-
-const attesterCtypeSchema = new mongoose.Schema({
-  attesterDid: String,
-  ctypeName: String,
-  ctypeId: String,
-  quote: Number,
-  terms: String
-});
-const AttesterCtype = mongoose.model('AttesterCtype', attesterCtypeSchema);
+import { AttesterCtype } from '../schemas/schemas';
 
 /**
  * Checks wheter the provided DiD is an attester or not.
@@ -63,7 +54,15 @@ export const createCtype = async (req: Request, res: Response) => {
     quote,
     terms
   });
-  const result = await attesterCtype.save();
+
+  const result = await attesterCtype.save()
+  if (!result) {
+    return res.status(400).json({
+      success: false,
+      msg: 'error connecting database'
+    });
+  }
+
   const created: IAttesterCtype = result.toJSON();
   return res.status(200).json({ success: true, data: created });
 };
