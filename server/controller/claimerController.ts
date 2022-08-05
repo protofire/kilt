@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import { ICredentialByDidResponse } from '../interfaces/credentialEndpointResponse';
-import { DidUri } from '@kiltprotocol/sdk-js';
-import { buildCredential, getEndpointResponse, getEndpointsFromDid } from '../utils/claimUtils';
+import { Claim, CType, DidUri, RequestForAttestation } from '@kiltprotocol/sdk-js';
+import { buildCredential, getEndpointResponse, getEndpointsFromDid, getFullDidDetails, keystoreSigner } from '../kilt/kiltUtils';
 import { AttesterCtype } from '../schemas/schemas';
 import { ctypesList } from '../constants/ctypes';
 import { IAttesterCtype } from '../interfaces/attesterCtype';
-
 
 /**
  * Fetchs all the credentials for a claimer.
@@ -102,7 +101,11 @@ export async function getAttesterCtypes(req: Request, res: Response) {
  * Creates and submits a new request for attestation.
  */
 export async function createAttesterRequest(req: Request, res: Response) {
-  const { claimerDid , attesterCtype, form } = req.body;
+  const { claimerDid , attesterCtype, form }: {
+    claimerDid: DidUri,
+    attesterCtype: IAttesterCtype,
+    form: any
+  } = req.body;
 
   if (!claimerDid || !attesterCtype || !form) {
     return res.status(400).json({
@@ -111,7 +114,43 @@ export async function createAttesterRequest(req: Request, res: Response) {
     });
   }
 
+  const ctypeSchema = ctypesList.find(c => c.$id === attesterCtype.ctypeId); 
+  if (!ctypeSchema) {
+    return res.status(400).json({
+      success: false,
+      msg: 'The provided ctype is invalid'
+    });
+  }
+
+  const owner = process.env.OWNER as DidUri;
+  if (!owner) {
+    return res.status(400).json({
+      success: false,
+      msg: 'The owner did not found'
+    });
+  }
+
+
+  const ctype = CType.fromSchema(ctypeSchema, owner);
+  const claim = Claim.fromCTypeAndClaimContents(ctype, form, claimerDid);
+  const requestForAttestation = RequestForAttestation.fromClaim(claim);
+
+  const fullDidDetails = await getFullDidDetails(claimerDid);
+  if (!fullDidDetails) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Could not load claimer DiD details'
+    });
+  }
+
+  const signedRequest = await requestForAttestation.signWithDidKey(
+    keystoreSigner,
+    fullDidDetails,
+    fullDidDetails?.authenticationKey.id
+  );
+
   return res.status(200).json({
-    success: true
+    success: true,
+    data: signedRequest
   });
 }

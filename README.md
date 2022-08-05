@@ -46,7 +46,8 @@ In order to run and debug the app you will need to setup the `Sporran` testing w
    DAPP_NAME=kilt
    WSS_ADDRESS=wss://peregrine.kilt.io/parachain-public-ws
    ENV=DEV
-   DB_URI=mongodb+srv:... # the URI you copied from mongoDB
+   DB_URI=mongodb+srv:... # the URI you copied from mongoDB.
+   OWNER=did:kilt:... # App owner full DiD.
    ```
 3. **Running locally:** Open 2 terminals, one for the *server* app and another for the *client* app. In the first one:
       ```bash

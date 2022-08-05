@@ -1,6 +1,14 @@
 import axios from 'axios';
 import { ICredentialEndpointResponse } from '../interfaces/credentialEndpointResponse';
-import { Attestation, Did, DidServiceEndpoint, DidUri, Credential } from '@kiltprotocol/sdk-js';
+import { 
+  Attestation,
+  Did,
+  DidServiceEndpoint,
+  DidUri,
+  Credential,
+  KeystoreSigningData,
+  KeystoreSigner
+} from '@kiltprotocol/sdk-js';
 
 /**
  *  set of utilities for handling sdk operations for claims.
@@ -11,9 +19,17 @@ class Status {
   static unverified = 'unverified';
 }
 
+const getFullDidDetails = async (did: DidUri) => {
+  const fullDidDetails = await Did.FullDidDetails.fromChainInfo(did);
+  return fullDidDetails;
+}
+
 const getEndpointsFromDid = async (did: DidUri) => {
-  const didDocument = await Did.DidResolver.resolveDoc(did as DidUri);
-  const endpoints = didDocument?.details?.getEndpoints();
+  const didDocument = await Did.DidResolver.resolveDoc(did);
+  const details = didDocument?.details;
+  if (!details) return [];
+
+  const endpoints = details?.getEndpoints();
   return endpoints;
 };
 
@@ -49,4 +65,13 @@ const buildCredential = async (endpointData: ICredentialEndpointResponse) => {
   };
 };
 
-export { getEndpointsFromDid, getEndpointResponse, buildCredential };
+const keystoreSigner: KeystoreSigner = {
+  sign: async (signData: KeystoreSigningData<any>) => {
+    return {
+      alg: signData.alg,
+      data: signData.data
+    }
+  }
+}
+
+export { getEndpointsFromDid, getEndpointResponse, buildCredential, getFullDidDetails, keystoreSigner };
