@@ -24,7 +24,9 @@ const getEndpointResponse = async (endpoint: DidServiceEndpoint) => {
 };
 
 const buildCredential = async (endpointData: ICredentialEndpointResponse) => {
-  const attestation = await Attestation.query(endpointData.credential.rootHash);
+  const attestation = await Attestation.query(
+    endpointData.credential.rootHash
+  );
   if (!attestation) {
     return {
       attesterDid: '',
@@ -32,12 +34,18 @@ const buildCredential = async (endpointData: ICredentialEndpointResponse) => {
       status: Status.unverified
     };
   }
-  const credential = Credential.fromRequestAndAttestation(endpointData.credential, attestation);
-  const isVerified = await credential.verify();
+
+  const credential = Credential.fromRequestAndAttestation(
+    endpointData.credential,
+    attestation
+  );
+
   return {
     attesterDid: attestation.owner,
     label: endpointData.metadata?.label,
-    status: isVerified ? Status.verified : Status.unverified
+    status: !credential.attestation.revoked
+      ? Status.verified
+      : Status.unverified
   };
 };
 
