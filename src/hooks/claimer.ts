@@ -53,17 +53,12 @@ export default function useClaimer() {
   };
 
   // list all the attesters for claimer
-  const onListAttesters = async (): Promise<IAttesterCtype[]> => {
+  const onListAttesters = async (did: string) => {
     setLoading(true);
-    const attesters: IAttesterCtype[] = [{
-      attesterDid: 'test',
-      ctypeName: 'test',
-      quote: 10,
-      terms: 'test',
-      ctypeId: 'telegram'
-    }];
+    const response = await fetch(`${endpoint}/api/claimer/attesters/${did}`);
+    const { data } = await response.json();
     setLoading(false);
-    return attesters;
+    return data as IAttesterCtype[];
   };
 
   // load the attester ctype details for claimer

@@ -4,7 +4,7 @@ import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useAttester from '../../../hooks/attester';
 import useUser from '../../../hooks/user';
-import { attesterCtypeToRow } from '../../../interfaces/attester-ctype';
+import { IAttesterCtype } from '../../../interfaces/attester-ctype';
 
 function AttesterCtypes() {
   const navigate = useNavigate();
@@ -20,6 +20,14 @@ function AttesterCtypes() {
   useEffect(() => {
     loadTable();
   }, []);
+
+  const attesterCtypeToRow = (attesterCtype: IAttesterCtype) => ({
+    id: attesterCtype.ctypeId,
+    values: [
+      { value: attesterCtype.ctypeName },
+      { value: attesterCtype.quote + ' KILT' }
+    ]
+  }) as Row;
 
   const loadTable = () => {
     const currentUser = user ?? loadUser();
