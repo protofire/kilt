@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onListRequests } from '../../../api/attester/listRequests';
-import { statusToCeil } from '../../../constants/claim-status';
 import { IAttesterRequest } from '../../../interfaces/attesterRequest';
 import { formatDidUri } from '../../../utils/formatDidUri';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useUser from '../../../hooks/user';
+import { getColorByStatus, getLabelByStatus } from '../../../utils/requestStatus';
 
 function AttesterRequests() {
   const navigate = useNavigate();
@@ -28,7 +28,10 @@ function AttesterRequests() {
     values: [
       { value: formatDidUri(request.claimerDidUri) },
       { value: request.ctypeName },
-      statusToCeil[request.status]
+      {
+        value: getLabelByStatus(request.status),
+        color: getColorByStatus(request.status)
+      }
     ]
   });
 

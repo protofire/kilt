@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { onListCredentials } from '../../api/claimer/listCredentials';
 import Table, { Row } from '../../components/Table/Table';
 import Topbar from '../../components/Topbar/Topbar';
-import { statusToCeil } from '../../constants/claim-status';
 import useUser from '../../hooks/user';
 import { ICredential } from '../../interfaces/credential';
 import { formatDidUri } from '../../utils/formatDidUri';
+import { getColorByStatus, getLabelByStatus } from '../../utils/requestStatus';
 
 function Claimer() {
   const navigate = useNavigate();
@@ -30,7 +30,10 @@ function Claimer() {
     values: [
       { value: credential.label },
       { value: formatDidUri(credential.attesterDidUri) },
-      statusToCeil[credential.status]
+      {
+        value: getLabelByStatus(credential.status),
+        color: getColorByStatus(credential.status)
+      }
     ]
   }) as Row;
 

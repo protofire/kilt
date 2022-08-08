@@ -4,6 +4,7 @@ import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
 import { AttesterCtype } from '../schemas/attesterCtype';
 import { RequestAttestation } from '../schemas/requestAttestation';
+import { IRequestDetailResponse } from '../interfaces/requestDetail';
 
 /**
  * Checks wheter the provided DiD is an attester or not.
@@ -161,6 +162,12 @@ export const getRequests = async (req: Request, res: Response) => {
   const ctypesToAttest = await AttesterCtype.find({
     attesterDidUri: did
   });
+  if (!ctypesToAttest) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Ctype to attest not found.'
+    });
+  }
 
   const ctypeIds = ctypesToAttest.map(cta => cta.ctypeId);
 
@@ -175,4 +182,49 @@ export const getRequests = async (req: Request, res: Response) => {
   }));
 
   return res.status(200).json({ success: true, data });
+};
+
+export const getRequestDetail = async (req: Request, res: Response) => {
+  const { id, did } = req.params;
+
+  const request = await RequestAttestation.findById(id);
+  if (!request) {
+    return res.status(404).json({
+      success: false,
+      msg: 'Request for attestation not found.'
+    });
+  }
+
+  const attesterCtype = await AttesterCtype.findOne({
+    ctypeId: request?.ctypeId,
+    attesterDidUri: did
+  });
+  if (!attesterCtype) {
+    return res.status(404).json({
+      success: false,
+      msg: 'Attester ctype not found.'
+    });
+  }
+
+  const ctype = ctypesList.find(c => c.$id === request?.ctypeId);
+  if (!ctype) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Invalid ctype id'
+    });
+  }
+
+  const data: IRequestDetailResponse = {
+    _id: request._id.toString(),
+    claimerDidUri: request?.claimerDid,
+    ctypeName: ctype?.title,
+    terms: attesterCtype?.terms,
+    form: request.request.claim.contents,
+    status: request.status
+  };
+
+  return res.status(200).json({
+    success: true,
+    data
+  });
 };
