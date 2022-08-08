@@ -1,9 +1,7 @@
 export interface IRequest {
-  id: number;
-  address: string;
-  status: string;
-  ctype: string;
-  terms: string;
-  claimerText: string;
-  files: string[];
+  readonly id: number;
+  readonly address: string;
+  readonly status: string;
+  readonly ctype: string;
+  readonly terms: string;
 }

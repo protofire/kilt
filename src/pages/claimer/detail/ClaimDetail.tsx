@@ -26,14 +26,6 @@ function ClaimDetail() {
           </span>
           <span className='subtitle'>Terms and Conditions</span>
           <span className='text'>{credential?.terms}</span>
-          <div><hr /></div>
-          <label className='subtitle'>Intro Text<br />
-            <div className='text'>{credential?.claimerText}</div>
-          </label>
-          <div>
-            <div className='subtitle'>Files</div>
-            <ul> {credential?.files.map(f => <li key={f.url}>{f.name}</li>)} </ul>
-          </div>
         </div>}
     </div>
   );

@@ -1,6 +1,7 @@
+import { DidUri } from '@kiltprotocol/sdk-js';
 import { useState } from 'react';
 import { IAttesterCtype } from '../interfaces/attester-ctype';
-import { FileURL, IAttestedCredential } from '../interfaces/credential';
+import { IAttestedCredential } from '../interfaces/credential';
 
 export default function useClaimer() {
   const [ loading, setLoading ] = useState(false);
@@ -38,7 +39,7 @@ export default function useClaimer() {
     setLoading(false);
     return {
       id: 'someid',
-      attesterDid: 'some did',
+      attesterDidUri: 'kilt:did:...' as DidUri,
       attesterName: 'Attester 1',
       ctypeName: 'CType 1',
       status: 'verified',
@@ -47,15 +48,14 @@ export default function useClaimer() {
         magna aliqua. Ut enim ad minim veniam, quis nostrud 
         exercitation ullamco laboris nisi ut aliquip ex ea 
         commodo consequat.`,
-      claimerText: 'some text from claimer',
-      files: [{ name: 'file1.jpeg', url: 'http://something' }] as FileURL[]
+      claimerText: 'some text from claimer'
     } as IAttestedCredential;
   };
 
   // list all the attesters for claimer
-  const onListAttesters = async (did: string) => {
+  const onListAttesters = async (didUri: DidUri) => {
     setLoading(true);
-    const response = await fetch(`${endpoint}/api/claimer/attesters/${did}`);
+    const response = await fetch(`${endpoint}/api/claimer/attesters/${didUri}`);
     const { data } = await response.json();
     setLoading(false);
     return data as IAttesterCtype[];
@@ -72,14 +72,14 @@ export default function useClaimer() {
 
   // creates a new claim request for the attesters
   const submitClaim = async (
-    claimerDid: string,
+    claimerDidUri: DidUri,
     attesterCtype: IAttesterCtype,
     form: any
   ) => {
     setLoading(true);
     const response = await fetch(`${endpoint}/api/claimer/attesters/request/`, {
       method: 'POST',
-      body: JSON.stringify({ claimerDid, attesterCtype, form }),
+      body: JSON.stringify({ claimerDidUri, attesterCtype, form }),
       headers: { 'Content-type': 'application/json; charset=UTF-8' }
     });
     const { success } = await response.json();

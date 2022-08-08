@@ -1,45 +1,16 @@
-import { ICTypeSchema } from '@kiltprotocol/sdk-js';
+import { DidUri } from '@kiltprotocol/sdk-js';
 import { useState } from 'react';
 import { statusToCeil } from '../constants/claim-status';
-import { IAttesterCtype } from '../interfaces/attester-ctype';
 
 export default function useAttester() {
   const [ loading, setLoading ] = useState(false);
 
   const endpoint = process.env.REACT_APP_SERVER_URL ?? 'http://localhost:8000';
 
-  const createAttesterCtype = async (ctype: IAttesterCtype) => {
-    setLoading(true);
-    const response = await fetch(`${endpoint}/api/attester/ctypes`, {
-      method: 'POST',
-      body: JSON.stringify(ctype),
-      headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const { success } = await response.json();
-    setLoading(false);
-    return success as boolean;
-  };
-
-  const onListAttesterCtypes = async (did: string) => {
-    setLoading(true);
-    const response = await fetch(`${endpoint}/api/attester/ctypes/${did}`);
-    const { data } = await response.json();
-    setLoading(false);
-    return data as IAttesterCtype[];
-  };
-
-  const onListCtypes = async (did: string) => {
-    setLoading(true);
-    const response = await fetch(`${endpoint}/api/attester/ctypes/all/${did}`);
-    const { data } = await response.json();
-    setLoading(false);
-    return data as ICTypeSchema[];
-  };
-
-  const onDeleteAttesterCtype = async (did: string, ctypeId: string) => {
+  const onDeleteAttesterCtype = async (didUri: DidUri, ctypeId: string) => {
     setLoading(true);
     const response = await fetch(
-      `${endpoint}/api/attester/ctypes/${did}/${ctypeId}`, {
+      `${endpoint}/api/attester/ctypes/${didUri}/${ctypeId}`, {
         method: 'DELETE'
       });
     const { success } = await response.json();
@@ -50,17 +21,6 @@ export default function useAttester() {
   // List the requests created by claimers for
   // attestation.
   const onListRequests = async () => {
-    /* uses the attester address to fetch the claim requests in real time.
-     * method: Web socket - pub/sub connection
-     * endpoint: /attester/request/:attester_address
-     * returns:
-     * [{
-     *  id: number,
-     *  claimer_address: string,
-     *  ctype_name: string,
-     *  status: string
-     * }, ...]
-     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -76,19 +36,6 @@ export default function useAttester() {
   // Loads detailed information about
   // the claim request for attestation
   const onLoadRequest = async (id: number) => {
-    /*
-     * method: GET
-     * endpoint: /attester/request/:claim_id
-     * returns: {
-     *  id: number,
-     *  claimerAddress: string,
-     *  status: string,
-     *  ctypeName: string,
-     *  ctypeTerms: string,
-     *  claimerText: string,
-     *  files: [{name: string, url: string}, ...]
-     * }
-     */
     setLoading(true);
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
@@ -109,16 +56,13 @@ export default function useAttester() {
     };
   };
 
-  const checkDidAttester = async (did: string) => {
-    const response = await fetch(`${endpoint}/api/attester/isAttester/${did}`);
+  const checkDidAttester = async (didUri: DidUri) => {
+    const response = await fetch(`${endpoint}/api/attester/isAttester/${didUri}`);
     const { data } = await response.json();
     return data?.isAttester;
   };
 
   return {
-    createAttesterCtype,
-    onListAttesterCtypes,
-    onListCtypes,
     onDeleteAttesterCtype,
     onListRequests,
     onLoadRequest,

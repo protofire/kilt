@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { DidUri } from '@kiltprotocol/sdk-js';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/user';
 
@@ -6,25 +7,30 @@ function Connect() {
   const navigate = useNavigate();
   const { login, logout, user } = useUser();
 
-  const [did, setDid] = useState<string>('');
+  const [didUri, setDidUri] = useState<DidUri>();
+
+  useEffect(() => {
+    if (!user) return;
+    setDidUri(user.didUri);
+  }, [ user ]);
 
   const connect = async () => {
-    const currentUser = user ?? await login(did);
+    if (!didUri) return;
+    const currentUser = user ?? await login(didUri);
     if (!currentUser) throw Error('Could not login user');
 
     if (currentUser.isAttester) navigate('/select-profile');
     else navigate('/claimer');
   };
 
-  useEffect(() => {
-    if (!user) return;
-    setDid(user.did);
-  }, [ user ]);
+  const handleDidUriChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setDidUri(e.target.value as DidUri);
+  };
 
   return (
     <div className='wrapper'>
       <div className='center column'>
-        <input type="text" value={did} placeholder={'did'} onChange={(e) => setDid(e.target.value)} />
+        <input type="text" value={didUri} placeholder={'DiD Uri'} onChange={handleDidUriChange} />
         <button className='primary' onClick={connect}>
           Connect
         </button>

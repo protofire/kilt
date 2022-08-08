@@ -5,7 +5,7 @@ import Topbar from '../../../components/Topbar/Topbar';
 import useClaimer from '../../../hooks/claimer';
 import useUser from '../../../hooks/user';
 import { IAttesterCtype } from '../../../interfaces/attester-ctype';
-import { formatDid } from '../../../utils/string';
+import { formatDidUri } from '../../../utils/formatDidUri';
 
 function ClaimerAttesterList() {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ function ClaimerAttesterList() {
 
   useEffect(() => {
     if (!user) return;
-    onListAttesters(user.did).then((attesters: IAttesterCtype[]) => {
+    onListAttesters(user.didUri).then((attesters: IAttesterCtype[]) => {
       setRows([...attesters.map(attesterCtypeToRow)]);
     });
   }, [ user ]);
@@ -23,7 +23,7 @@ function ClaimerAttesterList() {
   const attesterCtypeToRow = (attesterCtype: IAttesterCtype) => ({
     id: attesterCtype._id,
     values: [
-      { value: formatDid(attesterCtype.attesterDid) },
+      { value: formatDidUri(attesterCtype.attesterDidUri) },
       { value: attesterCtype.ctypeName },
       { value: attesterCtype.quote + ' KILT' }
     ]

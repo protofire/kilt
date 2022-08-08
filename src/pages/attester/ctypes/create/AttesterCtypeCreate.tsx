@@ -1,12 +1,12 @@
 import { ICTypeSchema } from '@kiltprotocol/sdk-js';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAttester from '../../../../hooks/attester';
+import { createAttesterCtype } from '../../../../api/attester/createAttesterCtype';
+import { onListCtypes } from '../../../../api/ctypes/listCtypes';
 import useUser from '../../../../hooks/user';
 
 function AttesterCtypeCreate() {
   const { user } = useUser();
-  const { createAttesterCtype, onListCtypes } = useAttester();
   const navigate = useNavigate();
 
   const [ctypes, setCtypes] = useState<ICTypeSchema[]>([]);
@@ -15,21 +15,31 @@ function AttesterCtypeCreate() {
   const [terms, setTerms] = useState<string>();
 
   useEffect(() => {
-    if (!user) return;
-    onListCtypes(user.did).then(setCtypes);
+    user && onListCtypes(user.didUri).then(setCtypes);
   }, [ user ]);
 
+  const handleCtypeChanged = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCtypeId(e.target.value);
+  };
+
+  const handleQuoteChanged = (e: ChangeEvent<HTMLInputElement>) => {
+    setQuote(Number(e.target.value));
+  };
+
+  const handleTermsChanged = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setTerms(e.target.value);
+  };
+
   const onSubmit = async () => {
-    const attesterDid = user?.did;
     const selectedCtype = ctypes.find(c => c.$id === selectedCtypeId);
-    if (!selectedCtypeId || !selectedCtype || !quote || !terms || !attesterDid) return;
+    if (!selectedCtypeId || !selectedCtype || !quote || !terms || !user?.didUri) return;
 
     const success = await createAttesterCtype({
       ctypeId: selectedCtypeId,
       ctypeName: selectedCtype.title,
       quote,
       terms,
-      attesterDid
+      attesterDidUri: user?.didUri
     });
     if (success) navigate(-1);
   };
@@ -39,17 +49,17 @@ function AttesterCtypeCreate() {
       <div className='center'>
         <div className='column'>
           <span className='title'>Create quote for CType</span>
-          <select onChange={(e) => setSelectedCtypeId(e.target.value)}>
+          <select onChange={handleCtypeChanged}>
             {ctypes.map(c =>
               <option key={c.$id} value={c.$id}>{c.title}</option>)}
           </select>
           <input
             type="number"
-            onChange={e => setQuote(Number(e.target.value))}
+            onChange={handleQuoteChanged}
             placeholder='Quote (KILT)' />
           <textarea
             placeholder='Terms and Conditions'
-            onChange={e => setTerms(e.target.value)}
+            onChange={handleTermsChanged}
             cols={40}
             rows={5}/>
           <button className='primary' onClick={onSubmit}>Create</button>

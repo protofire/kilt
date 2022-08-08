@@ -4,7 +4,7 @@ import Topbar from '../../../../components/Topbar/Topbar';
 import useClaimer from '../../../../hooks/claimer';
 import useUser from '../../../../hooks/user';
 import { IAttesterCtype } from '../../../../interfaces/attester-ctype';
-import { formatDid } from '../../../../utils/string';
+import { formatDidUri } from '../../../../utils/formatDidUri';
 
 function ClaimForm() {
   const params = useParams();
@@ -29,7 +29,7 @@ function ClaimForm() {
 
   const onSubmit = async () => {
     if (!user || !attesterCtype) return;
-    await submitClaim(user.did, attesterCtype, form);
+    await submitClaim(user.didUri, attesterCtype, form);
     goBack();
   };
 
@@ -51,11 +51,11 @@ function ClaimForm() {
               Attester:
               <strong>
                 {attesterCtype &&
-                  ` ${formatDid(attesterCtype.attesterDid)} (${attesterCtype.ctypeName})`}
+                  ` ${formatDidUri(attesterCtype.attesterDidUri)} (${attesterCtype.ctypeName})`}
               </strong>
             </span>
             <span className='subtitle'>
-              Quote: {attesterCtype && ` ${attesterCtype.quote} KILT` }
+              Quote: {attesterCtype && ` ${attesterCtype.quote} KILT`}
             </span>
           </div>
           <span className='subtitle'>Terms and Conditions</span>
@@ -82,7 +82,7 @@ function ClaimForm() {
           </div>
           <div>
             <button className='secondary' onClick={goBack}>Cancel</button>
-            <button className='primary'onClick={onSubmit}>Submit</button>
+            <button className='primary' onClick={onSubmit}>Submit</button>
           </div>
         </div>}
     </div>

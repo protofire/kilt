@@ -6,7 +6,7 @@ import { statusToCeil } from '../../constants/claim-status';
 import useClaimer from '../../hooks/claimer';
 import useUser from '../../hooks/user';
 import { ICredential } from '../../interfaces/credential';
-import { formatDid } from '../../utils/string';
+import { formatDidUri } from '../../utils/formatDidUri';
 
 function Claimer() {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ function Claimer() {
   useEffect(() => {
     const currentUser = user ?? loadUser();
     if (!currentUser) return;
-    onListCredentials(currentUser.did)
+    onListCredentials(currentUser.didUri)
       .then((credentials: ICredential[]) =>
         setRows([...credentials.map(credentialToRow)]));
   }, []);
@@ -26,7 +26,7 @@ function Claimer() {
     id: credential.id,
     values: [
       { value: credential.label },
-      { value: formatDid(credential.attesterDid) },
+      { value: formatDidUri(credential.attesterDidUri) },
       statusToCeil[credential.status]
     ]
   }) as Row;

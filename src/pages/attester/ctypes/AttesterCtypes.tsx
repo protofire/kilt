@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { onListAttesterCtypes } from '../../../api/attester/listAttesterCtypes';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useAttester from '../../../hooks/attester';
@@ -10,7 +11,6 @@ function AttesterCtypes() {
   const navigate = useNavigate();
   const { user, loadUser } = useUser();
   const {
-    onListAttesterCtypes,
     onDeleteAttesterCtype,
     loading
   } = useAttester();
@@ -32,7 +32,7 @@ function AttesterCtypes() {
   const loadTable = () => {
     const currentUser = user ?? loadUser();
     if (!currentUser) return;
-    onListAttesterCtypes(currentUser.did)
+    onListAttesterCtypes(currentUser.didUri)
       .then((ctypes) =>
         ctypes.map((c) => attesterCtypeToRow(c)))
       .then(setRows);
@@ -40,7 +40,7 @@ function AttesterCtypes() {
 
   const onAdd = () => navigate('create');
   const onDelete = async (id: string) => user &&
-    onDeleteAttesterCtype(user.did, id).then(loadTable);
+    onDeleteAttesterCtype(user.didUri, id).then(loadTable);
 
   return (
     <div className='wrapper'>

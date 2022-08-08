@@ -1,5 +1,5 @@
 import useUser from '../../hooks/user';
-import { formatDid } from '../../utils/string';
+import { formatDidUri } from '../../utils/formatDidUri';
 
 function Topbar() {
   const { user } = useUser();
@@ -9,7 +9,7 @@ function Topbar() {
       <div className='topbar-content'>
         { user &&
           (user.isAttester ? 'Attester: ' : 'Claimer: ') +
-          formatDid(user ? user.did : '')}
+          formatDidUri(user.didUri)}
       </div>
     </div>
   );

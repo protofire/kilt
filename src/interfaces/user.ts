@@ -1,8 +1,8 @@
-import { DidResourceUri } from '@kiltprotocol/types';
+import { DidResourceUri, DidUri } from '@kiltprotocol/types';
 
 export interface IUser {
-  did: string;
-  signature: string;
-  didKeyUri: DidResourceUri;
-  isAttester: boolean;
+  readonly didUri: DidUri;
+  readonly signature: string;
+  readonly didKeyUri: DidResourceUri;
+  readonly isAttester: boolean;
 }

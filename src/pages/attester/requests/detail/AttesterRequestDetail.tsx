@@ -30,14 +30,6 @@ function AttesterRequestDetail() {
         </span>
         <span className='subtitle'>Terms and Conditions</span>
         <span className='text'>{request?.terms}</span>
-        <div><hr /></div>
-        <label className='subtitle'>Intro Text<br />
-          <div className='text'>{request?.claimerText}</div>
-        </label>
-        <div>
-          <div className='subtitle'>Files</div>
-          <ul> {request?.files.map(f => <li key={f}>{f}</li>)} </ul>
-        </div>
         <div>
             <button className='secondary' onClick={goBack}>Reject</button>
             <button className='primary' onClick={goBack}>Verify</button>
