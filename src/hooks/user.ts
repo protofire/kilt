@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import useSporran from './sporran';
 import { IUser } from '../interfaces/user';
-import useAttester from './attester';
 import { DidUri } from '@kiltprotocol/sdk-js';
+import { checkDidAttester } from '../api/attester/isAttester';
 
 export default function useUser() {
   const [user, setUser] = useState<null | IUser>(null);
   const { sporran } = useSporran();
-  const { checkDidAttester } = useAttester();
 
   function loadUser() {
     const userString = localStorage.getItem('user');

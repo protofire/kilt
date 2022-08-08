@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { onDeleteAttesterCtype } from '../../../api/attester/deleteAttesterCtype';
 import { onListAttesterCtypes } from '../../../api/attester/listAttesterCtypes';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
-import useAttester from '../../../hooks/attester';
 import useUser from '../../../hooks/user';
 import { IAttesterCtype } from '../../../interfaces/attester-ctype';
 
 function AttesterCtypes() {
   const navigate = useNavigate();
   const { user, loadUser } = useUser();
-  const {
-    onDeleteAttesterCtype,
-    loading
-  } = useAttester();
-
+  const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState<Row[]>([]);
 
   useEffect(() => {
@@ -29,18 +25,25 @@ function AttesterCtypes() {
     ]
   }) as Row;
 
-  const loadTable = () => {
+  const loadTable = async () => {
+    setLoading(true);
     const currentUser = user ?? loadUser();
     if (!currentUser) return;
-    onListAttesterCtypes(currentUser.didUri)
-      .then((ctypes) =>
-        ctypes.map((c) => attesterCtypeToRow(c)))
-      .then(setRows);
+    const ctypes = await onListAttesterCtypes(currentUser.didUri);
+    const ctypesRows = ctypes.map((c) => attesterCtypeToRow(c));
+    setRows(ctypesRows);
+    setLoading(false);
+  };
+
+  const onDelete = async (id: string) => {
+    if (!user) return;
+    setLoading(true);
+    await onDeleteAttesterCtype(user.didUri, id);
+    loadTable();
+    setLoading(false);
   };
 
   const onAdd = () => navigate('create');
-  const onDelete = async (id: string) => user &&
-    onDeleteAttesterCtype(user.didUri, id).then(loadTable);
 
   return (
     <div className='wrapper'>

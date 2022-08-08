@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { onLoadCredential } from '../../../api/claimer/loadCredential';
 import Topbar from '../../../components/Topbar/Topbar';
-import useClaimer from '../../../hooks/claimer';
 import { IAttestedCredential } from '../../../interfaces/credential';
 
 function ClaimDetail() {
   const params = useParams();
-  const { onLoadCredential, loading } = useClaimer();
   const [credential, setCredential] = useState<IAttestedCredential | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    onLoadCredential(Number(params.id)).then(setCredential);
+    setLoading(true);
+    onLoadCredential(Number(params.id))
+      .then(setCredential)
+      .then(() => setLoading(false));
   }, []);
 
   return (

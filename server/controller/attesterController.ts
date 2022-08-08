@@ -89,7 +89,7 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
     });
   }
 
-  const ctypes: IAttesterCtype[] = await AttesterCtype.find({ 
+  const ctypes: IAttesterCtype[] = await AttesterCtype.find({
     attesterDidUri: did
   });
   return res.status(200).json({ data: ctypes ?? [] });

@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { onListRequests } from '../../../api/attester/requests';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
-import useAttester from '../../../hooks/attester';
 
 function AttesterRequests() {
   const navigate = useNavigate();
-  const { onListRequests, loading } = useAttester();
   const [rows, setRows] = useState<Row[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    onListRequests().then(setRows);
+    setLoading(true);
+    onListRequests()
+      .then(setRows)
+      .then(() => setLoading(false));
   }, []);
 
   const columns = [

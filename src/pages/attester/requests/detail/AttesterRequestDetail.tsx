@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { onLoadRequest } from '../../../../api/attester/requests';
 import Topbar from '../../../../components/Topbar/Topbar';
-import useAttester from '../../../../hooks/attester';
 import { IRequest } from '../../../../interfaces/request';
 
 function AttesterRequestDetail() {
   const params = useParams();
   const navigate = useNavigate();
-  const { onLoadRequest, loading } = useAttester();
 
+  const [loading, setLoading] = useState(false);
   const [request, setRequest] = useState<IRequest | null>(null);
 
   useEffect(() => {
-    onLoadRequest(Number(params.id)).then(setRequest);
+    setLoading(true);
+    onLoadRequest(Number(params.id))
+      .then(setRequest)
+      .then(() => setLoading(false));
   }, []);
 
   const goBack = () => navigate(-1);

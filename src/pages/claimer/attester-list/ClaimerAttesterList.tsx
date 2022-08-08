@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { onListAttesters } from '../../../api/claimer/listAttesters';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
-import useClaimer from '../../../hooks/claimer';
 import useUser from '../../../hooks/user';
 import { IAttesterCtype } from '../../../interfaces/attester-ctype';
 import { formatDidUri } from '../../../utils/formatDidUri';
@@ -10,14 +10,16 @@ import { formatDidUri } from '../../../utils/formatDidUri';
 function ClaimerAttesterList() {
   const navigate = useNavigate();
   const { user } = useUser();
-  const { onListAttesters, loading } = useClaimer();
   const [rows, setRows] = useState<Row[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!user) return;
-    onListAttesters(user.didUri).then((attesters: IAttesterCtype[]) => {
-      setRows([...attesters.map(attesterCtypeToRow)]);
-    });
+    setLoading(true);
+    onListAttesters(user.didUri)
+      .then((attesters: IAttesterCtype[]) =>
+        setRows([...attesters.map(attesterCtypeToRow)]))
+      .then(() => setLoading(false));
   }, [ user ]);
 
   const attesterCtypeToRow = (attesterCtype: IAttesterCtype) => ({

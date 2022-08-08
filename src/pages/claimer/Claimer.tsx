@@ -1,25 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { onListCredentials } from '../../api/claimer/listCredentials';
 import Table, { Row } from '../../components/Table/Table';
 import Topbar from '../../components/Topbar/Topbar';
 import { statusToCeil } from '../../constants/claim-status';
-import useClaimer from '../../hooks/claimer';
 import useUser from '../../hooks/user';
 import { ICredential } from '../../interfaces/credential';
 import { formatDidUri } from '../../utils/formatDidUri';
 
 function Claimer() {
   const navigate = useNavigate();
-  const { onListCredentials, loading } = useClaimer();
   const [ rows, setRows ] = useState<Row[]>([]);
   const { user, loadUser } = useUser();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const currentUser = user ?? loadUser();
     if (!currentUser) return;
+    setLoading(true);
     onListCredentials(currentUser.didUri)
-      .then((credentials: ICredential[]) =>
-        setRows([...credentials.map(credentialToRow)]));
+      .then((credentials: ICredential[]) => {
+        setRows([...credentials.map(credentialToRow)]);
+        setLoading(false);
+      });
   }, []);
 
   const credentialToRow = (credential: ICredential) => ({

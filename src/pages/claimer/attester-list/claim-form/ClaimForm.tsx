@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { onLoadAttesterCtype } from '../../../../api/claimer/loadAttesterCtype';
+import { submitClaim } from '../../../../api/claimer/submitClaim';
 import Topbar from '../../../../components/Topbar/Topbar';
-import useClaimer from '../../../../hooks/claimer';
 import useUser from '../../../../hooks/user';
 import { IAttesterCtype } from '../../../../interfaces/attester-ctype';
 import { formatDidUri } from '../../../../utils/formatDidUri';
@@ -10,18 +11,20 @@ function ClaimForm() {
   const params = useParams();
   const navigate = useNavigate();
   const { user } = useUser();
-  const { submitClaim, onLoadAttesterCtype, loading } = useClaimer();
 
+  const [loading, setLoading] = useState(false);
   const [attesterCtype, setAttesterCtype] = useState<IAttesterCtype | null>(null);
   const [properties, setProperties] = useState<string[]>([]);
   const [form, setForm] = useState<any>({});
 
   useEffect(() => {
     if (!params.id) return goBack();
+    setLoading(true);
     onLoadAttesterCtype(params.id).then((a) => {
       setAttesterCtype(a);
       const propertyList = [...Object.keys(a.properties ?? {})];
       setProperties(propertyList);
+      setLoading(false);
     });
   }, []);
 
@@ -29,7 +32,9 @@ function ClaimForm() {
 
   const onSubmit = async () => {
     if (!user || !attesterCtype) return;
+    setLoading(true);
     await submitClaim(user.didUri, attesterCtype, form);
+    setLoading(false);
     goBack();
   };
 
