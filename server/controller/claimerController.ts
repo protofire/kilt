@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ICredentialByDidResponse } from '../interfaces/credentialEndpointResponse';
+import { ICredentialByDidResponse } from '../interfaces/credential';
 import { DidUri, IRequestForAttestation } from '@kiltprotocol/sdk-js';
 import {
   buildCredential,
