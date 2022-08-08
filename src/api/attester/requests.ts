@@ -1,17 +1,3 @@
-import { statusToCeil } from '../../constants/claim-status';
-
-// attestation.
-export const onListRequests = async () => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 500);
-  });
-  return [
-    { id: 1, values: [{ value: '0xCase2SD..ASD' }, { value: 'CType 1' }, statusToCeil.verified] },
-    { id: 2, values: [{ value: '0xCase2SD..ASD' }, { value: 'CType 1' }, statusToCeil.pending_payment] },
-    { id: 3, values: [{ value: '0xCase2SD..ASD' }, { value: 'CType 1' }, statusToCeil.unverified] }
-  ];
-};
-
 // Loads detailed information about
 // the claim request for attestation
 export const onLoadRequest = async (id: number) => {

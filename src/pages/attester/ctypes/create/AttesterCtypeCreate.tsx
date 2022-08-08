@@ -15,7 +15,13 @@ function AttesterCtypeCreate() {
   const [terms, setTerms] = useState<string>();
 
   useEffect(() => {
-    user && onListCtypes(user.didUri).then(setCtypes);
+    user && onListCtypes(user.didUri)
+      .then((ctypes) => {
+        setCtypes(ctypes);
+        if (ctypes.length > 0) {
+          setSelectedCtypeId(ctypes[0].$id);
+        }
+      });
   }, [ user ]);
 
   const handleCtypeChanged = (e: ChangeEvent<HTMLSelectElement>) => {

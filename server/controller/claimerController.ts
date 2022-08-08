@@ -162,7 +162,8 @@ export async function createAttesterRequest(req: Request, res: Response) {
   const requestForSave = new RequestAttestation({
     request,
     ctypeId: ctypeSchema.$id,
-    claimerDid: claimerDidUri
+    claimerDid: claimerDidUri,
+    status: Status.unverified
   });
 
   const saved = await requestForSave.save();

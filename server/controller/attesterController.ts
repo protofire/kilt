@@ -3,6 +3,7 @@ import { IAttesterCtype } from '../interfaces/attesterCtype';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
 import { AttesterCtype } from '../schemas/attesterCtype';
+import { RequestAttestation } from '../schemas/requestAttestation';
 
 /**
  * Checks wheter the provided DiD is an attester or not.
@@ -141,4 +142,37 @@ export const deleteCtype = async (req: Request, res: Response) => {
     ctypeId: id
   });
   return res.status(200).json({ success: result.acknowledged });
+};
+
+/**
+ * List all the requests for attestation for the current attester.
+ */
+export const getRequests = async (req: Request, res: Response) => {
+  const { did } = req.params;
+
+  const attester = attesterList.find(a => a === did);
+  if (!attester) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Not a valid attester.'
+    });
+  }
+
+  const ctypesToAttest = await AttesterCtype.find({
+    attesterDidUri: did
+  });
+
+  const ctypeIds = ctypesToAttest.map(cta => cta.ctypeId);
+
+  const requests = await RequestAttestation.find(
+    { ctypeId: { "$in" : ctypeIds } });
+
+  const data = requests.map(r => ({
+    _id: r._id,
+    claimerDidUri: r.claimerDid,
+    ctypeName: r.ctypeId,
+    status: r.status
+  }));
+
+  return res.status(200).json({ success: true, data });
 };
