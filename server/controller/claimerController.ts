@@ -1,11 +1,18 @@
 import { Request, Response } from 'express';
 import { ICredentialByDidResponse } from '../interfaces/credentialEndpointResponse';
-import { DidUri, IRequestAttestation, IRequestForAttestation } from '@kiltprotocol/sdk-js';
-import { buildCredential, createClaim, createRequest, getEndpointResponse, getEndpointsFromDid, Status } from '../kilt/claimer';
+import { DidUri, IRequestForAttestation } from '@kiltprotocol/sdk-js';
+import {
+  buildCredential,
+  createClaim,
+  createRequest,
+  getEndpointResponse,
+  getEndpointsFromDid
+} from '../kilt/claimer';
 import { AttesterCtype, RequestAttestation } from '../schemas/schemas';
 import { ctypesList } from '../constants/ctypes';
 import { IAttesterCtype } from '../interfaces/attesterCtype';
 import { getFullDidDetails } from '../kilt/utils';
+import { Status } from '../constants/status';
 
 /**
  * Fetchs all the credentials for a claimer.

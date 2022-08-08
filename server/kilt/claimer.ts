@@ -14,15 +14,11 @@ import {
 import { UUID } from '@kiltprotocol/utils';
 import { FullDidDetails } from '@kiltprotocol/did';
 import { keystoreSigner } from './utils';
+import { Status } from '../constants/status';
 
 /**
  *  set of utilities for handling sdk operations for claims.
  */
-
-export class Status {
-  static verified = 'verified';
-  static unverified = 'unverified';
-}
 
 const getEndpointsFromDid = async (did: DidUri) => {
   const didDocument = await Did.DidResolver.resolveDoc(did);
