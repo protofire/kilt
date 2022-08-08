@@ -1,4 +1,4 @@
-import { IAttesterCtype } from '../../interfaces/attester-ctype';
+import { IAttesterCtype } from '../../interfaces/attesterCtype';
 import { apiConfig } from '../config';
 
 export const createAttesterCtype = async (ctype: IAttesterCtype) => {

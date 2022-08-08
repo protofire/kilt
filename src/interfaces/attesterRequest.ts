@@ -1,8 +1,8 @@
-import { DidUri } from "@kiltprotocol/sdk-js";
+import { DidUri } from '@kiltprotocol/sdk-js';
 
 export interface IAttesterRequest {
-  _id: string,
-  claimerDidUri: DidUri,
-  ctypeName: string,
-  status: string
+  readonly _id: string,
+  readonly claimerDidUri: DidUri,
+  readonly ctypeName: string,
+  readonly status: string
 }

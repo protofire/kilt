@@ -14,7 +14,7 @@ import {
 import { UUID } from '@kiltprotocol/utils';
 import { FullDidDetails } from '@kiltprotocol/did';
 import { keystoreSigner } from './utils';
-import { Status } from '../constants/status';
+import { Status } from '../constants/status.enum';
 
 /**
  *  set of utilities for handling sdk operations for claims.
@@ -69,7 +69,7 @@ const createClaim = (
   const ctype = CType.fromSchema(ctypeSchema, fullDidDetails.uri);
   const claim = Claim.fromCTypeAndClaimContents(ctype, form, fullDidDetails.uri);
   return claim;
-}
+};
 
 const createRequest = async (
   claim: Claim,

@@ -165,7 +165,7 @@ export const getRequests = async (req: Request, res: Response) => {
   const ctypeIds = ctypesToAttest.map(cta => cta.ctypeId);
 
   const requests = await RequestAttestation.find(
-    { ctypeId: { "$in" : ctypeIds } });
+    { ctypeId: { $in: ctypeIds } });
 
   const data = requests.map(r => ({
     _id: r._id,

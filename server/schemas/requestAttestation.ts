@@ -17,4 +17,4 @@ const requestSchema = new mongoose.Schema<IClaimerRequest>({
 
 const RequestAttestation = mongoose.model('RequestAttestation', requestSchema);
 
-export { RequestAttestation }
+export { RequestAttestation };

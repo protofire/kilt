@@ -5,7 +5,7 @@ import { onListAttesterCtypes } from '../../../api/attester/listAttesterCtypes';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useUser from '../../../hooks/user';
-import { IAttesterCtype } from '../../../interfaces/attester-ctype';
+import { IAttesterCtype } from '../../../interfaces/attesterCtype';
 
 function AttesterCtypes() {
   const navigate = useNavigate();

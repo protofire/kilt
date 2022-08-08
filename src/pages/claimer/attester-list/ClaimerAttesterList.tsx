@@ -4,7 +4,7 @@ import { onListAttesters } from '../../../api/claimer/listAttesters';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useUser from '../../../hooks/user';
-import { IAttesterCtype } from '../../../interfaces/attester-ctype';
+import { IAttesterCtype } from '../../../interfaces/attesterCtype';
 import { formatDidUri } from '../../../utils/formatDidUri';
 
 function ClaimerAttesterList() {

@@ -11,7 +11,7 @@ import {
 import { ctypesList } from '../constants/ctypes';
 import { IAttesterCtype } from '../interfaces/attesterCtype';
 import { getFullDidDetails } from '../kilt/utils';
-import { Status } from '../constants/status';
+import { Status } from '../constants/status.enum';
 import { RequestAttestation } from '../schemas/requestAttestation';
 import { AttesterCtype } from '../schemas/attesterCtype';
 
@@ -49,10 +49,10 @@ export async function getCredentialsByDid(req: Request, res: Response) {
 
   const requests = await RequestAttestation.find({ claimerDid: did });
   const notAttestedCredentials = requests.map((r) => ({
-      attesterDidUri: '',
-      label: r.ctypeId,
-      status: Status.unverified
-    }));
+    attesterDidUri: '',
+    label: r.ctypeId,
+    status: Status.unverified
+  }));
 
   const credentials = [...attestedCredentials, ...notAttestedCredentials];
 
@@ -158,7 +158,7 @@ export async function createAttesterRequest(req: Request, res: Response) {
 
   const claim = createClaim(ctypeSchema, fullDidDetails, form);
   const request: IRequestForAttestation = await createRequest(claim, fullDidDetails);
-  
+
   const requestForSave = new RequestAttestation({
     request,
     ctypeId: ctypeSchema.$id,

@@ -1,5 +1,5 @@
 import { DidUri } from '@kiltprotocol/sdk-js';
-import { IAttesterCtype } from '../../interfaces/attester-ctype';
+import { IAttesterCtype } from '../../interfaces/attesterCtype';
 import { apiConfig } from '../config';
 
 export const submitClaim = async (
