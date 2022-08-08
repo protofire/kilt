@@ -8,11 +8,12 @@ import {
   getEndpointResponse,
   getEndpointsFromDid
 } from '../kilt/claimer';
-import { AttesterCtype, RequestAttestation } from '../schemas/schemas';
 import { ctypesList } from '../constants/ctypes';
 import { IAttesterCtype } from '../interfaces/attesterCtype';
 import { getFullDidDetails } from '../kilt/utils';
 import { Status } from '../constants/status';
+import { RequestAttestation } from '../schemas/requestAttestation';
+import { AttesterCtype } from '../schemas/attesterCtype';
 
 /**
  * Fetchs all the credentials for a claimer.

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { IAttesterCtype } from '../interfaces/attesterCtype';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
-import { AttesterCtype } from '../schemas/schemas';
+import { AttesterCtype } from '../schemas/attesterCtype';
 
 /**
  * Checks wheter the provided DiD is an attester or not.
