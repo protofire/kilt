@@ -1,18 +1,18 @@
 import { DidUri, InstanceType } from '@kiltprotocol/sdk-js';
 
-export interface IAttesterCtype {
-  attesterDid: DidUri | string,
-  ctypeName: string,
-  ctypeId: string,
-  quote: number,
-  terms: string,
-  properties?: IPropertyMap
+interface IPropertyMap {
+  readonly [name: string]: {
+    readonly $ref?: string | undefined;
+    readonly type?: InstanceType | undefined;
+    readonly format?: string | undefined;
+  }
 }
 
-interface IPropertyMap {
-  [name: string]: { 
-    $ref?: string | undefined;
-    type?: InstanceType | undefined;
-    format?: string | undefined;
-  }
+export interface IAttesterCtype {
+  readonly attesterDidUri: DidUri | string,
+  readonly ctypeName: string,
+  readonly ctypeId: string,
+  readonly quote: number,
+  readonly terms: string,
+  readonly properties?: Readonly<IPropertyMap>
 }

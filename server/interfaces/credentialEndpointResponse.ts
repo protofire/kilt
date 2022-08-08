@@ -1,16 +1,16 @@
 import { IRequestForAttestation } from '@kiltprotocol/sdk-js';
 
 interface IMetadataDetial {
-  label: string;
+  readonly label: string;
 }
 
 export interface ICredentialEndpointResponse {
-  credential: IRequestForAttestation;
-  metadata: IMetadataDetial;
+  readonly credential: Readonly<IRequestForAttestation>;
+  readonly metadata: Readonly<IMetadataDetial>;
 }
 
 export interface ICredentialByDidResponse {
-  attesterDid: string,
-  label: string,
-  status: string
+  readonly attesterDidUri: string,
+  readonly label: string,
+  readonly status: string
 }

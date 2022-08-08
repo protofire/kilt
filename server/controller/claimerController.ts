@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import { ICredentialByDidResponse } from '../interfaces/credentialEndpointResponse';
-import { Claim, CType, DidUri, RequestForAttestation } from '@kiltprotocol/sdk-js';
-import { buildCredential, getEndpointResponse, getEndpointsFromDid, getFullDidDetails, keystoreSigner } from '../kilt/kiltUtils';
+import { DidUri } from '@kiltprotocol/sdk-js';
+import { buildCredential, createRequest, getEndpointResponse, getEndpointsFromDid } from '../kilt/claimer';
 import { AttesterCtype } from '../schemas/schemas';
 import { ctypesList } from '../constants/ctypes';
 import { IAttesterCtype } from '../interfaces/attesterCtype';
+import { getFullDidDetails } from '../kilt/utils';
 
 /**
  * Fetchs all the credentials for a claimer.
@@ -63,14 +64,14 @@ export async function getAttesterCtypes(req: Request, res: Response) {
     });
   }
 
-  return res.status(200).json({ success: true, data: attesterCtypes});
+  return res.status(200).json({ success: true, data: attesterCtypes });
 }
 
 /**
  * Gets a single AttesterCtype by id.
  * @returns { success: boolean, data: AttesterCtype }
  */
- export async function getAttesterCtypeDetail(req: Request, res: Response) {
+export async function getAttesterCtypeDetail(req: Request, res: Response) {
   const { id } = req.params;
 
   if (!id) {
@@ -94,27 +95,27 @@ export async function getAttesterCtypes(req: Request, res: Response) {
     ...attesterCtype.toJSON(),
     properties: ctype.properties
   };
-  return res.status(200).json({ success: true, data: attesterCtypeResponse});
+  return res.status(200).json({ success: true, data: attesterCtypeResponse });
 }
 
 /**
  * Creates and submits a new request for attestation.
  */
 export async function createAttesterRequest(req: Request, res: Response) {
-  const { claimerDid , attesterCtype, form }: {
-    claimerDid: DidUri,
+  const { claimerDidUri, attesterCtype, form }: {
+    claimerDidUri: DidUri,
     attesterCtype: IAttesterCtype,
     form: any
   } = req.body;
 
-  if (!claimerDid || !attesterCtype || !form) {
+  if (!claimerDidUri || !attesterCtype || !form) {
     return res.status(400).json({
       success: false,
       msg: 'Must provide claimerDid, attesterCtype and form.'
     });
   }
 
-  const ctypeSchema = ctypesList.find(c => c.$id === attesterCtype.ctypeId); 
+  const ctypeSchema = ctypesList.find(c => c.$id === attesterCtype.ctypeId);
   if (!ctypeSchema) {
     return res.status(400).json({
       success: false,
@@ -130,27 +131,18 @@ export async function createAttesterRequest(req: Request, res: Response) {
     });
   }
 
-
-  const ctype = CType.fromSchema(ctypeSchema, owner);
-  const claim = Claim.fromCTypeAndClaimContents(ctype, form, claimerDid);
-  const requestForAttestation = RequestForAttestation.fromClaim(claim);
-
-  const fullDidDetails = await getFullDidDetails(claimerDid);
-  if (!fullDidDetails) {
+  const fullDidDetails = await getFullDidDetails(claimerDidUri);
+  if (!fullDidDetails || fullDidDetails.uri !== claimerDidUri) {
     return res.status(400).json({
       success: false,
       msg: 'Could not load claimer DiD details'
     });
   }
 
-  const signedRequest = await requestForAttestation.signWithDidKey(
-    keystoreSigner,
-    fullDidDetails,
-    fullDidDetails?.authenticationKey.id
-  );
+  const request = await createRequest(ctypeSchema, fullDidDetails, form);
 
   return res.status(200).json({
     success: true,
-    data: signedRequest
+    data: request
   });
 }

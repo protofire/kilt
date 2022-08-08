@@ -20,9 +20,9 @@ export const isAttester = (req: Request, res: Response) => {
  * @returns { data: IAttesterCtype }
  */
 export const createCtype = async (req: Request, res: Response) => {
-  const { attesterDid, ctypeId, quote, terms } = req.body;
+  const { attesterDidUri, ctypeId, quote, terms } = req.body;
 
-  const attester = attesterList.find(a => a === attesterDid);
+  const attester = attesterList.find(a => a === attesterDidUri);
   if (!attester) {
     return res.status(400).json({
       success: false,
@@ -48,14 +48,14 @@ export const createCtype = async (req: Request, res: Response) => {
   const ctypeName = ctype.title;
 
   const attesterCtype = new AttesterCtype({
-    attesterDid,
+    attesterDidUri,
     ctypeName,
     ctypeId,
     quote,
     terms
   });
 
-  const result = await attesterCtype.save()
+  const result = await attesterCtype.save();
   if (!result) {
     return res.status(400).json({
       success: false,
@@ -77,7 +77,7 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
   if (!did) {
     return res.status(400).json({
       success: false,
-      msg: 'Must provide DiD parameter'
+      msg: 'Must provide DiD Uri parameter'
     });
   }
 
@@ -89,7 +89,9 @@ export const getAttesterCtypes = async (req: Request, res: Response) => {
     });
   }
 
-  const ctypes: IAttesterCtype[] = await AttesterCtype.find({ attesterDid: did });
+  const ctypes: IAttesterCtype[] = await AttesterCtype.find({ 
+    attesterDidUri: did
+  });
   return res.status(200).json({ data: ctypes ?? [] });
 };
 
@@ -135,7 +137,7 @@ export const deleteCtype = async (req: Request, res: Response) => {
   }
 
   const result = await AttesterCtype.deleteOne({
-    attesterDid: did,
+    attesterDidUri: did,
     ctypeId: id
   });
   return res.status(200).json({ success: result.acknowledged });

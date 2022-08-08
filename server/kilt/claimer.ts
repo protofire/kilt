@@ -1,14 +1,19 @@
 import axios from 'axios';
 import { ICredentialEndpointResponse } from '../interfaces/credentialEndpointResponse';
-import { 
+import {
   Attestation,
   Did,
   DidServiceEndpoint,
   DidUri,
   Credential,
-  KeystoreSigningData,
-  KeystoreSigner
+  CType,
+  Claim,
+  RequestForAttestation,
+  ICTypeSchema
 } from '@kiltprotocol/sdk-js';
+import { UUID } from '@kiltprotocol/utils';
+import { FullDidDetails } from '@kiltprotocol/did';
+import { keystoreSigner } from './utils';
 
 /**
  *  set of utilities for handling sdk operations for claims.
@@ -17,11 +22,6 @@ import {
 class Status {
   static verified = 'verified';
   static unverified = 'unverified';
-}
-
-const getFullDidDetails = async (did: DidUri) => {
-  const fullDidDetails = await Did.FullDidDetails.fromChainInfo(did);
-  return fullDidDetails;
 }
 
 const getEndpointsFromDid = async (did: DidUri) => {
@@ -45,7 +45,7 @@ const buildCredential = async (endpointData: ICredentialEndpointResponse) => {
   );
   if (!attestation) {
     return {
-      attesterDid: '',
+      attesterDidUri: '',
       label: endpointData.metadata?.label,
       status: Status.unverified
     };
@@ -57,7 +57,7 @@ const buildCredential = async (endpointData: ICredentialEndpointResponse) => {
   );
 
   return {
-    attesterDid: attestation.owner,
+    attesterDidUri: attestation.owner,
     label: endpointData.metadata?.label,
     status: !credential.attestation.revoked
       ? Status.verified
@@ -65,13 +65,28 @@ const buildCredential = async (endpointData: ICredentialEndpointResponse) => {
   };
 };
 
-const keystoreSigner: KeystoreSigner = {
-  sign: async (signData: KeystoreSigningData<any>) => {
-    return {
-      alg: signData.alg,
-      data: signData.data
-    }
-  }
-}
+const createRequest = async (
+  ctypeSchema: ICTypeSchema,
+  fullDidDetails: FullDidDetails,
+  form: any = {}
+) => {
+  const owner = process.env.OWNER as DidUri;
+  const ctype = CType.fromSchema(ctypeSchema, owner);
+  const claim = Claim.fromCTypeAndClaimContents(ctype, form, fullDidDetails.uri);
+  const requestForAttestation = RequestForAttestation.fromClaim(claim);
 
-export { getEndpointsFromDid, getEndpointResponse, buildCredential, getFullDidDetails, keystoreSigner };
+  const signedRequest = await requestForAttestation.signWithDidKey(
+    keystoreSigner,
+    fullDidDetails,
+    fullDidDetails?.authenticationKey.id,
+    { challenge: UUID.generate() }
+  );
+  return signedRequest;
+};
+
+export {
+  getEndpointsFromDid,
+  getEndpointResponse,
+  buildCredential,
+  createRequest
+};

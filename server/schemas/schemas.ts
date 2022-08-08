@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const attesterCtypeSchema = new mongoose.Schema({
-  attesterDid: String,
+  attesterDidUri: String,
   ctypeName: String,
   ctypeId: String,
   quote: Number,
@@ -9,4 +9,4 @@ const attesterCtypeSchema = new mongoose.Schema({
 });
 const AttesterCtype = mongoose.model('AttesterCtype', attesterCtypeSchema);
 
-export { AttesterCtype }
+export { AttesterCtype };
