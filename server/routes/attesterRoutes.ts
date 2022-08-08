@@ -1,21 +1,23 @@
 import express from 'express';
+import { isAttester } from '../controller/attesterController';
+import { getCtypes } from '../controller/ctypesController';
 import {
-  isAttester,
-  getAttesterCtypes,
-  createCtype,
-  deleteCtype,
-  getCtypes,
-  getRequests,
-  getRequestDetail
-} from '../controller/attesterController';
+  getRequestDetail,
+  getRequests
+} from '../controller/requestsController';
+import {
+  createAttesterCtype,
+  deleteAttesterCtype,
+  getAttesterCtypesForAttester
+} from '../controller/attesterCtypeController';
 
 const attesterRoute = express.Router();
 
 attesterRoute.get('/isAttester/:did', isAttester);
 attesterRoute.get('/ctypes/all/:did', getCtypes);
-attesterRoute.get('/ctypes/:did', getAttesterCtypes);
-attesterRoute.post('/ctypes', createCtype);
-attesterRoute.delete('/ctypes/:did/:id', deleteCtype);
+attesterRoute.get('/ctypes/:did', getAttesterCtypesForAttester);
+attesterRoute.post('/ctypes', createAttesterCtype);
+attesterRoute.delete('/ctypes/:did/:id', deleteAttesterCtype);
 attesterRoute.get('/request/:did', getRequests);
 attesterRoute.get('/request/detail/:id/:did', getRequestDetail);
 
