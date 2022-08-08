@@ -157,11 +157,10 @@ export async function createAttesterRequest(req: Request, res: Response) {
   }
 
   const claim = createClaim(ctypeSchema, fullDidDetails, form);
-  const request = await createRequest(claim, fullDidDetails);
-  const requestInterface: IRequestForAttestation = request;
+  const request: IRequestForAttestation = await createRequest(claim, fullDidDetails);
   
   const requestForSave = new RequestAttestation({
-    request: requestInterface,
+    request,
     ctypeId: ctypeSchema.$id,
     claimerDid: claimerDidUri
   });
