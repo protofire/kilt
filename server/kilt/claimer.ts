@@ -19,7 +19,7 @@ import { keystoreSigner } from './utils';
  *  set of utilities for handling sdk operations for claims.
  */
 
-class Status {
+export class Status {
   static verified = 'verified';
   static unverified = 'unverified';
 }
@@ -65,14 +65,20 @@ const buildCredential = async (endpointData: ICredentialEndpointResponse) => {
   };
 };
 
-const createRequest = async (
+const createClaim = (
   ctypeSchema: ICTypeSchema,
   fullDidDetails: FullDidDetails,
   form: any = {}
 ) => {
-  const owner = process.env.OWNER as DidUri;
-  const ctype = CType.fromSchema(ctypeSchema, owner);
+  const ctype = CType.fromSchema(ctypeSchema, fullDidDetails.uri);
   const claim = Claim.fromCTypeAndClaimContents(ctype, form, fullDidDetails.uri);
+  return claim;
+}
+
+const createRequest = async (
+  claim: Claim,
+  fullDidDetails: FullDidDetails
+) => {
   const requestForAttestation = RequestForAttestation.fromClaim(claim);
 
   const signedRequest = await requestForAttestation.signWithDidKey(
@@ -88,5 +94,6 @@ export {
   getEndpointsFromDid,
   getEndpointResponse,
   buildCredential,
-  createRequest
+  createRequest,
+  createClaim
 };

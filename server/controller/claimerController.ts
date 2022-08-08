@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { ICredentialByDidResponse } from '../interfaces/credentialEndpointResponse';
-import { DidUri } from '@kiltprotocol/sdk-js';
-import { buildCredential, createRequest, getEndpointResponse, getEndpointsFromDid } from '../kilt/claimer';
-import { AttesterCtype } from '../schemas/schemas';
+import { DidUri, IRequestAttestation, IRequestForAttestation } from '@kiltprotocol/sdk-js';
+import { buildCredential, createClaim, createRequest, getEndpointResponse, getEndpointsFromDid, Status } from '../kilt/claimer';
+import { AttesterCtype, RequestAttestation } from '../schemas/schemas';
 import { ctypesList } from '../constants/ctypes';
 import { IAttesterCtype } from '../interfaces/attesterCtype';
 import { getFullDidDetails } from '../kilt/utils';
@@ -36,8 +36,17 @@ export async function getCredentialsByDid(req: Request, res: Response) {
   }
 
   const endpointResponse = await getEndpointResponse(endpoints[0]);
-  const credentials: ICredentialByDidResponse[] = await Promise
+  const attestedCredentials: ICredentialByDidResponse[] = await Promise
     .all(endpointResponse.map(buildCredential));
+
+  const requests = await RequestAttestation.find({ claimerDid: did });
+  const notAttestedCredentials = requests.map((r) => ({
+      attesterDidUri: '',
+      label: r.ctypeId,
+      status: Status.unverified
+    }));
+
+  const credentials = [...attestedCredentials, ...notAttestedCredentials];
 
   return res.status(200).json({ success: true, data: credentials });
 }
@@ -139,10 +148,20 @@ export async function createAttesterRequest(req: Request, res: Response) {
     });
   }
 
-  const request = await createRequest(ctypeSchema, fullDidDetails, form);
+  const claim = createClaim(ctypeSchema, fullDidDetails, form);
+  const request = await createRequest(claim, fullDidDetails);
+  const requestInterface: IRequestForAttestation = request;
+  
+  const requestForSave = new RequestAttestation({
+    request: requestInterface,
+    ctypeId: ctypeSchema.$id,
+    claimerDid: claimerDidUri
+  });
+
+  const saved = await requestForSave.save();
 
   return res.status(200).json({
     success: true,
-    data: request
+    data: saved
   });
 }

@@ -1,6 +1,15 @@
+import { IRequestForAttestation } from '@kiltprotocol/sdk-js';
 import mongoose from 'mongoose';
 
-const attesterCtypeSchema = new mongoose.Schema({
+interface IAttesterCtype {
+  attesterDidUri: string,
+  ctypeName: string,
+  ctypeId: string,
+  quote: number,
+  terms: string
+}
+
+const attesterCtypeSchema = new mongoose.Schema<IAttesterCtype>({
   attesterDidUri: String,
   ctypeName: String,
   ctypeId: String,
@@ -9,4 +18,21 @@ const attesterCtypeSchema = new mongoose.Schema({
 });
 const AttesterCtype = mongoose.model('AttesterCtype', attesterCtypeSchema);
 
-export { AttesterCtype };
+interface IClaimerRequest {
+  request: IRequestForAttestation,
+  ctypeId: string,
+  claimerDid: string
+}
+
+const requestSchema = new mongoose.Schema<IClaimerRequest>({
+  request: Object,
+  ctypeId: String,
+  claimerDid: String
+});
+
+const RequestAttestation = mongoose.model('RequestAttestation', requestSchema);
+
+export { 
+  AttesterCtype,
+  RequestAttestation
+};
