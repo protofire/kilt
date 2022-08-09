@@ -100,8 +100,9 @@ import { websocket } from '../services/websocket';
 
   const ctypeIds = ctypesToAttest.map(cta => cta.ctypeId);
 
-  const requests = await RequestAttestation.find(
-    { ctypeId: { $in: ctypeIds } });
+  const requests = await RequestAttestation
+    .find({ ctypeId: { $in: ctypeIds } })
+    .sort({ _id: -1 }); // descending sort
 
   const data = requests.map(r => ({
     _id: r._id,
