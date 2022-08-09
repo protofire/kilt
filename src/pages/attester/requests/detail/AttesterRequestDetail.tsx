@@ -30,8 +30,8 @@ function AttesterRequestDetail() {
   const getActionByStatus = () => {
     if (!request) return;
     switch (request.status) {
-      case Status.verified: return 'Verify';
-      case Status.unverified: return 'Confirm Payment';
+      case Status.unverified: return 'Verify';
+      case Status.pendingPayment: return 'Confirm Payment';
       default: return '';
     }
   };
