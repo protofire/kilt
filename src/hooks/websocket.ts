@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { apiConfig } from '../api/config';
 
-export default function useWebsocket(path?: string) {
+export default function useWebsocket() {
   const [socket, setSocket] = useState<null | WebSocket>(null);
 
   const sendMessage = (message = {}) => {
@@ -11,7 +11,7 @@ export default function useWebsocket(path?: string) {
 
   useEffect(() => {
     const { websocketUrl } = apiConfig();
-    const webSocket = new WebSocket(`${websocketUrl}${path}`);
+    const webSocket = new WebSocket(`${websocketUrl}`);
     setSocket(webSocket);
   }, []);
 
