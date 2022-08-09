@@ -74,7 +74,7 @@ import { websocket } from '../services/websocket';
     status: saved.status
   };
 
-  connection.send(JSON.stringify(requestToSend));
+  connection?.send(JSON.stringify(requestToSend));
 
   return res.status(200).json({
     success: true,
