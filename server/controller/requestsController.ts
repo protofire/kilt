@@ -9,6 +9,7 @@ import { createClaim, createRequest } from '../kilt/claimer';
 import { getFullDidDetails } from '../kilt/utils';
 import { AttesterCtype } from '../schemas/attesterCtype';
 import { RequestAttestation } from '../schemas/requestAttestation';
+import { websocket } from '../services/websocket';
 
 /**
  * Creates and submits a new request for attestation.
@@ -19,6 +20,7 @@ import { RequestAttestation } from '../schemas/requestAttestation';
     attesterCtype: IAttesterCtype,
     form: any
   } = req.body;
+  const { connection } = websocket();
 
   if (!claimerDidUri || !attesterCtype || !form) {
     return res.status(400).json({
@@ -62,6 +64,17 @@ import { RequestAttestation } from '../schemas/requestAttestation';
   });
 
   const saved = await requestForSave.save();
+
+  // sends the new request to the clients to update
+  // the attesters requests table
+  const requestToSend: IRequestDetailResponse = {
+    _id: saved._id.toString(),
+    claimerDidUri: saved.claimerDid,
+    ctypeName: saved.ctypeId,
+    status: saved.status
+  };
+
+  connection.send(JSON.stringify(requestToSend));
 
   return res.status(200).json({
     success: true,

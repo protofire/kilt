@@ -7,6 +7,7 @@ import { claimerRoute } from './routes/claimerRoutes';
 import { attesterRoute } from './routes/attesterRoutes';
 import * as Kilt from '@kiltprotocol/sdk-js';
 import { connect } from 'mongoose';
+import { websocket } from './services/websocket';
 
 async function connectDB() {
   const uri = process.env.DB_URI;
@@ -25,15 +26,18 @@ async function main() {
   await Kilt.init({ address: 'wss://peregrine.kilt.io/parachain-public-ws' });
   await Kilt.connect();
 
+  // connects the Mongodb instance.
   await connectDB();
 
   app.use('/api/claimer', claimerRoute);
   app.use('/api/attester', attesterRoute);
 
   const port = process.env.PORT ?? 8000;
-  app.listen(port, () => {
+  const server = app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
   });
+
+  websocket().init(server);
 }
 
 main();

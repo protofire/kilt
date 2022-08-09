@@ -7,13 +7,17 @@ import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useUser from '../../../hooks/user';
 import { getColorByStatus, getLabelByStatus } from '../../../utils/requestStatus';
+import useWebsocket from '../../../hooks/websocket';
 
 function AttesterRequests() {
   const navigate = useNavigate();
   const { user } = useUser();
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
+  const { socket } = useWebsocket();
 
+  // handles the incoming requests through
+  // the http connection on first render.
   useEffect(() => {
     if (!user) return;
     setLoading(true);
@@ -22,6 +26,19 @@ function AttesterRequests() {
       .then(setRows)
       .then(() => setLoading(false));
   }, [ user ]);
+
+  // handles the incoming requests through
+  // the websocket connection.
+  useEffect(() => {
+    if (!socket) return;
+    socket.onmessage = (msg: MessageEvent<any>) => {
+      handleNewRequest(JSON.parse(msg.data));
+    };
+  }, [ socket ]);
+
+  const handleNewRequest = (req: IAttesterRequest) => {
+    setRows(rows => [requestToRow(req), ...rows ]);
+  };
 
   const requestToRow = (request: IAttesterRequest): Row => ({
     id: request._id,
