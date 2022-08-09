@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/kilt/static/css/main.eaf33528.css",
-    "main.js": "/kilt/static/js/main.eb0ae7f1.js",
+    "main.js": "/kilt/static/js/main.5117aeb5.js",
     "static/js/787.f7cb4330.chunk.js": "/kilt/static/js/787.f7cb4330.chunk.js",
     "index.html": "/kilt/index.html",
     "main.eaf33528.css.map": "/kilt/static/css/main.eaf33528.css.map",
-    "main.eb0ae7f1.js.map": "/kilt/static/js/main.eb0ae7f1.js.map",
+    "main.5117aeb5.js.map": "/kilt/static/js/main.5117aeb5.js.map",
     "787.f7cb4330.chunk.js.map": "/kilt/static/js/787.f7cb4330.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.eaf33528.css",
-    "static/js/main.eb0ae7f1.js"
+    "static/js/main.5117aeb5.js"
   ]
 }
