@@ -37,14 +37,6 @@ import { websocket } from '../services/websocket';
     });
   }
 
-  const owner = process.env.OWNER as DidUri;
-  if (!owner) {
-    return res.status(400).json({
-      success: false,
-      msg: 'The owner did not found'
-    });
-  }
-
   const fullDidDetails = await getFullDidDetails(claimerDidUri);
   if (!fullDidDetails || fullDidDetails.uri !== claimerDidUri) {
     return res.status(400).json({
