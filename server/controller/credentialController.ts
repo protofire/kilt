@@ -208,3 +208,35 @@ export const verifyRequest = async (req: Request, res: Response) => {
     credential
   });
 }
+
+export const confirmRequest = async (req: Request, res: Response) => {
+  const { did, id } = req.params;
+
+  const attester = attesterList.find(a => a === did);
+  if (!attester) {
+    return res.status(400).json({
+      success: false,
+      msg: 'not a valid attester.'
+    });
+  }
+
+  const credential = await ClaimerCredential.findById(id);
+  if (!credential?.credential?.attestation?.owner) {
+    return res.status(404).json({ 
+      success: false,
+      msg: 'Request for attestation not found.'
+    });
+  }
+
+  if (credential.credential.attestation.owner !== did) {
+    return res.status(400).json({ 
+      success: false,
+      msg: 'The payment must be confirmed by the issuer attester.'
+    });
+  }
+
+  credential.status = Status.verified;
+  await credential.save();
+
+  res.status(200).json({ success: true });
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { confirmPaymentCredential } from '../../../../api/attester/confirmPaymentCredential';
 import { onLoadRequest } from '../../../../api/attester/requests';
 import { verifyAttesterRequest } from '../../../../api/attester/verifyAttesterRequest';
 import Topbar from '../../../../components/Topbar/Topbar';
@@ -29,7 +30,7 @@ function AttesterRequestDetail() {
   const goBack = () => navigate(-1);
 
   const verify = async () => {
-    if (!user || !request || !params.id) return;
+    if (!user || !params.id) return;
     setLoading(true);
     await verifyAttesterRequest(params.id, user.didUri);
     setLoading(false);
@@ -37,7 +38,9 @@ function AttesterRequestDetail() {
   };
 
   const confirmPayment = async () => {
+    if (!user || !params.id) return;
     setLoading(true);
+    await confirmPaymentCredential(params.id, user.didUri);
     setLoading(false);
     goBack();
   };
