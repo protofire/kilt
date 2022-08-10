@@ -4,6 +4,7 @@ export interface IAttesterRequest {
   readonly _id: string,
   readonly claimerDidUri: DidUri,
   readonly ctypeName: string,
+  readonly ctypeId: string,
   readonly status: string
 }
 

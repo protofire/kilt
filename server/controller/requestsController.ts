@@ -63,7 +63,8 @@ import { websocket } from '../services/websocket';
     _id: saved._id.toString(),
     claimerDidUri: saved.claimerDid,
     ctypeName: saved.ctypeId,
-    status: saved.status
+    status: saved.status,
+    ctypeId: saved.ctypeId
   };
 
   connection?.send(JSON.stringify(requestToSend));
@@ -147,6 +148,7 @@ export const getRequestDetail = async (req: Request, res: Response) => {
   const data: IRequestDetailResponse = {
     _id: request._id.toString(),
     claimerDidUri: request?.claimerDid,
+    ctypeId: request.ctypeId,
     ctypeName: ctype?.title,
     terms: attesterCtype?.terms,
     form: request.request.claim.contents,

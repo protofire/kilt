@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onListRequests } from '../../../api/attester/listRequests';
 import { IAttesterRequest } from '../../../interfaces/attesterRequest';
@@ -8,23 +8,33 @@ import Topbar from '../../../components/Topbar/Topbar';
 import useUser from '../../../hooks/user';
 import { getColorByStatus, getLabelByStatus } from '../../../utils/requestStatus';
 import useWebsocket from '../../../hooks/websocket';
+import { onListAttesterCtypes } from '../../../api/attester/listAttesterCtypes';
 
 function AttesterRequests() {
   const navigate = useNavigate();
-  const { user } = useUser();
-  const [rows, setRows] = useState<Row[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { user, loadUser } = useUser();
   const { socket } = useWebsocket();
+  const attesterCtypeIds = useRef<string[]>([]);
+  const [state, setState] = useState<{ rows: Row[], loading: boolean}>({
+    rows: [],
+    loading: false
+  });
 
   // handles the incoming requests through
   // the http connection on first render.
   useEffect(() => {
-    if (!user) return;
-    setLoading(true);
-    onListRequests(user?.didUri)
-      .then((requests: IAttesterRequest[]) => requests.map(requestToRow))
-      .then(setRows)
-      .then(() => setLoading(false));
+    const currentUser = user ?? loadUser();
+    setState(s => ({ ...s, loading: true }));
+    Promise.all([
+      onListRequests(currentUser.didUri),
+      onListAttesterCtypes(currentUser.didUri)
+    ]).then(([requests, ctypes]) => {
+      attesterCtypeIds.current = ctypes.map(c => c.ctypeId);
+      setState(s => ({
+        rows: requests.map(requestToRow),
+        loading: false
+      }));
+    });
   }, [ user ]);
 
   // handles the incoming requests through
@@ -37,7 +47,12 @@ function AttesterRequests() {
   }, [ socket ]);
 
   const handleNewRequest = (req: IAttesterRequest) => {
-    setRows(rows => [requestToRow(req), ...rows ]);
+    if (attesterCtypeIds.current.length === 0) return;
+    // filter the ctypes that correspond to the current
+    // attester.
+    const isValid = attesterCtypeIds.current.includes(req.ctypeId);
+    if (!isValid) return;
+    setState((s) => ({ ...s, rows: [requestToRow(req), ...state.rows ] }));
   };
 
   const requestToRow = (request: IAttesterRequest): Row => ({
@@ -59,14 +74,14 @@ function AttesterRequests() {
       <Topbar />
       <div className='center'>
         <span className='title'>Claimer requests</span>
-        {loading
+        {state.loading
           ? <div> Loading... </div>
           : <Table
               columns={[
                 { name: 'Address' },
                 { name: 'CType' },
                 { name: 'Status' }]}
-              rows={rows}
+              rows={state.rows}
               onClick={onClick} />}
       </div>
     </div>
