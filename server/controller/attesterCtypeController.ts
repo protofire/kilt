@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { attesterList } from "../constants/attesters";
 import { ctypesList } from "../constants/ctypes";
-import { IAttesterCtype } from '../interfaces/attesterCtype';
-import { AttesterCtype } from '../schemas/attesterCtype';
+import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
 
 /**
  * Creates a new attester ctype relationship in database.
@@ -44,15 +43,13 @@ import { AttesterCtype } from '../schemas/attesterCtype';
     terms
   });
 
-  const result = await attesterCtype.save();
-  if (!result) {
+  const created: IAttesterCtype = await attesterCtype.save();
+  if (!created) {
     return res.status(400).json({
       success: false,
       msg: 'error connecting database'
     });
   }
-
-  const created: IAttesterCtype = result.toJSON();
   return res.status(200).json({ success: true, data: created });
 };
 
@@ -141,7 +138,7 @@ import { AttesterCtype } from '../schemas/attesterCtype';
 
   // sets properties to fill by claimer
   const attesterCtypeResponse: IAttesterCtype = {
-    ...attesterCtype.toJSON(),
+    ...attesterCtype,
     properties: ctype.properties
   };
   return res.status(200).json({ success: true, data: attesterCtypeResponse });

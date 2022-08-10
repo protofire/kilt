@@ -1,12 +1,22 @@
 import mongoose, { ObjectId } from 'mongoose';
+import { InstanceType } from '@kiltprotocol/sdk-js';
 
-interface IAttesterCtype {
-  _id: ObjectId,
+interface IPropertyMap {
+  [name: string]: {
+    $ref?: string | undefined;
+    type?: InstanceType | undefined;
+    format?: string | undefined;
+  }
+}
+
+export interface IAttesterCtype {
+  _id?: ObjectId,
   attesterDidUri: string,
   ctypeName: string,
   ctypeId: string,
   quote: number,
-  terms: string
+  terms: string,
+  properties?: Readonly<IPropertyMap>
 }
 
 const attesterCtypeSchema = new mongoose.Schema<IAttesterCtype>({
@@ -14,7 +24,8 @@ const attesterCtypeSchema = new mongoose.Schema<IAttesterCtype>({
   ctypeName: String,
   ctypeId: String,
   quote: Number,
-  terms: String
+  terms: String,
+  properties: Object
 });
 const AttesterCtype = mongoose.model('AttesterCtype', attesterCtypeSchema);
 

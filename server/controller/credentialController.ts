@@ -3,13 +3,12 @@ import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
 import { Status } from '../constants/status.enum';
-import { IAttesterCtype } from '../interfaces/attesterCtype';
 import { IRequestDetail } from '../interfaces/requestDetail';
 import { getOwnerKeyring } from '../kilt/account';
 import { createAttestation } from '../kilt/attestation';
 import { createClaim, createRequest } from '../kilt/claimer';
 import { getFullDidDetails, getKeystoreSigner } from '../kilt/utils';
-import { AttesterCtype } from '../schemas/attesterCtype';
+import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
 import { ClaimerCredential, IClaimerCredential } from '../schemas/credential';
 import { websocket } from '../services/websocket';
 
