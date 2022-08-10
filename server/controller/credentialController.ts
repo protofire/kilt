@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
 import { Status } from '../constants/status.enum';
-import { IRequestDetail } from '../interfaces/requestDetail';
 import { getOwnerKeyring } from '../kilt/account';
 import { createAttestation } from '../kilt/attestation';
 import { createClaim, createRequest } from '../kilt/claimer';
@@ -60,9 +59,9 @@ import { websocket } from '../services/websocket';
 
   // sends the new request to the clients to update
   // the attesters requests table
-  const requestToSend: IRequestDetail = {
-    _id: saved._id.toString(),
-    claimerDidUri: saved.claimerDid,
+  const requestToSend: IClaimerCredential = {
+    _id: saved._id,
+    claimerDid: saved.claimerDid,
     ctypeName: saved.ctypeId,
     status: saved.status,
     ctypeId: saved.ctypeId
@@ -100,22 +99,12 @@ import { websocket } from '../services/websocket';
       msg: 'Ctype to attest not found.'
     });
   }
-
   const ctypeIds = ctypesToAttest.map(cta => cta.ctypeId);
-
   const credentials: IClaimerCredential[] = await ClaimerCredential
     .find({ status: { $ne: Status.verified }, ctypeId: { $in: ctypeIds } })
     .sort({ _id: -1 }); // descending sort
 
-  const data: IRequestDetail[] = credentials.map(c => ({
-    _id: c._id?.toString(),
-    claimerDidUri: c.claimerDid,
-    ctypeName: c.ctypeId,
-    status: c.status,
-    ctypeId: c.ctypeId
-  }));
-
-  return res.status(200).json({ success: true, data });
+  return res.status(200).json({ success: true, data: credentials });
 };
 
 export const getRequestDetail = async (req: Request, res: Response) => {
@@ -148,13 +137,13 @@ export const getRequestDetail = async (req: Request, res: Response) => {
     });
   }
 
-  const data: IRequestDetail = {
-    _id: credential._id.toString(),
-    claimerDidUri: credential.claimerDid,
+  const data: IClaimerCredential = {
+    _id: credential._id,
+    claimerDid: credential.claimerDid,
     ctypeId: credential.ctypeId,
     ctypeName: ctype.title,
     terms: attesterCtype.terms,
-    form: credential.request.claim.contents,
+    form: credential?.request?.claim.contents,
     status: credential.status
   };
 
@@ -168,7 +157,7 @@ export const verifyRequest = async (req: Request, res: Response) => {
   const { id, did } = req.params;
 
   const currentCredential = await ClaimerCredential.findById(id);
-  if (!currentCredential) {
+  if (!currentCredential?.request) {
     return res.status(404).json({ 
       success: false,
       msg: 'Request for attestation not found.'

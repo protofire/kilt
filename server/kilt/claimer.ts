@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ICredentialEndpointResponse } from '../interfaces/credential';
+import { ICredentialEndpointResponse } from '../interfaces/credentialEndpointResponse';
 import {
   Attestation,
   Did,
