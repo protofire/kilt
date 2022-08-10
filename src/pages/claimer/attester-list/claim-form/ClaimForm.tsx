@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { onLoadAttesterCtype } from '../../../../api/claimer/loadAttesterCtype';
-import { submitClaim } from '../../../../api/claimer/submitClaim';
+import { createCredential } from '../../../../api/credential/createCredential';
 import Topbar from '../../../../components/Topbar/Topbar';
 import useUser from '../../../../hooks/user';
 import { IAttesterCtype } from '../../../../interfaces/attesterCtype';
@@ -33,7 +33,7 @@ function ClaimForm() {
   const onSubmit = async () => {
     if (!user || !attesterCtype) return;
     setLoading(true);
-    await submitClaim(user.didUri, attesterCtype, form);
+    await createCredential(user.didUri, attesterCtype, form);
     setLoading(false);
     goBack();
   };

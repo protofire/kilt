@@ -5,15 +5,10 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { claimerRoute } from './routes/claimerRoutes';
 import { attesterRoute } from './routes/attesterRoutes';
-import * as Kilt from '@kiltprotocol/sdk-js';
-import { connect } from 'mongoose';
 import { websocket } from './services/websocket';
-
-async function connectDB() {
-  const uri = process.env.DB_URI;
-  if (!uri) throw Error('DB URI missing env variable');
-  await connect(uri);
-}
+import { blockchain } from './services/blockchain';
+import { database } from './services/database';
+import { credentialRoute } from './routes/credentialRoutes';
 
 async function main() {
   dotenv.config();
@@ -23,20 +18,20 @@ async function main() {
   app.use(bodyParser.json());
 
   // ensures Kilt connected before running the app
-  await Kilt.init({ address: 'wss://peregrine.kilt.io/parachain-public-ws' });
-  await Kilt.connect();
-
+  await blockchain().init();
   // connects the Mongodb instance.
-  await connectDB();
+  await database().init();
 
   app.use('/api/claimer', claimerRoute);
   app.use('/api/attester', attesterRoute);
+  app.use('/api/credential', credentialRoute);
 
   const port = process.env.PORT ?? 8000;
   const server = app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
   });
 
+  // connects the server to a ws service for live updates
   websocket().init(server);
 }
 

@@ -13,8 +13,8 @@ import {
 } from '@kiltprotocol/sdk-js';
 import { UUID } from '@kiltprotocol/utils';
 import { FullDidDetails } from '@kiltprotocol/did';
-import { keystoreSigner } from './utils';
 import { Status } from '../constants/status.enum';
+import { getKeystoreSigner } from './utils';
 
 /**
  *  set of utilities for handling sdk operations for claims.
@@ -76,6 +76,7 @@ const createRequest = async (
   fullDidDetails: FullDidDetails
 ) => {
   const requestForAttestation = RequestForAttestation.fromClaim(claim);
+  const keystoreSigner = getKeystoreSigner();
 
   const signedRequest = await requestForAttestation.signWithDidKey(
     keystoreSigner,

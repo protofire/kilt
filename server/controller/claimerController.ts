@@ -6,8 +6,7 @@ import {
   getEndpointResponse,
   getEndpointsFromDid
 } from '../kilt/claimer';
-import { Status } from '../constants/status.enum';
-import { RequestAttestation } from '../schemas/requestAttestation';
+import { ClaimerCredential } from '../schemas/credential';
 
 /**
  * Fetchs all the credentials for a claimer.
@@ -41,11 +40,12 @@ export async function getCredentialsByDid(req: Request, res: Response) {
   const attestedCredentials: ICredentialByDidResponse[] = await Promise
     .all(endpointResponse.map(buildCredential));
 
-  const requests = await RequestAttestation.find({ claimerDid: did });
-  const notAttestedCredentials = requests.map((r) => ({
-    attesterDidUri: '',
-    label: r.ctypeId,
-    status: Status.unverified
+  const savedCredentials = await ClaimerCredential.find({ claimerDid: did });
+
+  const notAttestedCredentials = savedCredentials.map((c) => ({
+    attesterDidUri: c.credential?.attestation?.owner ?? '',
+    label: c.ctypeId,
+    status: c.status
   }));
 
   const credentials = [...attestedCredentials, ...notAttestedCredentials];

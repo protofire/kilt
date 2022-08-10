@@ -1,7 +1,7 @@
 import { DidUri } from '@kiltprotocol/sdk-js';
 
-export interface IRequestDetailResponse {
-  readonly _id: string,
+export interface IRequestDetail {
+  readonly _id?: string,
   readonly claimerDidUri: DidUri | string,
   readonly ctypeName: string,
   readonly ctypeId: string,

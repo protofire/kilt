@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { onLoadRequest } from '../../../../api/attester/requests';
+import { verifyAttesterRequest } from '../../../../api/attester/verifyAttesterRequest';
 import Topbar from '../../../../components/Topbar/Topbar';
 import { Status } from '../../../../constants/status';
 import useUser from '../../../../hooks/user';
@@ -27,12 +28,35 @@ function AttesterRequestDetail() {
 
   const goBack = () => navigate(-1);
 
+  const verify = async () => {
+    if (!user || !request || !params.id) return;
+    setLoading(true);
+    await verifyAttesterRequest(params.id, user.didUri);
+    setLoading(false);
+    goBack();
+  };
+
+  const confirmPayment = async () => {
+    setLoading(true);
+    setLoading(false);
+    goBack();
+  };
+
   const getActionByStatus = () => {
     if (!request) return;
     switch (request.status) {
       case Status.unverified: return 'Verify';
       case Status.pendingPayment: return 'Confirm Payment';
       default: return '';
+    }
+  };
+
+  const runCallbackByStatus = () => {
+    if (!request) return;
+    switch (request.status) {
+      case Status.unverified: return verify();
+      case Status.pendingPayment: return confirmPayment();
+      default: return () => {};
     }
   };
 
@@ -74,7 +98,7 @@ function AttesterRequestDetail() {
             <button className='secondary' onClick={goBack}>
               Reject
             </button>}
-          <button className='primary' onClick={goBack}>
+          <button className='primary' onClick={() => runCallbackByStatus()}>
             {getActionByStatus()}
           </button>
         </div>

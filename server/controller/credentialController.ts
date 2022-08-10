@@ -4,23 +4,25 @@ import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
 import { Status } from '../constants/status.enum';
 import { IAttesterCtype } from '../interfaces/attesterCtype';
-import { IRequestDetailResponse } from '../interfaces/requestDetail';
+import { IRequestDetail } from '../interfaces/requestDetail';
+import { getOwnerKeyring } from '../kilt/account';
+import { createAttestation } from '../kilt/attestation';
 import { createClaim, createRequest } from '../kilt/claimer';
-import { getFullDidDetails } from '../kilt/utils';
+import { getFullDidDetails, getKeystoreSigner } from '../kilt/utils';
 import { AttesterCtype } from '../schemas/attesterCtype';
-import { RequestAttestation } from '../schemas/requestAttestation';
+import { ClaimerCredential, IClaimerCredential } from '../schemas/credential';
 import { websocket } from '../services/websocket';
 
 /**
- * Creates and submits a new request for attestation.
+ * Creates and submits a new credential 
+ * request for attestation.
  */
- export async function createAttesterRequest(req: Request, res: Response) {
+ export async function createCredential(req: Request, res: Response) {
   const { claimerDidUri, attesterCtype, form }: {
     claimerDidUri: DidUri,
     attesterCtype: IAttesterCtype,
     form: any
   } = req.body;
-  const { connection } = websocket();
 
   if (!claimerDidUri || !attesterCtype || !form) {
     return res.status(400).json({
@@ -48,18 +50,18 @@ import { websocket } from '../services/websocket';
   const claim = createClaim(ctypeSchema, fullDidDetails, form);
   const request: IRequestForAttestation = await createRequest(claim, fullDidDetails);
 
-  const requestForSave = new RequestAttestation({
+  const credential = new ClaimerCredential({
     request,
     ctypeId: ctypeSchema.$id,
     claimerDid: claimerDidUri,
     status: Status.unverified
   });
 
-  const saved = await requestForSave.save();
+  const saved = await credential.save();
 
   // sends the new request to the clients to update
   // the attesters requests table
-  const requestToSend: IRequestDetailResponse = {
+  const requestToSend: IRequestDetail = {
     _id: saved._id.toString(),
     claimerDidUri: saved.claimerDid,
     ctypeName: saved.ctypeId,
@@ -67,7 +69,7 @@ import { websocket } from '../services/websocket';
     ctypeId: saved.ctypeId
   };
 
-  connection?.send(JSON.stringify(requestToSend));
+  websocket().connection?.send(JSON.stringify(requestToSend));
 
   return res.status(200).json({
     success: true,
@@ -76,7 +78,8 @@ import { websocket } from '../services/websocket';
 }
 
 /**
- * List all the requests for attestation for the current attester.
+ * List all the requests for credential
+ * attestation for the current attester.
  */
  export const getRequests = async (req: Request, res: Response) => {
   const { did } = req.params;
@@ -101,15 +104,16 @@ import { websocket } from '../services/websocket';
 
   const ctypeIds = ctypesToAttest.map(cta => cta.ctypeId);
 
-  const requests = await RequestAttestation
-    .find({ ctypeId: { $in: ctypeIds } })
+  const credentials: IClaimerCredential[] = await ClaimerCredential
+    .find({ status: { $ne: Status.verified }, ctypeId: { $in: ctypeIds } })
     .sort({ _id: -1 }); // descending sort
 
-  const data = requests.map(r => ({
-    _id: r._id,
-    claimerDidUri: r.claimerDid,
-    ctypeName: r.ctypeId,
-    status: r.status
+  const data: IRequestDetail[] = credentials.map(c => ({
+    _id: c._id?.toString(),
+    claimerDidUri: c.claimerDid,
+    ctypeName: c.ctypeId,
+    status: c.status,
+    ctypeId: c.ctypeId
   }));
 
   return res.status(200).json({ success: true, data });
@@ -118,8 +122,8 @@ import { websocket } from '../services/websocket';
 export const getRequestDetail = async (req: Request, res: Response) => {
   const { id, did } = req.params;
 
-  const request = await RequestAttestation.findById(id);
-  if (!request) {
+  const credential = await ClaimerCredential.findById(id);
+  if (!credential) {
     return res.status(404).json({
       success: false,
       msg: 'Request for attestation not found.'
@@ -127,7 +131,7 @@ export const getRequestDetail = async (req: Request, res: Response) => {
   }
 
   const attesterCtype = await AttesterCtype.findOne({
-    ctypeId: request?.ctypeId,
+    ctypeId: credential.ctypeId,
     attesterDidUri: did
   });
   if (!attesterCtype) {
@@ -137,7 +141,7 @@ export const getRequestDetail = async (req: Request, res: Response) => {
     });
   }
 
-  const ctype = ctypesList.find(c => c.$id === request?.ctypeId);
+  const ctype = ctypesList.find(c => c.$id === credential.ctypeId);
   if (!ctype) {
     return res.status(400).json({
       success: false,
@@ -145,14 +149,14 @@ export const getRequestDetail = async (req: Request, res: Response) => {
     });
   }
 
-  const data: IRequestDetailResponse = {
-    _id: request._id.toString(),
-    claimerDidUri: request?.claimerDid,
-    ctypeId: request.ctypeId,
-    ctypeName: ctype?.title,
-    terms: attesterCtype?.terms,
-    form: request.request.claim.contents,
-    status: request.status
+  const data: IRequestDetail = {
+    _id: credential._id.toString(),
+    claimerDidUri: credential.claimerDid,
+    ctypeId: credential.ctypeId,
+    ctypeName: ctype.title,
+    terms: attesterCtype.terms,
+    form: credential.request.claim.contents,
+    status: credential.status
   };
 
   return res.status(200).json({
@@ -160,3 +164,47 @@ export const getRequestDetail = async (req: Request, res: Response) => {
     data
   });
 };
+
+export const verifyRequest = async (req: Request, res: Response) => {
+  const { id, did } = req.params;
+
+  const currentCredential = await ClaimerCredential.findById(id);
+  if (!currentCredential) {
+    return res.status(404).json({ 
+      success: false,
+      msg: 'Request for attestation not found.'
+    });
+  }
+
+  const keystoreSigner = getKeystoreSigner();
+  const attesterFullDid = await getFullDidDetails(did as DidUri);
+  if (!attesterFullDid) {
+    return res.status(404).json({
+      success: false,
+      msg: 'Attester full DiD not found.'
+    });
+  }
+
+  const keyring = getOwnerKeyring();
+  if (keyring.pairs.length === 0) {
+    return res.status(400).json({ 
+      success: false,
+      msg: 'No keypairs for submitter account'
+    });
+  }
+
+  const credential = await createAttestation(
+    keystoreSigner,
+    currentCredential.request,
+    attesterFullDid,
+    keyring.pairs[0]
+  );
+  currentCredential.status = Status.prendingPayment;
+  currentCredential.credential = credential;
+  await currentCredential.save();
+
+  return res.status(200).json({
+    success: true,
+    credential
+  });
+}

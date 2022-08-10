@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 
 interface IAttesterCtype {
+  _id: ObjectId,
   attesterDidUri: string,
   ctypeName: string,
   ctypeId: string,

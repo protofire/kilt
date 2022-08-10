@@ -3,8 +3,9 @@ import { isAttester } from '../controller/attesterController';
 import { getCtypes } from '../controller/ctypesController';
 import {
   getRequestDetail,
-  getRequests
-} from '../controller/requestsController';
+  getRequests,
+  verifyRequest
+} from '../controller/credentialController';
 import {
   createAttesterCtype,
   deleteAttesterCtype,
@@ -18,7 +19,8 @@ attesterRoute.get('/ctypes/all/:did', getCtypes);
 attesterRoute.get('/ctypes/:did', getAttesterCtypesForAttester);
 attesterRoute.post('/ctypes', createAttesterCtype);
 attesterRoute.delete('/ctypes/:did/:id', deleteAttesterCtype);
-attesterRoute.get('/request/:did', getRequests);
 attesterRoute.get('/request/detail/:id/:did', getRequestDetail);
+attesterRoute.post('/request/verify/:id/:did', verifyRequest);
+attesterRoute.get('/request/:did', getRequests);
 
 export { attesterRoute };
