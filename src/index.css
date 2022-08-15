@@ -136,10 +136,19 @@ li {
 
 .topbar {
   width: 100vw;
+  display: flex;
+  justify-content: space-between;
 }
 
-.topbar-content {
+.topbar-content-right {
+  display: inline;
   text-align: end;
+  margin: 20px;
+}
+
+.topbar-content-left {
+  display: inline;
+  text-align: start;
   margin: 20px;
 }
 
