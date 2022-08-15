@@ -8,7 +8,7 @@ import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
  * @returns { data: IAttesterCtype }
  */
 export const createAttesterCtype = async (req: Request, res: Response) => {
-  const { attesterDidUri, ctypeId, quote, terms } = req.body;
+  const { attesterDidUri, attesterWeb3name, ctypeId, quote, terms } = req.body;
 
   const attester = attesterList.find(a => a === attesterDidUri);
   if (!attester) {
@@ -36,6 +36,7 @@ export const createAttesterCtype = async (req: Request, res: Response) => {
   const ctypeName = ctype.title;
 
   const attesterCtype = new AttesterCtype({
+    attesterWeb3name,
     attesterDidUri,
     ctypeName,
     ctypeId,
@@ -139,6 +140,7 @@ export async function getAttesterCtypeDetail(req: Request, res: Response) {
   const attesterCtypeResponse: IAttesterCtype = {
     _id: attesterCtype._id,
     attesterDidUri: attesterCtype.attesterDidUri,
+    attesterWeb3name: attesterCtype.attesterWeb3name,
     ctypeName: ctype.title,
     ctypeId: attesterCtype.ctypeId,
     quote: attesterCtype.quote,

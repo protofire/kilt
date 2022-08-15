@@ -17,15 +17,17 @@ function ClaimerAttesterList() {
     if (!user) return;
     setLoading(true);
     onListAttesters(user.didUri)
-      .then((attesters: IAttesterCtype[]) =>
-        setRows([...attesters.map(attesterCtypeToRow)]))
+      .then((attesters: IAttesterCtype[]) => { console.log(attesters); setRows([...attesters.map(attesterCtypeToRow)]); })
       .then(() => setLoading(false));
   }, [ user ]);
 
   const attesterCtypeToRow = (attesterCtype: IAttesterCtype) => ({
     id: attesterCtype._id,
     values: [
-      { value: formatDidUri(attesterCtype.attesterDidUri) },
+      {
+        value: attesterCtype.attesterWeb3name ??
+          formatDidUri(attesterCtype.attesterDidUri)
+      },
       { value: attesterCtype.ctypeName },
       { value: attesterCtype.quote + ' KILT' }
     ]

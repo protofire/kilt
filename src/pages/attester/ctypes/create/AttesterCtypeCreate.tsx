@@ -45,7 +45,8 @@ function AttesterCtypeCreate() {
       ctypeName: selectedCtype.title,
       quote,
       terms,
-      attesterDidUri: user?.didUri
+      attesterDidUri: user?.didUri,
+      attesterWeb3name: user?.web3name
     });
     if (success) navigate(-1);
   };

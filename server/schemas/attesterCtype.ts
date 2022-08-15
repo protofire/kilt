@@ -12,6 +12,7 @@ interface IPropertyMap {
 export interface IAttesterCtype {
   _id?: ObjectId,
   attesterDidUri: string,
+  attesterWeb3name: string,
   ctypeName: string,
   ctypeId: string,
   quote: number,
@@ -21,6 +22,7 @@ export interface IAttesterCtype {
 
 const attesterCtypeSchema = new mongoose.Schema<IAttesterCtype>({
   attesterDidUri: String,
+  attesterWeb3name: String,
   ctypeName: String,
   ctypeId: String,
   quote: Number,
