@@ -8,7 +8,7 @@ export const onLoadCredential = async (id: number) => {
   return {
     id: 'someid',
     attesterDidUri: 'kilt:did:...' as DidUri,
-    attesterName: 'Attester 1',
+    attesterWeb3name: 'Attester 1',
     ctypeName: 'CType 1',
     status: 'verified',
     terms: `Lorem ipsum dolor sit amet, consectetur adipiscing elit,

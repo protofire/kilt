@@ -39,8 +39,10 @@ const buildCredential = async (endpointData: ICredentialEndpointResponse) => {
   const attestation = await Attestation.query(
     endpointData.credential.rootHash
   );
+
   if (!attestation) {
     return {
+      attesterWeb3name: '',
       attesterDidUri: '',
       label: endpointData.metadata?.label,
       status: Status.unverified
@@ -52,7 +54,10 @@ const buildCredential = async (endpointData: ICredentialEndpointResponse) => {
     attestation
   );
 
+  const web3name = await Did.Web3Names.queryWeb3NameForDid(attestation.owner);
+
   return {
+    attesterWeb3name: web3name ?? '',
     attesterDidUri: attestation.owner,
     label: endpointData.metadata?.label,
     status: !credential.attestation.revoked

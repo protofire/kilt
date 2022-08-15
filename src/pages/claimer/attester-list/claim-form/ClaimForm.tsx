@@ -33,7 +33,7 @@ function ClaimForm() {
   const onSubmit = async () => {
     if (!user || !attesterCtype) return;
     setLoading(true);
-    await createCredential(user.didUri, attesterCtype, form);
+    await createCredential(user.didUri, user.web3name, attesterCtype, form);
     setLoading(false);
     goBack();
   };

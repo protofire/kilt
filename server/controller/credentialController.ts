@@ -1,4 +1,4 @@
-import { DidUri, IRequestForAttestation } from '@kiltprotocol/sdk-js';
+import { Did, DidUri, IRequestForAttestation } from '@kiltprotocol/sdk-js';
 import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
@@ -16,8 +16,9 @@ import { websocket } from '../services/websocket';
  * request for attestation.
  */
 export async function createCredential(req: Request, res: Response) {
-  const { claimerDidUri, attesterCtype, form }: {
+  const { claimerDidUri, claimerWeb3name, attesterCtype, form }: {
     claimerDidUri: DidUri,
+    claimerWeb3name: string,
     attesterCtype: IAttesterCtype,
     form: any
   } = req.body;
@@ -52,7 +53,10 @@ export async function createCredential(req: Request, res: Response) {
     request,
     ctypeId: ctypeSchema.$id,
     ctypeName: ctypeSchema.title,
+    attesterDid: '',
+    attesterWeb3name: '',
     claimerDid: claimerDidUri,
+    claimerWeb3name,
     status: Status.unverified
   });
 
@@ -63,7 +67,10 @@ export async function createCredential(req: Request, res: Response) {
   const requestToSend: IClaimerCredential = {
     _id: saved._id,
     claimerDid: saved.claimerDid,
+    claimerWeb3name,
     ctypeName: saved.ctypeId,
+    attesterDid: '',
+    attesterWeb3name: '',
     status: saved.status,
     ctypeId: saved.ctypeId
   };
@@ -141,8 +148,11 @@ export const getRequestDetail = async (req: Request, res: Response) => {
   const data: IClaimerCredential = {
     _id: credential._id,
     claimerDid: credential.claimerDid,
+    claimerWeb3name: credential.claimerWeb3name,
     ctypeId: credential.ctypeId,
     ctypeName: ctype.title,
+    attesterDid: credential.attesterDid,
+    attesterWeb3name: credential.attesterWeb3name,
     terms: attesterCtype.terms,
     form: credential?.request?.claim.contents,
     status: credential.status
@@ -188,8 +198,13 @@ export const verifyRequest = async (req: Request, res: Response) => {
     attesterFullDid,
     keyring.pairs[0]
   );
+
+  const web3Name = await Did.Web3Names.queryWeb3NameForDid(attesterFullDid.uri);
+
   currentCredential.status = Status.prendingPayment;
   currentCredential.credential = credential;
+  currentCredential.attesterDid = attesterFullDid.uri;
+  currentCredential.attesterWeb3name = web3Name ?? '';
   await currentCredential.save();
 
   return res.status(200).json({

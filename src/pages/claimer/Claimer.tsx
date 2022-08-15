@@ -29,7 +29,10 @@ function Claimer() {
     id: credential._id,
     values: [
       { value: credential.label },
-      { value: formatDidUri(credential.attesterDidUri) },
+      {
+        value: credential.attesterWeb3name ??
+          formatDidUri(credential.attesterDidUri)
+      },
       {
         value: getLabelByStatus(credential.status),
         color: getColorByStatus(credential.status)

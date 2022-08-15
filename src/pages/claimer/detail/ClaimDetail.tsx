@@ -16,6 +16,11 @@ function ClaimDetail() {
       .then(() => setLoading(false));
   }, []);
 
+  const displayName = (credential: IAttestedCredential | null) => {
+    if (!credential) return '';
+    return credential.attesterWeb3name ?? credential.attesterDidUri;
+  };
+
   return (
     <div className='wrapper'>
       <Topbar />
@@ -24,7 +29,7 @@ function ClaimDetail() {
         : <div className='column page'>
           <span className='title'>Claim</span>
           <span className='subtitle'>
-            Attester: <strong>{credential?.attesterName}</strong><em> </em>
+            Attester: <strong>{displayName(credential)}</strong><em> </em>
             Status: <strong>{credential?.status}</strong>
           </span>
           <span className='subtitle'>Terms and Conditions</span>

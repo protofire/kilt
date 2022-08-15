@@ -44,7 +44,8 @@ export async function getCredentialsByDid(req: Request, res: Response) {
 
   const notAttestedCredentials = savedCredentials.map((c) => ({
     _id: c._id,
-    attesterDidUri: c.credential?.attestation?.owner ?? '',
+    attesterWeb3name: c.attesterWeb3name,
+    attesterDidUri: c.attesterDid,
     label: c.ctypeId,
     status: c.status
   }));

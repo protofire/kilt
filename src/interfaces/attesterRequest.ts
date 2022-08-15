@@ -11,6 +11,9 @@ export interface IAttesterRequest {
 export interface IAttesterRequestDetail {
   readonly _id: string;
   readonly claimerDid: DidUri,
+  readonly claimerWeb3name: string,
+  readonly attesterDid: string,
+  readonly attesterWeb3name: string,
   readonly ctypeName: string,
   readonly terms: string,
   readonly status: string
