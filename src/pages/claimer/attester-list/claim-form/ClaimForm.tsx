@@ -44,6 +44,11 @@ function ClaimForm() {
       return form;
     });
 
+  const displayName = (attester: IAttesterCtype) => {
+    return attester.attesterWeb3name ??
+      formatDidUri(attester.attesterDidUri);
+  };
+
   return (
     <div className='wrapper'>
       <Topbar />
@@ -56,7 +61,7 @@ function ClaimForm() {
               Attester:
               <strong>
                 {attesterCtype &&
-                  ` ${formatDidUri(attesterCtype.attesterDidUri)} (${attesterCtype.ctypeName})`}
+                  ` ${displayName(attesterCtype)} (${attesterCtype.ctypeName})`}
               </strong>
             </span>
             <span className='subtitle'>
