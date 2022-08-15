@@ -1,5 +1,5 @@
 import { IClaimContents, ICredential, IRequestForAttestation } from '@kiltprotocol/sdk-js';
-import mongoose, { ObjectId, Types } from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 
 export interface IClaimerCredential {
   _id?: ObjectId,

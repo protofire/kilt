@@ -6,7 +6,7 @@ import { ctypesList } from '../constants/ctypes';
  * Gets all the ctypes
  * @returns { data: ICTypeSchema[] }
  */
- export const getCtypes = async (req: Request, res: Response) => {
+export const getCtypes = async (req: Request, res: Response) => {
   const { did } = req.params;
 
   const attester = attesterList.find(a => a === did);

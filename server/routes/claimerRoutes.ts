@@ -11,5 +11,4 @@ claimerRoute.get('/credential/:did', getCredentialsByDid);
 claimerRoute.get('/attesters/:did', getAttesterCtypesForClaimer);
 claimerRoute.get('/attesters/detail/:id', getAttesterCtypeDetail);
 
-
 export { claimerRoute };

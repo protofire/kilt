@@ -26,7 +26,7 @@ function Claimer() {
   }, []);
 
   const credentialToRow = (credential: ICredential) => ({
-    id: credential.id,
+    id: credential._id,
     values: [
       { value: credential.label },
       { value: formatDidUri(credential.attesterDidUri) },

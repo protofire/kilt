@@ -1,7 +1,7 @@
 import { DidUri } from '@kiltprotocol/sdk-js';
 
 export interface ICredential {
-  readonly id?: string;
+  readonly _id?: string;
   readonly attesterName?: string;
   readonly attesterDidUri: DidUri;
   readonly label: string;

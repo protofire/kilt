@@ -12,10 +12,10 @@ import { ClaimerCredential, IClaimerCredential } from '../schemas/credential';
 import { websocket } from '../services/websocket';
 
 /**
- * Creates and submits a new credential 
+ * Creates and submits a new credential
  * request for attestation.
  */
- export async function createCredential(req: Request, res: Response) {
+export async function createCredential(req: Request, res: Response) {
   const { claimerDidUri, attesterCtype, form }: {
     claimerDidUri: DidUri,
     attesterCtype: IAttesterCtype,
@@ -51,6 +51,7 @@ import { websocket } from '../services/websocket';
   const credential = new ClaimerCredential({
     request,
     ctypeId: ctypeSchema.$id,
+    ctypeName: ctypeSchema.title,
     claimerDid: claimerDidUri,
     status: Status.unverified
   });
@@ -79,7 +80,7 @@ import { websocket } from '../services/websocket';
  * List all the requests for credential
  * attestation for the current attester.
  */
- export const getRequests = async (req: Request, res: Response) => {
+export const getRequests = async (req: Request, res: Response) => {
   const { did } = req.params;
 
   const attester = attesterList.find(a => a === did);
@@ -158,7 +159,7 @@ export const verifyRequest = async (req: Request, res: Response) => {
 
   const currentCredential = await ClaimerCredential.findById(id);
   if (!currentCredential?.request) {
-    return res.status(404).json({ 
+    return res.status(404).json({
       success: false,
       msg: 'Request for attestation not found.'
     });
@@ -175,7 +176,7 @@ export const verifyRequest = async (req: Request, res: Response) => {
 
   const keyring = getOwnerKeyring();
   if (keyring.pairs.length === 0) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       success: false,
       msg: 'No keypairs for submitter account'
     });
@@ -195,7 +196,7 @@ export const verifyRequest = async (req: Request, res: Response) => {
     success: true,
     credential
   });
-}
+};
 
 export const confirmRequest = async (req: Request, res: Response) => {
   const { did, id } = req.params;
@@ -210,14 +211,14 @@ export const confirmRequest = async (req: Request, res: Response) => {
 
   const credential = await ClaimerCredential.findById(id);
   if (!credential?.credential?.attestation?.owner) {
-    return res.status(404).json({ 
+    return res.status(404).json({
       success: false,
       msg: 'Request for attestation not found.'
     });
   }
 
   if (credential.credential.attestation.owner !== did) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       success: false,
       msg: 'The payment must be confirmed by the issuer attester.'
     });
@@ -227,4 +228,4 @@ export const confirmRequest = async (req: Request, res: Response) => {
   await credential.save();
 
   res.status(200).json({ success: true });
-}
+};

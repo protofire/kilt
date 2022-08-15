@@ -5,15 +5,15 @@ import {
   KeyringPair,
   KeystoreSigner,
   IRequestForAttestation
-} from "@kiltprotocol/sdk-js";
-import { submitTx } from "./utils";
+} from '@kiltprotocol/sdk-js';
+import { submitTx } from './utils';
 
 export const createAttestation = async (
   keystore: KeystoreSigner,
   requestForAttestation: IRequestForAttestation,
   attester: Did.FullDidDetails,
-  submitterAccount: KeyringPair,
-): Promise<Credential>  => {
+  submitterAccount: KeyringPair
+): Promise<Credential> => {
   // Create an attestation object and write its root hash on the chain
   // using the provided attester's full DID.
   const attestation = Attestation.fromRequestAndDid(
@@ -35,4 +35,4 @@ export const createAttestation = async (
     requestForAttestation,
     attestation
   );
-}
+};

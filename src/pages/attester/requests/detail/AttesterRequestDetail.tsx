@@ -74,7 +74,7 @@ function AttesterRequestDetail() {
           <div>
             Claimer:<em> </em>
             <strong>
-              {request && formatDidUri(request.claimerDidUri)}
+              {request && formatDidUri(request.claimerDid)}
             </strong>
           </div> <br />
           <div>

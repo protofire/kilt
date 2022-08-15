@@ -1,5 +1,5 @@
 import { Server } from 'http';
-import { WebSocket } from "ws";
+import { WebSocket } from 'ws';
 
 let connection: WebSocket;
 
@@ -7,28 +7,28 @@ const websocket = () => {
   const init = (server: Server) => {
     const websocketServer = new WebSocket.Server({
       noServer: true,
-      path: "/websockets"
+      path: '/websockets'
     });
 
-    server.on("upgrade", (request, socket, head) => {
+    server.on('upgrade', (request, socket, head) => {
       websocketServer.handleUpgrade(request, socket, head, (websocket) => {
-        websocketServer.emit("connection", websocket, request);
+        websocketServer.emit('connection', websocket, request);
       });
     });
 
     websocketServer.on(
-      "connection",
+      'connection',
       (websocketConnection) => {
-        console.log(`[server]: WebSocket Server connected`);
-        connection = websocketConnection.on("message", (message) => {
+        console.log('[server]: WebSocket Server connected');
+        connection = websocketConnection.on('message', (message) => {
           const parsedMessage = JSON.parse(message.toString());
           console.log(parsedMessage);
         });
       }
     );
-  }
+  };
 
- return { init, connection }
-}
+  return { init, connection };
+};
 
 export { websocket };

@@ -22,7 +22,7 @@ export const submitTx = async (
     resolveOn: resolve,
     rejectOn: console.error
   });
-}); 
+});
 
 const getFullDidDetails = async (did: DidUri) => {
   const fullDidDetails = await Did.FullDidDetails.fromChainInfo(did);
@@ -39,7 +39,7 @@ const getKeystoreSigner = () => {
     }
   };
   return keystoreSigner;
-}
+};
 
 export {
   getFullDidDetails,

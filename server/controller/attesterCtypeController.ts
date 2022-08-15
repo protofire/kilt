@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import { attesterList } from "../constants/attesters";
-import { ctypesList } from "../constants/ctypes";
+import { attesterList } from '../constants/attesters';
+import { ctypesList } from '../constants/ctypes';
 import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
 
 /**
  * Creates a new attester ctype relationship in database.
  * @returns { data: IAttesterCtype }
  */
- export const createAttesterCtype = async (req: Request, res: Response) => {
+export const createAttesterCtype = async (req: Request, res: Response) => {
   const { attesterDidUri, ctypeId, quote, terms } = req.body;
 
   const attester = attesterList.find(a => a === attesterDidUri);
@@ -53,15 +53,14 @@ import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
   return res.status(200).json({ success: true, data: created });
 };
 
-
 /**
  * Gets all the ctypes created by
  * @returns { data: IAttesterCtype[] }
  */
- export const getAttesterCtypesForAttester = async (
-   req: Request,
-   res: Response
-  ) => {
+export const getAttesterCtypesForAttester = async (
+  req: Request,
+  res: Response
+) => {
   const { did } = req.params;
 
   if (!did) {
@@ -89,10 +88,10 @@ import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
  * Gets all the AttesterCtypes saved on database.
  * @returns { success: boolean, data: AttesterCtype[] }
  */
- export const getAttesterCtypesForClaimer = async (
-   req: Request,
-   res: Response
-  ) => {
+export const getAttesterCtypesForClaimer = async (
+  req: Request,
+  res: Response
+) => {
   const { did } = req.params;
 
   if (!did || !did.startsWith('did:kilt:')) {
@@ -111,13 +110,13 @@ import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
   }
 
   return res.status(200).json({ success: true, data: attesterCtypes });
-}
+};
 
 /**
  * Gets a single AttesterCtype by id.
  * @returns { success: boolean, data: AttesterCtype }
  */
- export async function getAttesterCtypeDetail(req: Request, res: Response) {
+export async function getAttesterCtypeDetail(req: Request, res: Response) {
   const { id } = req.params;
 
   if (!id) {
@@ -138,7 +137,12 @@ import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
 
   // sets properties to fill by claimer
   const attesterCtypeResponse: IAttesterCtype = {
-    ...attesterCtype,
+    _id: attesterCtype._id,
+    attesterDidUri: attesterCtype.attesterDidUri,
+    ctypeName: ctype.title,
+    ctypeId: attesterCtype.ctypeId,
+    quote: attesterCtype.quote,
+    terms: attesterCtype.terms,
     properties: ctype.properties
   };
   return res.status(200).json({ success: true, data: attesterCtypeResponse });
@@ -148,7 +152,7 @@ import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
  * Deletes the provided ctype using the id.
  * @returns { success: boolean }
  */
- export const deleteAttesterCtype = async (req: Request, res: Response) => {
+export const deleteAttesterCtype = async (req: Request, res: Response) => {
   const { did, id } = req.params;
 
   const attester = attesterList.find(a => a === did);
