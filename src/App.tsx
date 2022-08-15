@@ -31,9 +31,7 @@ function App() {
         <Route path='/.well-known/did-configuration.json' element={ <Navigate to="/didConfiguration.json" /> }/>
 
         {/* Fallback routes */}
-        <Route path="/claimer/attester-list/claim" element={<Connect />}> </Route>
-        <Route path="/claimer/detail" element={<Connect />}> </Route>
-        <Route element={<Connect />}></Route>
+        <Route path="*" element={<Connect />}></Route>
       </Routes>
     </HashRouter>
     </div>
