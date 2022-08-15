@@ -2,12 +2,15 @@ import { DidUri } from '@kiltprotocol/sdk-js';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/user';
+import { isValidDid } from '../../utils/formatDidUri';
 
 function Connect() {
   const navigate = useNavigate();
   const { login, logout, user } = useUser();
 
-  const [didUri, setDidUri] = useState<DidUri>();
+  const [didUri, setDidUri] = useState<string>();
+
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     if (!user) return;
@@ -15,22 +18,23 @@ function Connect() {
   }, [ user ]);
 
   const connect = async () => {
-    if (!didUri) return;
-    const currentUser = user ?? await login(didUri);
-    if (!currentUser) throw Error('Could not login user');
-
+    if (!isValidDid(didUri)) return setError('Invalid Did');
+    const currentUser = user ?? await login(didUri as DidUri);
+    if (!currentUser) return setError('Could not login with the given Did');
     if (currentUser.isAttester) navigate('/select-profile');
     else navigate('/claimer');
   };
 
   const handleDidUriChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDidUri(e.target.value as DidUri);
+    setError('');
+    setDidUri(e.target.value);
   };
 
   return (
     <div className='wrapper'>
       <div className='center column'>
         <input type="text" value={didUri} placeholder={'DiD Uri'} onChange={handleDidUriChange} />
+        {error && <div className='error'>{error}</div>}
         <button className='primary' onClick={connect}>
           Connect
         </button>

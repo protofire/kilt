@@ -183,3 +183,8 @@ li {
 .margin-left {
   margin-left: 10px;
 }
+
+.error {
+  color: #db4b4b;
+  margin: 5px;
+}

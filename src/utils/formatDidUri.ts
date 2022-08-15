@@ -9,3 +9,9 @@ export const formatDidUri = (did: DidUri) =>
 export const getDisplayName = (user: IUser) => {
   return user.web3name ?? formatDidUri(user.didUri);
 };
+
+export const isValidDid = (input: string | undefined) => {
+  if (!input) return false;
+  const regex = /^(did:kilt:[a-zA-Z0-9]{48})$/;
+  return regex.test(input);
+};
