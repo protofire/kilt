@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/user';
-import { formatDidUri } from '../../utils/formatDidUri';
+import { getDisplayName } from '../../utils/formatDidUri';
 import { ReactComponent as BackSvg } from '../../assets/back.svg';
 
 function Topbar() {
@@ -19,7 +19,7 @@ function Topbar() {
       <div className='topbar-content-right'>
         { user &&
           (user.isAttester ? 'Attester: ' : 'Claimer: ') +
-          formatDidUri(user.didUri)}
+          getDisplayName(user)}
       </div>
     </div>
   );

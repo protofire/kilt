@@ -1,5 +1,4 @@
 import express from 'express';
-import { isAttester } from '../controller/attesterController';
 import { getCtypes } from '../controller/ctypesController';
 import {
   confirmRequest,
@@ -15,7 +14,6 @@ import {
 
 const attesterRoute = express.Router();
 
-attesterRoute.get('/isAttester/:did', isAttester);
 attesterRoute.get('/ctypes/all/:did', getCtypes);
 attesterRoute.get('/ctypes/:did', getAttesterCtypesForAttester);
 attesterRoute.post('/ctypes', createAttesterCtype);
