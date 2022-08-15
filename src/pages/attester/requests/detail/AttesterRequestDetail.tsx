@@ -7,7 +7,7 @@ import Topbar from '../../../../components/Topbar/Topbar';
 import { Status } from '../../../../constants/status';
 import useUser from '../../../../hooks/user';
 import { IAttesterRequestDetail } from '../../../../interfaces/attesterRequest';
-import { formatDidUri } from '../../../../utils/formatDidUri';
+import { formatDidUri } from '../../../../utils/did';
 import { getColorByStatus, getLabelByStatus } from '../../../../utils/requestStatus';
 
 function AttesterRequestDetail() {

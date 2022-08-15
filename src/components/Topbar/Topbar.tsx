@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/user';
-import { getDisplayName } from '../../utils/formatDidUri';
+import { getDisplayName } from '../../utils/did';
 import { ReactComponent as BackSvg } from '../../assets/back.svg';
 
 function Topbar() {

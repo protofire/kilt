@@ -2,7 +2,7 @@ import { DidUri } from '@kiltprotocol/sdk-js';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/user';
-import { isValidDid } from '../../utils/formatDidUri';
+import { isValidDid } from '../../utils/did';
 
 function Connect() {
   const navigate = useNavigate();

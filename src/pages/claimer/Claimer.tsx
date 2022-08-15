@@ -5,7 +5,7 @@ import Table, { Row } from '../../components/Table/Table';
 import Topbar from '../../components/Topbar/Topbar';
 import useUser from '../../hooks/user';
 import { ICredential } from '../../interfaces/credential';
-import { formatDidUri } from '../../utils/formatDidUri';
+import { formatDidUri } from '../../utils/did';
 import { getColorByStatus, getLabelByStatus } from '../../utils/requestStatus';
 
 function Claimer() {

@@ -5,7 +5,7 @@ import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
 import useUser from '../../../hooks/user';
 import { IAttesterCtype } from '../../../interfaces/attesterCtype';
-import { formatDidUri } from '../../../utils/formatDidUri';
+import { formatDidUri } from '../../../utils/did';
 
 function ClaimerAttesterList() {
   const navigate = useNavigate();
