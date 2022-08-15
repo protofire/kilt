@@ -63,6 +63,10 @@ function AttesterRequestDetail() {
     }
   };
 
+  const displayName = (req: IAttesterRequestDetail) => {
+    return req.claimerWeb3name ?? formatDidUri(req.claimerDid);
+  };
+
   return (
     <div className='wrapper'>
     <Topbar />
@@ -74,7 +78,7 @@ function AttesterRequestDetail() {
           <div>
             Claimer:<em> </em>
             <strong>
-              {request && formatDidUri(request.claimerDid)}
+              {request && displayName(request)}
             </strong>
           </div> <br />
           <div>

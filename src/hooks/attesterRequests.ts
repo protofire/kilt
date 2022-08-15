@@ -60,7 +60,10 @@ export const useAttesterRequests = () => {
   const requestToRow = (request: IAttesterRequest): Row => ({
     id: request._id,
     values: [
-      { value: formatDidUri(request.claimerDid) },
+      {
+        value: request.claimerWeb3name ??
+        formatDidUri(request.claimerDid)
+      },
       { value: request.ctypeName },
       {
         value: getLabelByStatus(request.status),

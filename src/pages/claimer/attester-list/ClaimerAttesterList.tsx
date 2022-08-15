@@ -17,7 +17,8 @@ function ClaimerAttesterList() {
     if (!user) return;
     setLoading(true);
     onListAttesters(user.didUri)
-      .then((attesters: IAttesterCtype[]) => { console.log(attesters); setRows([...attesters.map(attesterCtypeToRow)]); })
+      .then((attesters: IAttesterCtype[]) =>
+        setRows([...attesters.map(attesterCtypeToRow)]))
       .then(() => setLoading(false));
   }, [ user ]);
 

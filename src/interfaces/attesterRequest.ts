@@ -3,6 +3,7 @@ import { DidUri } from '@kiltprotocol/sdk-js';
 export interface IAttesterRequest {
   readonly _id: string,
   readonly claimerDid: DidUri,
+  readonly claimerWeb3name: string,
   readonly ctypeName: string,
   readonly ctypeId: string,
   readonly status: string
