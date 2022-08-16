@@ -69,7 +69,7 @@ function ClaimForm() {
             </span>
           </div>
           <span className='subtitle'>Terms and Conditions</span>
-          <div className='text'>
+          <div className='text wrap'>
             {attesterCtype && attesterCtype.terms}
           </div>
           <div>
