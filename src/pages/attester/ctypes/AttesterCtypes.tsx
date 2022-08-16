@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onDeleteAttesterCtype } from '../../../api/attester/deleteAttesterCtype';
 import { onListAttesterCtypes } from '../../../api/attester/listAttesterCtypes';
@@ -18,7 +18,7 @@ function AttesterCtypes() {
   }, []);
 
   const attesterCtypeToRow = (attesterCtype: IAttesterCtype) => ({
-    id: attesterCtype.ctypeId,
+    id: attesterCtype._id,
     values: [
       { value: attesterCtype.ctypeName },
       { value: attesterCtype.quote + ' KILT' }
@@ -35,13 +35,17 @@ function AttesterCtypes() {
     setLoading(false);
   };
 
-  const onDelete = async (id: string) => {
+  const onDelete = useCallback(async (id: string) => {
     if (!user) return;
     setLoading(true);
     await onDeleteAttesterCtype(user.didUri, id);
     loadTable();
     setLoading(false);
-  };
+  }, [ user ]);
+
+  const onView = useCallback((id: string) => {
+    navigate(`${id}`);
+  }, []);
 
   const onAdd = () => navigate('create');
 
@@ -59,7 +63,8 @@ function AttesterCtypes() {
               { name: 'Actions' }]}
             rows={rows}
             onDelete={onDelete}
-            disabled />
+            onClick={onView}
+          />
           <button className='primary' onClick={onAdd}>Add Quote</button>
         </div>
       }

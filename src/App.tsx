@@ -11,6 +11,7 @@ import AttesterRequestDetail from './pages/attester/requests/detail/AttesterRequ
 import ClaimerAttesterList from './pages/claimer/attester-list/ClaimerAttesterList';
 import ClaimForm from './pages/claimer/attester-list/claim-form/ClaimForm';
 import ClaimDetail from './pages/claimer/detail/ClaimDetail';
+import AttesterCtypeView from './pages/attester/ctypes/view/AttesterCtypeView';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/attester" element={<Attester />}> </Route>
         <Route path="/attester/ctypes" element={<AttesterCtypes />}> </Route>
         <Route path="/attester/ctypes/create" element={<AttesterCtypeCreate />}> </Route>
+        <Route path="/attester/ctypes/:id" element={<AttesterCtypeView />}> </Route>
         <Route path="/attester/requests" element={<AttesterRequests />}> </Route>
         <Route path="/attester/requests/:id" element={<AttesterRequestDetail />}> </Route>
         <Route path='/.well-known/did-configuration.json' element={ <Navigate to="/didConfiguration.json" /> }/>
