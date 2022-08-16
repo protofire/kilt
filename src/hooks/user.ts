@@ -22,6 +22,7 @@ export default function useUser() {
   async function logout() {
     localStorage.removeItem('user');
     setUser(null);
+    window.location.reload();
   }
 
   async function login(didUri: DidUri) {
