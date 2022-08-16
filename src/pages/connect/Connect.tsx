@@ -8,7 +8,7 @@ function Connect() {
   const navigate = useNavigate();
   const { login, logout, user } = useUser();
 
-  const [didUri, setDidUri] = useState<string>();
+  const [didUri, setDidUri] = useState<string>('');
 
   const [error, setError] = useState<string>('');
 
