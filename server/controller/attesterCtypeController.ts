@@ -165,17 +165,6 @@ export const deleteAttesterCtype = async (req: Request, res: Response) => {
     });
   }
 
-  const ctype = ctypesList.find(c => c.$id === id);
-  if (!ctype) {
-    return res.status(400).json({
-      success: false,
-      msg: 'Must provide a valid id parameter.'
-    });
-  }
-
-  const result = await AttesterCtype.deleteOne({
-    attesterDidUri: did,
-    ctypeId: id
-  });
-  return res.status(200).json({ success: result.acknowledged });
+  await AttesterCtype.findByIdAndDelete(id);
+  return res.status(200).json({ success: true });
 };

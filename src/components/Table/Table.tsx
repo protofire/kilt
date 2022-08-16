@@ -57,7 +57,12 @@ function Table({ columns, rows, onClick, onDelete, disabled = false } : Props) {
                 )}
                 {onDelete &&
                   <td key={r.id}>
-                    <button onClick={() => onDeletePressed(r.id)} className='action'>
+                    <button
+                      onClick={(e) => {
+                        onDeletePressed(r.id);
+                        e.stopPropagation();
+                      }}
+                      className='action'>
                       Delete
                     </button>
                   </td>}
