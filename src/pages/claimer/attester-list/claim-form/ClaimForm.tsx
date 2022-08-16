@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { onLoadAttesterCtype } from '../../../../api/claimer/loadAttesterCtype';
 import { createCredential } from '../../../../api/credential/createCredential';
@@ -7,6 +7,17 @@ import useUser from '../../../../hooks/user';
 import { IAttesterCtype } from '../../../../interfaces/attesterCtype';
 import { formatDidUri } from '../../../../utils/did';
 
+interface IProperty {
+  name: string;
+  type: string | undefined;
+}
+
+const propToInputType: Record<string, string> = {
+  number: 'number',
+  integer: 'number',
+  string: 'text'
+};
+
 function ClaimForm() {
   const params = useParams();
   const navigate = useNavigate();
@@ -14,7 +25,7 @@ function ClaimForm() {
 
   const [loading, setLoading] = useState(false);
   const [attesterCtype, setAttesterCtype] = useState<IAttesterCtype | null>(null);
-  const [properties, setProperties] = useState<string[]>([]);
+  const [properties, setProperties] = useState<IProperty[]>([]);
   const [form, setForm] = useState<any>({});
 
   useEffect(() => {
@@ -22,27 +33,44 @@ function ClaimForm() {
     setLoading(true);
     onLoadAttesterCtype(params.id).then((a) => {
       setAttesterCtype(a);
-      const propertyList = [...Object.keys(a.properties ?? {})];
+      const propertyList: IProperty[] = a.properties
+        ? Object.keys(a.properties).map(k => ({
+          name: k,
+          type: a.properties![k].type?.toString()
+        }))
+        : [];
+
       setProperties(propertyList);
       setLoading(false);
     });
-  }, []);
+  }, [ params ]);
 
   const goBack = () => navigate('/claimer', { replace: true });
 
-  const onSubmit = async () => {
+  const onSubmit = useCallback(async () => {
     if (!user || !attesterCtype) return;
     setLoading(true);
-    await createCredential(user.didUri, user.web3name, attesterCtype, form);
+    await createCredential(
+      user.didUri,
+      user.web3name,
+      attesterCtype,
+      JSON.stringify(form)
+    );
     setLoading(false);
     goBack();
-  };
+  }, [user, attesterCtype]);
 
-  const onChangeInput = (property: string, value: string) =>
+  const onChangeInput = (
+    property: string,
+    value: string,
+    type?: string
+  ) => {
+    const isNumeric = type === 'number' || type === 'integer';
     setForm((form: any) => {
-      form[property] = value;
+      form[property] = isNumeric ? Number(value) : value;
       return form;
     });
+  };
 
   const displayName = (attester: IAttesterCtype) => {
     return attester.attesterWeb3name ??
@@ -83,9 +111,10 @@ function ClaimForm() {
             <span className='text'>
               {properties.map(k =>
                 <input
-                  key={k}
-                  placeholder={k}
-                  onChange={(e) => onChangeInput(k, e.target.value)}
+                  key={k.name}
+                  placeholder={`${k.name} (${k.type})`}
+                  type={propToInputType[k.type ?? 'string']}
+                  onChange={(e) => onChangeInput(k.name, e.target.value, k.type)}
                 />)}
             </span>
             <br /><br />

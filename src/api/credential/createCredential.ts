@@ -6,7 +6,7 @@ export const createCredential = async (
   claimerDidUri: DidUri,
   claimerWeb3name: string | null,
   attesterCtype: IAttesterCtype,
-  form: any
+  form: string
 ) => {
   const { baseUrl } = apiConfig();
   const response = await fetch(`${baseUrl}/api/credential/`, {

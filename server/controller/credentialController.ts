@@ -20,7 +20,7 @@ export async function createCredential(req: Request, res: Response) {
     claimerDidUri: DidUri,
     claimerWeb3name: string,
     attesterCtype: IAttesterCtype,
-    form: any
+    form: string
   } = req.body;
 
   if (!claimerDidUri || !attesterCtype || !form) {
@@ -46,7 +46,7 @@ export async function createCredential(req: Request, res: Response) {
     });
   }
 
-  const claim = createClaim(ctypeSchema, fullDidDetails, form);
+  const claim = createClaim(ctypeSchema, fullDidDetails, JSON.parse(form));
   const request: IRequestForAttestation = await createRequest(claim, fullDidDetails);
 
   const credential = new ClaimerCredential({
