@@ -196,3 +196,16 @@ li {
   white-space: -o-pre-wrap; 
   word-wrap: break-word;
 }
+
+table {
+  border-collapse: collapse;
+}
+
+tr {
+  vertical-align: middle;
+  height: 45px;
+}
+
+tbody tr {
+  border-top: solid #bdbdbd 1px;
+}

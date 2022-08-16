@@ -6,7 +6,7 @@ import Topbar from '../../components/Topbar/Topbar';
 import useUser from '../../hooks/user';
 import { ICredential } from '../../interfaces/credential';
 import { formatDidUri } from '../../utils/did';
-import { getColorByStatus, getLabelByStatus } from '../../utils/requestStatus';
+import { getColorByStatus, getLabelByStatus } from '../../utils/status';
 
 function Claimer() {
   const navigate = useNavigate();

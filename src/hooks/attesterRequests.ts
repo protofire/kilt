@@ -4,7 +4,7 @@ import { onListRequests } from '../api/attester/listRequests';
 import { Row } from '../components/Table/Table';
 import { IAttesterRequest } from '../interfaces/attesterRequest';
 import { formatDidUri } from '../utils/did';
-import { getColorByStatus, getLabelByStatus } from '../utils/requestStatus';
+import { getColorByStatus, getLabelByStatus } from '../utils/status';
 import useUser from './user';
 import useWebsocket from './websocket';
 
