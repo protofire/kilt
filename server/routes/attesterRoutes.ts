@@ -1,16 +1,16 @@
 import express from 'express';
 import { getCtypes } from '../controller/ctypesController';
 import {
-  confirmRequest,
-  getRequestDetail,
-  getRequests,
-  verifyRequest
-} from '../controller/credentialController';
-import {
   createAttesterCtype,
   deleteAttesterCtype,
   getAttesterCtypesForAttester
 } from '../controller/attesterCtypeController';
+import {
+  confirmRequest,
+  getRequestDetail,
+  getRequests,
+  verifyRequest
+} from '../controller/attesterController';
 
 const attesterRoute = express.Router();
 

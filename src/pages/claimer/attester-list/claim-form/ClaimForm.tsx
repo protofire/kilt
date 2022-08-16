@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { createCredential } from '../../../../api/claimer/createCredential';
 import { onLoadAttesterCtype } from '../../../../api/claimer/loadAttesterCtype';
-import { createCredential } from '../../../../api/credential/createCredential';
 import Topbar from '../../../../components/Topbar/Topbar';
 import useUser from '../../../../hooks/user';
 import { IAttesterCtype } from '../../../../interfaces/attesterCtype';

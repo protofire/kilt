@@ -9,7 +9,7 @@ export const createCredential = async (
   form: string
 ) => {
   const { baseUrl } = apiConfig();
-  const response = await fetch(`${baseUrl}/api/credential/`, {
+  const response = await fetch(`${baseUrl}/api/claimer/credential`, {
     method: 'POST',
     body: JSON.stringify({
       claimerDidUri,

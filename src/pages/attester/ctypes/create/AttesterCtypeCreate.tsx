@@ -2,7 +2,7 @@ import { ICTypeSchema } from '@kiltprotocol/sdk-js';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createAttesterCtype } from '../../../../api/attester/createAttesterCtype';
-import { onListCtypes } from '../../../../api/ctypes/listCtypes';
+import { onListCtypes } from '../../../../api/attester/listCtypes';
 import useUser from '../../../../hooks/user';
 
 function AttesterCtypeCreate() {

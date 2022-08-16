@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import useSporran from './sporran';
 import { IUser } from '../interfaces/user';
 import { DidUri } from '@kiltprotocol/sdk-js';
-import { getUserDetails } from '../api/attester/userDetails';
+import { getUserDetails } from '../api/user/userDetails';
 
 export default function useUser() {
   const [user, setUser] = useState<null | IUser>(null);

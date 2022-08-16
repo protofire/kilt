@@ -8,7 +8,6 @@ import { attesterRoute } from './routes/attesterRoutes';
 import { websocket } from './services/websocket';
 import { blockchain } from './services/blockchain';
 import { database } from './services/database';
-import { credentialRoute } from './routes/credentialRoutes';
 import { userRoutes } from './routes/userRoutes';
 
 async function main() {
@@ -25,7 +24,6 @@ async function main() {
 
   app.use('/api/claimer', claimerRoute);
   app.use('/api/attester', attesterRoute);
-  app.use('/api/credential', credentialRoute);
   app.use('/api/user', userRoutes);
 
   const port = process.env.PORT ?? 8000;

@@ -1,11 +1,7 @@
 import { Did, DidUri } from '@kiltprotocol/sdk-js';
 import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
-
-export const formatDidUri = (did: DidUri) =>
-  did.substring(0, 12) +
-  '...' +
-  did.substring(did.length - 5, did.length - 1);
+import { formatDidUri } from '../kilt/utils';
 
 /**
  * Checks wheter the provided DiD is an attester or not.
