@@ -27,6 +27,7 @@ function ClaimForm() {
   const [attesterCtype, setAttesterCtype] = useState<IAttesterCtype | null>(null);
   const [properties, setProperties] = useState<IProperty[]>([]);
   const [form, setForm] = useState<any>({});
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!params.id) return goBack();
@@ -49,6 +50,13 @@ function ClaimForm() {
 
   const onSubmit = useCallback(async () => {
     if (!user || !attesterCtype) return;
+    const allDirty = properties.length === Object.keys(form).length;
+    const allHaveValue = Object.keys(form).every(k => !!form[k]);
+    if (!allDirty || !allHaveValue) {
+      setError('You must fill all the fields.');
+      return;
+    }
+    setError('');
     setLoading(true);
     await createCredential(
       user.didUri,
@@ -58,9 +66,9 @@ function ClaimForm() {
     );
     setLoading(false);
     goBack();
-  }, [user, attesterCtype]);
+  }, [user, attesterCtype, properties, form]);
 
-  const onChangeInput = (
+  const onChangeInput = useCallback((
     property: string,
     value: string,
     type?: string
@@ -70,7 +78,7 @@ function ClaimForm() {
       form[property] = isNumeric ? Number(value) : value;
       return form;
     });
-  };
+  }, []);
 
   const displayName = (attester: IAttesterCtype) => {
     return attester.attesterWeb3name ??
@@ -119,6 +127,7 @@ function ClaimForm() {
             </span>
             <br /><br />
           </div>
+          {error && <div className='error'>{error}</div>}
           <div>
             <button className='secondary' onClick={goBack}>Cancel</button>
             <button className='primary' onClick={onSubmit}>Submit</button>

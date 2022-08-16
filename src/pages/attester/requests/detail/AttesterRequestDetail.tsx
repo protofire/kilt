@@ -106,7 +106,7 @@ function AttesterRequestDetail() {
         </span>
         <br />
         <span className='subtitle'>Terms and Conditions</span>
-        <span className='text'>{request?.terms}</span>
+        <span className='text wrap'>{request?.terms}</span>
         <hr />
         <span className='subtitle'>Claimer Information</span>
         <span className='text'>
