@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
 
 interface Column {
   name: string,
@@ -23,6 +23,14 @@ interface Props {
 }
 
 function Table({ columns, rows, onClick, onDelete, disabled = false } : Props) {
+  const onDeletePressed = useCallback(async (id: string | number) => {
+    if (!onDelete) return;
+    const confirmed = confirm('Are you sure you want to delete?');
+    if (confirmed) {
+      onDelete(id);
+    }
+  }, []);
+
   return (
     <table>
       <thead>
@@ -49,7 +57,7 @@ function Table({ columns, rows, onClick, onDelete, disabled = false } : Props) {
                 )}
                 {onDelete &&
                   <td key={r.id}>
-                    <button onClick={() => onDelete(r.id)} className='action'>
+                    <button onClick={() => onDeletePressed(r.id)} className='action'>
                       Delete
                     </button>
                   </td>}

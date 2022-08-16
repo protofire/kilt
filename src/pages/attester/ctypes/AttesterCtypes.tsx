@@ -60,7 +60,7 @@ function AttesterCtypes() {
             rows={rows}
             onDelete={onDelete}
             disabled />
-          <button className='primary' onClick={onAdd}>Add</button>
+          <button className='primary' onClick={onAdd}>Add Quote</button>
         </div>
       }
     </div>

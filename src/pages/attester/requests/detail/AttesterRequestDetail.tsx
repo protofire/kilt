@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { confirmPaymentCredential } from '../../../../api/attester/confirmPaymentCredential';
 import { onLoadRequest } from '../../../../api/attester/requests';
@@ -25,46 +25,59 @@ function AttesterRequestDetail() {
     onLoadRequest(params.id, user.didUri)
       .then(setRequest)
       .then(() => setLoading(false));
-  }, [ user ]);
+  }, [ user, params ]);
 
   const goBack = () => navigate(-1);
 
-  const verify = async () => {
+  const verify = useCallback(async () => {
     if (!user || !params.id) return;
-    setLoading(true);
-    await verifyAttesterRequest(params.id, user.didUri);
-    setLoading(false);
-    goBack();
-  };
+    const confirmed = confirm('Are you sure you want to verify?');
+    if (confirmed) {
+      setLoading(true);
+      await verifyAttesterRequest(params.id, user.didUri);
+      setLoading(false);
+      goBack();
+    }
+  }, [ user, params ]);
 
-  const confirmPayment = async () => {
+  const confirmPayment = useCallback(async () => {
     if (!user || !params.id) return;
-    setLoading(true);
-    await confirmPaymentCredential(params.id, user.didUri);
-    setLoading(false);
-    goBack();
-  };
+    const confirmed = confirm('Are you sure you want to confirm?');
+    if (confirmed) {
+      setLoading(true);
+      await confirmPaymentCredential(params.id, user.didUri);
+      setLoading(false);
+      goBack();
+    }
+  }, [ params, user ]);
 
-  const getActionByStatus = () => {
+  const getActionByStatus = useCallback(() => {
     if (!request) return;
     switch (request.status) {
       case Status.unverified: return 'Verify';
       case Status.pendingPayment: return 'Confirm Payment';
       default: return '';
     }
-  };
+  }, [request, Status]);
 
-  const runCallbackByStatus = () => {
+  const runCallbackByStatus = useCallback(() => {
     if (!request) return;
     switch (request.status) {
       case Status.unverified: return verify();
       case Status.pendingPayment: return confirmPayment();
       default: return () => {};
     }
-  };
+  }, [request, Status]);
 
   const displayName = (req: IAttesterRequestDetail) => {
     return req.claimerWeb3name ?? formatDidUri(req.claimerDid);
+  };
+
+  const reject = () => {
+    const confirmed = confirm('Are you sure you want to reject?');
+    if (confirmed) {
+      goBack();
+    }
   };
 
   return (
@@ -102,7 +115,7 @@ function AttesterRequestDetail() {
         </span>
         <div>
           {request?.status === Status.unverified &&
-            <button className='secondary' onClick={goBack}>
+            <button className='secondary' onClick={reject}>
               Reject
             </button>}
           <button className='primary' onClick={() => runCallbackByStatus()}>
