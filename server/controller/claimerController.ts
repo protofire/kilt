@@ -89,12 +89,43 @@ import { IAttesterCtype } from '../schemas/attesterCtype';
 }
 
 /**
- * Fetchs all the credentials for a claimer.
- * First, itlooks to the endpoints created fetching all the
- * data, and then filters this data to build the credentials.
+ * Fetchs all saved credentials for a claimer.
  * @returns { success: boolean, data: ICredentialByDidResponse[] }
  */
 export async function getCredentialsByDid(req: Request, res: Response) {
+  const { did } = req.params;
+
+  if (!did) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide DiD parameter'
+    });
+  }
+
+  if (!did.startsWith('did:kilt:')) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Wrong DiD format'
+    });
+  }
+
+  const savedCredentials = await ClaimerCredential.find({ claimerDid: did });
+
+  const credentials = savedCredentials.map((c) => ({
+    _id: c._id,
+    attesterWeb3name: c.attesterWeb3name,
+    attesterDidUri: c.attesterDid,
+    label: c.ctypeId,
+    status: c.status
+  }));
+
+  return res.status(200).json({ success: true, data: credentials });
+}
+/**
+ * Fetchs all endpoint credentials for a claimer.
+ * @returns { success: boolean, data: ICredentialByDidResponse[] }
+ */
+ export async function getEndpointCredentialsByDid(req: Request, res: Response) {
   const { did } = req.params;
 
   if (!did) {
@@ -117,20 +148,8 @@ export async function getCredentialsByDid(req: Request, res: Response) {
   }
 
   const endpointResponse = await getEndpointResponse(endpoints[0]);
-  const attestedCredentials: ICredentialByDidResponse[] = await Promise
+  const credentials: ICredentialByDidResponse[] = await Promise
     .all(endpointResponse.map(buildCredential));
-
-  const savedCredentials = await ClaimerCredential.find({ claimerDid: did });
-
-  const notAttestedCredentials = savedCredentials.map((c) => ({
-    _id: c._id,
-    attesterWeb3name: c.attesterWeb3name,
-    attesterDidUri: c.attesterDid,
-    label: c.ctypeId,
-    status: c.status
-  }));
-
-  const credentials = [...attestedCredentials, ...notAttestedCredentials];
 
   return res.status(200).json({ success: true, data: credentials });
 }
