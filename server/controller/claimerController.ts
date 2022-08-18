@@ -20,7 +20,7 @@ import { IAttesterCtype } from '../schemas/attesterCtype';
  * request for attestation.
  * @returns { success: boolean, data: Document<IClaimerCredential> }
  */
- export async function createCredential(req: Request, res: Response) {
+export async function createCredential(req: Request, res: Response) {
   const { claimerDidUri, claimerWeb3name, attesterCtype, form }: {
     claimerDidUri: DidUri,
     claimerWeb3name: string,
@@ -35,8 +35,8 @@ import { IAttesterCtype } from '../schemas/attesterCtype';
     });
   }
 
-  const ctypeSchema = ctypesList.find(c => c.$id === attesterCtype.ctypeId);
-  if (!ctypeSchema) {
+  const ctype = ctypesList.find(c => c.schema.$id === attesterCtype.ctypeId);
+  if (!ctype) {
     return res.status(400).json({
       success: false,
       msg: 'The provided ctype is invalid'
@@ -51,13 +51,13 @@ import { IAttesterCtype } from '../schemas/attesterCtype';
     });
   }
 
-  const claim = createClaim(ctypeSchema, fullDidDetails, JSON.parse(form));
+  const claim = createClaim(ctype.schema, fullDidDetails, JSON.parse(form));
   const request: IRequestForAttestation = await createRequest(claim, fullDidDetails);
 
   const credential = new ClaimerCredential({
     request,
-    ctypeId: ctypeSchema.$id,
-    ctypeName: ctypeSchema.title,
+    ctypeId: ctype.schema.$id,
+    ctypeName: ctype.schema.title,
     attesterDid: '',
     attesterWeb3name: '',
     claimerDid: claimerDidUri,
@@ -121,11 +121,12 @@ export async function getCredentialsByDid(req: Request, res: Response) {
 
   return res.status(200).json({ success: true, data: credentials });
 }
+
 /**
  * Fetchs all endpoint credentials for a claimer.
  * @returns { success: boolean, data: ICredentialByDidResponse[] }
  */
- export async function getEndpointCredentialsByDid(req: Request, res: Response) {
+export async function getEndpointCredentialsByDid(req: Request, res: Response) {
   const { did } = req.params;
 
   if (!did) {

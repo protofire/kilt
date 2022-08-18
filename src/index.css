@@ -40,6 +40,16 @@ li {
   cursor: pointer;
 }
 
+.primary:disabled {
+  padding: 14px 20px;
+  background: rgb(185, 185, 185);
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: auto;
+}
+
 .secondary {
   padding: 14px 20px;
   background: transparent;

@@ -5,7 +5,7 @@ import { ReactComponent as BackSvg } from '../../assets/back.svg';
 
 function Topbar() {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, logout } = useUser();
 
   const goBack = () => navigate(-1);
 
@@ -19,7 +19,10 @@ function Topbar() {
       <div className='topbar-content-right'>
         { user &&
           (user.isAttester ? 'Attester: ' : 'Claimer: ') +
-          getDisplayName(user)}
+          getDisplayName(user)} <em> </em>
+        <button className='secondary' onClick={logout}>
+          Disconnect
+        </button>
       </div>
     </div>
   );

@@ -69,7 +69,7 @@ export const getRequestDetail = async (req: Request, res: Response) => {
     });
   }
 
-  const ctype = ctypesList.find(c => c.$id === credential.ctypeId);
+  const ctype = ctypesList.find(c => c.schema.$id === credential.ctypeId);
   if (!ctype) {
     return res.status(400).json({
       success: false,
@@ -82,7 +82,7 @@ export const getRequestDetail = async (req: Request, res: Response) => {
     claimerDid: credential.claimerDid,
     claimerWeb3name: credential.claimerWeb3name,
     ctypeId: credential.ctypeId,
-    ctypeName: ctype.title,
+    ctypeName: ctype.schema.title,
     attesterDid: credential.attesterDid,
     attesterWeb3name: credential.attesterWeb3name,
     terms: attesterCtype.terms,

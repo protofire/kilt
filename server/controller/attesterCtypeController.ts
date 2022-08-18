@@ -18,7 +18,7 @@ export const createAttesterCtype = async (req: Request, res: Response) => {
     });
   }
 
-  const ctype = ctypesList.find(c => c.$id === ctypeId);
+  const ctype = ctypesList.find(c => c.schema.$id === ctypeId);
   if (!ctype) {
     return res.status(400).json({
       success: false,
@@ -33,7 +33,7 @@ export const createAttesterCtype = async (req: Request, res: Response) => {
     });
   }
 
-  const ctypeName = ctype.title;
+  const ctypeName = ctype.schema.title;
 
   const attesterCtype = new AttesterCtype({
     attesterWeb3name,
@@ -128,7 +128,7 @@ export async function getAttesterCtypeDetail(req: Request, res: Response) {
   }
 
   const attesterCtype = await AttesterCtype.findById(id);
-  const ctype = ctypesList.find(c => c.$id === attesterCtype?.ctypeId);
+  const ctype = ctypesList.find(c => c.schema.$id === attesterCtype?.ctypeId);
   if (!attesterCtype || !ctype) {
     return res.status(404).json({
       success: false,
@@ -141,11 +141,11 @@ export async function getAttesterCtypeDetail(req: Request, res: Response) {
     _id: attesterCtype._id,
     attesterDidUri: attesterCtype.attesterDidUri,
     attesterWeb3name: attesterCtype.attesterWeb3name,
-    ctypeName: ctype.title,
+    ctypeName: ctype.schema.title,
     ctypeId: attesterCtype.ctypeId,
     quote: attesterCtype.quote,
     terms: attesterCtype.terms,
-    properties: ctype.properties
+    properties: ctype.schema.properties
   };
   return res.status(200).json({ success: true, data: attesterCtypeResponse });
 }

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@kiltprotocol/sdk-js": "^0.28.1",
+    "@polkadot/util-crypto": "^10.1.4",
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",

@@ -7,7 +7,6 @@ import { createCredential, getCredentialsByDid } from '../controller/claimerCont
 
 const claimerRoute = express.Router();
 
-
 claimerRoute.post('/credential', createCredential);
 claimerRoute.get('/credential/:did', getCredentialsByDid);
 claimerRoute.get('/attesters/:did', getAttesterCtypesForClaimer);

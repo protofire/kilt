@@ -1,45 +1,45 @@
-import { DidUri } from '@kiltprotocol/sdk-js';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useSporran from '../../hooks/sporran';
 import useUser from '../../hooks/user';
-import { isValidDid } from '../../utils/did';
 
 function Connect() {
   const navigate = useNavigate();
-  const { login, logout, user } = useUser();
+  const { connect, session, connecting, sporran } = useSporran();
+  const { login, user, loading } = useUser();
 
-  const [didUri, setDidUri] = useState<string>('');
-
-  const [error, setError] = useState<string>('');
+  useEffect(() => {
+    connect();
+  }, [ sporran ]);
 
   useEffect(() => {
     if (!user) return;
-    setDidUri(user.didUri);
+
+    if (user.isAttester) navigate('/select-profile');
+    else navigate('/claimer');
   }, [ user ]);
 
-  const connect = async () => {
-    if (!isValidDid(didUri)) return setError('Invalid Did');
-    const currentUser = user ?? await login(didUri as DidUri);
-    if (!currentUser) return setError('Could not login with the given Did');
-    if (currentUser.isAttester) navigate('/select-profile');
-    else navigate('/claimer');
-  };
+  const connectAccount = useCallback(async () => {
+    if (!session) return;
+    await login(session);
+  }, [ session ]);
 
-  const handleDidUriChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setError('');
-    setDidUri(e.target.value);
-  };
+  if (loading) {
+    return (
+      <div className='wrapper'>
+        <div className='center column'>
+          <div> Loading... </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='wrapper'>
       <div className='center column'>
-        <input type="text" value={didUri} placeholder={'DiD Uri'} onChange={handleDidUriChange} />
-        {error && <div className='error'>{error}</div>}
-        <button className='primary' onClick={connect}>
+        {connecting && <div> Connecting... </div>}
+        <button disabled={connecting} className='primary' onClick={connectAccount}>
           Connect
-        </button>
-        <button className='secondary' onClick={logout}>
-          Disconnect
         </button>
       </div>
     </div>
