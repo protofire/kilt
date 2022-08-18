@@ -4,6 +4,7 @@ import { attesterList } from '../constants/attesters';
 import { encryptionKeystore, formatDidUri } from '../kilt/utils';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { ctypesList } from '../constants/ctypes';
+import { buildRequestCredentialMessage } from '../kilt/account';
 
 /**
  * Checks wheter the provided DiD is an attester or not.
@@ -68,11 +69,8 @@ export const getSessionInfo = async (req: Request, res: Response) => {
  * @returns { data: { sessionInfo: ISessionInfo } }
  */
 export const buildMessage = async (req: Request, res: Response) => {
-  const {
-    encryptionKeyId,
-    // challenge
-    // nonce
-  } = req.body;
+  const { encryptionKeyId } = req.body;
+
   const did = process.env.OWNER_DID;
   if (!did) {
     return res.status(400).json({
@@ -80,8 +78,8 @@ export const buildMessage = async (req: Request, res: Response) => {
       msg: 'Must you must set OWNER_DID env variable'
     });
   }
-  const didUri = did as DidUri;
 
+  const didUri = did as DidUri;
   const fullDid = await Did.FullDidDetails.fromChainInfo(didUri);
   if (!fullDid || !fullDid.encryptionKey) {
     return res.status(400).json({
@@ -90,27 +88,7 @@ export const buildMessage = async (req: Request, res: Response) => {
     });
   }
 
-  interface IMessageResponse {
-    message: IEncryptedMessage;
-  }
-
-  const cTypes = ctypesList.map(c => ({ name: c.schema.title, cTypeHash: c.hash }));
-  const challenge = Utils.UUID.generate();
-  const content = { cTypes, challenge };
-  const type = MessageBodyType.REQUEST_CREDENTIAL;
-  const keyDid = encryptionKeyId.replace(/#.*$/, '') as DidUri;
-  const message = new Message({ content, type }, didUri, keyDid);
-
-  const encryptedMessage = await message.encrypt(
-    fullDid.encryptionKey.id,
-    fullDid,
-    encryptionKeystore,
-    encryptionKeyId
-  );
-
-  const data: IMessageResponse = {
-    message: encryptedMessage
-  };
-
+  const message = await buildRequestCredentialMessage(fullDid, encryptionKeyId);
+  const data = { message };
   return res.status(200).json({ data });
 };
