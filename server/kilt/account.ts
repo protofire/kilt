@@ -19,7 +19,7 @@ export const getOwnerKeyring = () => {
 
 export const buildRequestCredentialMessage = async (
   fullDid: FullDidDetails,
-  encryptionKeyId: DidResourceUri,
+  encryptionKeyId: DidResourceUri
 ) => {
   if (!fullDid || !fullDid.encryptionKey) return;
   const cTypes = ctypesList.map(c => ({ name: c.schema.title, cTypeHash: c.hash }));
@@ -37,4 +37,4 @@ export const buildRequestCredentialMessage = async (
   );
 
   return encryptedMessage;
-}
+};

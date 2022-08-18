@@ -1,10 +1,10 @@
-import { Did, DidUri, IEncryptedMessage, Message, MessageBodyType, Utils } from '@kiltprotocol/sdk-js';
+import { Did, DidUri } from '@kiltprotocol/sdk-js';
 import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
-import { encryptionKeystore, formatDidUri } from '../kilt/utils';
+import { formatDidUri } from '../kilt/utils';
 import { randomAsHex } from '@polkadot/util-crypto';
-import { ctypesList } from '../constants/ctypes';
 import { buildRequestCredentialMessage } from '../kilt/account';
+import { ISessionInfo } from '../interfaces/sessionInfo';
 
 /**
  * Checks wheter the provided DiD is an attester or not.
@@ -43,13 +43,6 @@ export const getSessionInfo = async (req: Request, res: Response) => {
       success: false,
       msg: 'Unable to get full did details'
     });
-  }
-
-  interface ISessionInfo {
-    sessionId: string;
-    dappName: string;
-    dAppEncryptionKeyUri: string;
-    challenge: string;
   }
 
   const dAppEncryptionKeyUri = fullDid.assembleKeyUri(fullDid.encryptionKey.id);
