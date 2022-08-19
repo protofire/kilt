@@ -9,13 +9,13 @@ export default function useSporran () {
   async function connect() {
     if (!sporran) return;
     setConnecting(true);
+
     const {
       dappName,
       dAppEncryptionKeyUri,
       challenge
     } = await getSessionInfo();
 
-    // get data for starting session from the backend
     const session = await sporran.startSession(
       dappName,
       dAppEncryptionKeyUri,

@@ -35,4 +35,6 @@ async function main() {
   websocket().init(server);
 }
 
-main();
+main()
+  .then(() => console.log('App running'))
+  .catch((err) => console.error(err));

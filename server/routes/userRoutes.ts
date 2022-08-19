@@ -1,4 +1,5 @@
 import express from 'express';
+import { Request, Response } from 'express';
 import {
   buildMessage,
   getSessionInfo,
@@ -7,8 +8,15 @@ import {
 
 const userRoutes = express.Router();
 
-userRoutes.get('/details/:did', getUserDetails);
-userRoutes.get('/session', getSessionInfo);
-userRoutes.post('/message', buildMessage);
+const errorHandler = (fn: any) => (req: Request, res: Response) => {
+  Promise.resolve(fn(req, res))
+    .catch(err => {
+      res.status(500).send({ msg: err.message });
+    });
+};
+
+userRoutes.get('/details/:did', errorHandler(getUserDetails));
+userRoutes.get('/session', errorHandler(getSessionInfo));
+userRoutes.post('/message', errorHandler(buildMessage));
 
 export { userRoutes };
