@@ -24,14 +24,14 @@ function AttesterCtypeView() {
       <Topbar></Topbar>
       <div className='wrapper'>
         <div className='center'>
-          <div className='column'>
-            <span className='title'>Ctype for Attestation</span>
-            <span className='subtitle'>Name</span>
-            <span className='text'>{attesterCtype?.ctypeName}</span>
-            <span className='subtitle'>Quote</span>
-            <span className='text'>{attesterCtype?.quote}</span>
-            <span className='subtitle'>Terms</span>
-            <span className='text'>{attesterCtype?.terms}</span>
+          <div className='column page'>
+            <div className='title'>Ctype for Attestation</div>
+            <div className='subtitle'>Name</div>
+            <div className='text'>{attesterCtype?.ctypeName}</div>
+            <div className='subtitle'>Quote</div>
+            <div className='text'>{attesterCtype?.quote}</div>
+            <div className='subtitle'>Terms</div>
+            <div className='text wrap'>{attesterCtype?.terms}</div>
           </div>
         </div>
       </div>
