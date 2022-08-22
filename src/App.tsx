@@ -16,7 +16,7 @@ import AttesterCtypeView from './pages/attester/ctypes/view/AttesterCtypeView';
 function App() {
   return (
     <div className="App">
-    <BrowserRouter basename='kilt'>
+    <BrowserRouter basename='/kilt'>
       <Routes>
         <Route path="/" element={<Connect />}></Route>
         <Route path="/select-profile" element={<SelectProfile />}> </Route>
