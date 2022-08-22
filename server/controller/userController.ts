@@ -5,6 +5,7 @@ import { formatDidUri } from '../kilt/utils';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { buildRequestCredentialMessage } from '../kilt/account';
 import { ISessionInfo } from '../interfaces/sessionInfo';
+import { verifyDidSignature } from '@kiltprotocol/did';
 
 /**
  * Checks wheter the provided DiD is an attester or not.
@@ -23,6 +24,24 @@ export const getUserDetails = async (req: Request, res: Response) => {
     data: { isAttester, web3name }
   });
 };
+
+/**
+ * Verifies the signature provided by the user to login with Did
+ * @returns { success: boolean, msg: string }
+ */
+export const verifySignature = async (req: Request, res: Response) => {
+  const { message, signature, keyUri } = req.body;
+
+  const result = await verifyDidSignature({
+    message,
+    signature: { signature, keyUri }
+  });
+  if (!result.verified) {
+    return res.status(400).json({ success: false, msg: 'Not verified' });
+  }
+
+  return res.status(200).json({ success: true, msg: 'verified' });
+}
 
 /**
  * Gets the information for setting up the sporran session.

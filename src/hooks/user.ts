@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { IUser } from '../interfaces/user';
-import { IEncryptedMessage } from '@kiltprotocol/sdk-js';
-import { buildMessage } from '../api/user/buildMessage';
-import { getUserDetails } from '../api/user/userDetails';
+import { SignWithDidError } from '../interfaces/error';
 import { useNavigate } from 'react-router-dom';
+import { UUID } from '@kiltprotocol/utils';
+import { verifySignature } from '../api/user/verifySignature';
+import { getUserDetails } from '../api/user/userDetails';
+import { DidUri } from '@kiltprotocol/sdk-js';
 
 export default function useUser() {
   const navigate = useNavigate();
@@ -17,6 +19,13 @@ export default function useUser() {
     return storedUser;
   }
 
+  async function setUserDetails(didUri: DidUri) {
+    const { web3name, isAttester } = await getUserDetails(didUri);
+    const userData: IUser = { didUri, isAttester, web3name };
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  }
+
   useEffect(() => {
     loadUser();
   }, []);
@@ -27,22 +36,24 @@ export default function useUser() {
     navigate('/');
   }
 
-  async function login(session: any) {
+  const login = useCallback(async (sporran: any) => {
     setLoading(true);
-    const { encryptionKeyId } = session;
-
-    session.listen(async (msg: IEncryptedMessage) => {
-      const didUri = msg.senderKeyUri;
-      const { web3name, isAttester } = await getUserDetails(didUri);
-      const userData: IUser = { didUri, isAttester, web3name };
-      localStorage.setItem('user', JSON.stringify(userData));
-      setUser(userData);
-      setLoading(false);
-    });
-
-    const { message } = await buildMessage(encryptionKeyId);
-    await session.send(message);
-  }
+    try {
+      const message = UUID.generate();
+      const { didKeyUri, signature } = await sporran.signWithDid(message);
+      const result = await verifySignature(message, signature, didKeyUri);
+      if (result.success) {
+        setUserDetails(didKeyUri);
+      }
+    } catch (err) {
+      if (err instanceof SignWithDidError) {
+        console.error(err.message);
+        return;
+      }
+      console.error(err);
+    }
+    setLoading(false);
+  }, []);
 
   return {
     user,

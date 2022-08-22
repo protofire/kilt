@@ -5,24 +5,23 @@ import useUser from '../../hooks/user';
 
 function Connect() {
   const navigate = useNavigate();
-  const { connect, session, connecting, sporran } = useSporran();
+  const { connect, connecting, sporran } = useSporran();
   const { login, user, loading } = useUser();
 
   useEffect(() => {
     connect();
-  }, [ sporran ]);
+  }, [sporran]);
 
   useEffect(() => {
     if (!user) return;
 
     if (user.isAttester) navigate('/select-profile');
     else navigate('/claimer');
-  }, [ user ]);
+  }, [user]);
 
   const connectAccount = useCallback(async () => {
-    if (!session) return;
-    await login(session);
-  }, [ session ]);
+    await login(sporran);
+  }, [sporran]);
 
   if (loading) {
     return (
@@ -37,7 +36,7 @@ function Connect() {
   return (
     <div className='wrapper'>
       <div className='center column'>
-        {connecting && <div> Connecting... </div>}
+      {connecting && <div> Connecting... </div>}
         <button disabled={connecting} className='primary' onClick={connectAccount}>
           Connect
         </button>
