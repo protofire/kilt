@@ -14,6 +14,7 @@ export interface IClaimerCredential {
   ctypeName?: string,
   terms?: string,
   form?: IClaimContents,
+  quote: number,
 }
 
 const claimerCredentialSchema = new mongoose.Schema<IClaimerCredential>({
@@ -27,7 +28,8 @@ const claimerCredentialSchema = new mongoose.Schema<IClaimerCredential>({
   attesterWeb3name: String,
   status: String,
   terms: String,
-  form: Object
+  form: Object,
+  quote: Number,
 });
 const ClaimerCredential = mongoose.model('ClaimerCredential', claimerCredentialSchema);
 

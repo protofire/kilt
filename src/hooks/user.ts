@@ -43,7 +43,10 @@ export default function useUser() {
       const { didKeyUri, signature } = await sporran.signWithDid(message);
       const result = await verifySignature(message, signature, didKeyUri);
       if (result.success) {
-        setUserDetails(didKeyUri);
+        setUserDetails(didKeyUri.includes('#')
+          ? didKeyUri.split('#')[0]
+          : didKeyUri
+        );
       }
     } catch (err) {
       if (err instanceof SignWithDidError) {

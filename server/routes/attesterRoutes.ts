@@ -16,6 +16,7 @@ import {
 const errorHandler = (fn: any) => (req: Request, res: Response) => {
   Promise.resolve(fn(req, res))
     .catch(err => {
+      console.error(err);
       res.status(500).send({ msg: err.message });
     });
 };

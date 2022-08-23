@@ -86,6 +86,7 @@ export const getRequestDetail = async (req: Request, res: Response) => {
     attesterDid: credential.attesterDid,
     attesterWeb3name: credential.attesterWeb3name,
     terms: attesterCtype.terms,
+    quote: attesterCtype.quote,
     form: credential?.request?.claim.contents,
     status: credential.status
   };

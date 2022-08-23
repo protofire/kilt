@@ -50,10 +50,8 @@ export async function createCredential(req: Request, res: Response) {
       msg: 'Could not load claimer DiD details'
     });
   }
-
   const claim = createClaim(ctype.schema, fullDidDetails, JSON.parse(form));
   const request: IRequestForAttestation = await createRequest(claim, fullDidDetails);
-
   const credential = new ClaimerCredential({
     request,
     ctypeId: ctype.schema.$id,
@@ -62,7 +60,9 @@ export async function createCredential(req: Request, res: Response) {
     attesterWeb3name: '',
     claimerDid: claimerDidUri,
     claimerWeb3name,
-    status: Status.unverified
+    status: Status.unverified,
+    quote: attesterCtype.quote,
+    terms: attesterCtype.terms,
   });
 
   const saved = await credential.save();
@@ -77,7 +77,9 @@ export async function createCredential(req: Request, res: Response) {
     attesterDid: '',
     attesterWeb3name: '',
     status: saved.status,
-    ctypeId: saved.ctypeId
+    ctypeId: saved.ctypeId,
+    quote: attesterCtype.quote,
+    terms: attesterCtype.terms,
   };
 
   websocket().connection?.send(JSON.stringify(requestToSend));
@@ -120,6 +122,24 @@ export async function getCredentialsByDid(req: Request, res: Response) {
   }));
 
   return res.status(200).json({ success: true, data: credentials });
+}
+
+/**
+ * Fetchs a credential by id
+ * @returns { success: boolean, data: ICredentialByDidResponse[] }
+ */
+ export async function getCredentialById(req: Request, res: Response) {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide an Id'
+    });
+  }
+
+  const credential = await ClaimerCredential.findById(id);
+  return res.status(200).json({ success: true, data: credential });
 }
 
 /**

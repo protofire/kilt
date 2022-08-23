@@ -92,6 +92,10 @@ li {
   flex-direction: column;
 }
 
+.text-start {
+  text-align: start;
+}
+
 .page {
   max-width: 800px;
   margin: auto;

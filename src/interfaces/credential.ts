@@ -11,9 +11,12 @@ export interface ICredential {
 export interface IAttestedCredential {
   readonly id: string;
   readonly attesterWeb3name: string;
-  readonly attesterDidUri: DidUri;
+  readonly claimerWeb3name: string;
+  readonly attesterDid: DidUri;
+  readonly claimerDid: DidUri;
   readonly ctypeName: string;
   readonly claimerText: string;
   readonly status: string;
   readonly terms: string;
+  readonly quote: number;
 }
