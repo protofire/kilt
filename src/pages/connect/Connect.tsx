@@ -5,12 +5,12 @@ import useUser from '../../hooks/user';
 
 function Connect() {
   const navigate = useNavigate();
-  const { connect, connecting, sporran } = useSporran();
+  const { sporran } = useSporran();
   const { login, user, loading } = useUser();
 
-  useEffect(() => {
-    connect();
-  }, [sporran]);
+  // useEffect(() => {
+  //   connect();
+  // }, [sporran]);
 
   useEffect(() => {
     if (!user) return;
@@ -36,8 +36,7 @@ function Connect() {
   return (
     <div className='wrapper'>
       <div className='center column'>
-      {connecting && <div> Connecting... </div>}
-        <button disabled={connecting} className='primary' onClick={connectAccount}>
+        <button className='primary' onClick={connectAccount}>
           Connect
         </button>
       </div>
