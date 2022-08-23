@@ -1,4 +1,12 @@
+import { DidUri } from '@kiltprotocol/sdk-js';
+import { IGenericResponse } from '../../interfaces/response';
 import { apiConfig } from '../config';
+
+export interface IVerifiedUser extends IGenericResponse {
+  didUri: DidUri;
+  web3name: string;
+  isAttester: boolean;
+}
 
 export const verifySignature = async (message: string, signature: string, keyUri: string) => {
   const { baseUrl, headers } = apiConfig();
@@ -7,6 +15,6 @@ export const verifySignature = async (message: string, signature: string, keyUri
     body: JSON.stringify({ message, signature, keyUri }),
     headers
   });
-  const result = await response.json();
+  const result = await response.json() as IVerifiedUser;
   return result;
 };

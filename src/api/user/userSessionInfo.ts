@@ -1,6 +1,6 @@
 import { apiConfig } from '../config';
 
-interface ISessionInfo {
+export interface ISessionInfo {
   sessionId: string;
   dappName: string;
   dAppEncryptionKeyUri: string;

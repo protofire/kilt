@@ -8,7 +8,8 @@ import {
   KeystoreSigningData,
   SubmittableExtrinsic,
   ISubmittableResult,
-  SigningAlgorithms
+  SigningAlgorithms,
+  DidResourceUri
 } from '@kiltprotocol/sdk-js';
 import {
   naclSeal,
@@ -34,6 +35,10 @@ export const submitTx = async (
     rejectOn: console.error
   });
 });
+
+export const keyToDidUri = (key: DidResourceUri) => {
+  return key.split('#')[0] as DidUri;
+}
 
 const getFullDidDetails = async (did: DidUri) => {
   const fullDidDetails = await Did.FullDidDetails.fromChainInfo(did);

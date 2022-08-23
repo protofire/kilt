@@ -8,10 +8,6 @@ function Connect() {
   const { sporran } = useSporran();
   const { login, user, loading } = useUser();
 
-  // useEffect(() => {
-  //   connect();
-  // }, [sporran]);
-
   useEffect(() => {
     if (!user) return;
 
