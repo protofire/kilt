@@ -16,7 +16,7 @@
       ],
       "credentialSubject": {
         "id": "did:kilt:4rgY4XMMu1EXmBB9QkEbFaDTSHdVACYpdgwb55hKf7yYebWh",
-        "origin": "http://localhost:3000",
+        "origin": "https://protofire.github.io/",
         "rootHash": "0x4d7984f3dd90d262d517bd84b81bf85c36e5c3a60db2c43e105ab65a7427cb13"
       },
       "proof": {
