@@ -4,7 +4,6 @@ import {
   buildMessage,
   getLoginInfo,
   getSessionInfo,
-  getUserDetails,
   verifySignature
 } from '../controller/userController';
 
@@ -18,7 +17,6 @@ const errorHandler = (fn: any) => (req: Request, res: Response) => {
     });
 };
 
-userRoutes.get('/details/:did', errorHandler(getUserDetails));
 userRoutes.post('/verify', errorHandler(verifySignature));
 userRoutes.get('/session', errorHandler(getSessionInfo));
 userRoutes.get('/login', errorHandler(getLoginInfo));
