@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Connect from './pages/connect/Connect';
 import SelectProfile from './pages/select-profile/SelectProfile';
 import Claimer from './pages/claimer/Claimer';
@@ -30,7 +30,6 @@ function App() {
         <Route path="/attester/ctypes/:id" element={<AttesterCtypeView />}> </Route>
         <Route path="/attester/requests" element={<AttesterRequests />}> </Route>
         <Route path="/attester/requests/:id" element={<AttesterRequestDetail />}> </Route>
-        <Route path='/.well-known/did-configuration.json' element={ <Navigate replace to="/didConfiguration.json" /> }/>
 
         {/* Fallback routes */}
         <Route path="*" element={<Connect />}></Route>
