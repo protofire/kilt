@@ -17,10 +17,10 @@ function AttesterCtypeCreate() {
 
   useEffect(() => {
     user && onListCtypes(user.didUri)
-      .then((ctypes) => {
-        setCtypes(ctypes);
-        if (ctypes.length > 0) {
-          setSelectedCtypeId(ctypes[0].$id);
+      .then((all) => {
+        setCtypes(all.map(c => c.schema));
+        if (all.length > 0) {
+          setSelectedCtypeId(all[0].schema.$id);
         }
       });
   }, [ user ]);
