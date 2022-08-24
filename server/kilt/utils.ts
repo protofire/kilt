@@ -11,6 +11,7 @@ import {
   SigningAlgorithms,
   DidResourceUri
 } from '@kiltprotocol/sdk-js';
+import { Keyring } from '@kiltprotocol/utils';
 import {
   naclSeal,
   sr25519PairFromSeed,
@@ -21,6 +22,7 @@ import {
   naclBoxPairFromSecret,
   naclOpen
 } from '@polkadot/util-crypto';
+import { u8aToHex, hexToU8a } from '@polkadot/util';
 
 // promisifies the result of the transaction
 export const submitTx = async (
@@ -98,6 +100,24 @@ export const formatDidUri = (did: DidUri) =>
   did.substring(0, 12) +
   '...' +
   did.substring(did.length - 5, did.length - 1);
+
+
+export function signMessage(message: string) {
+  const mnemonic = process.env.OWNER_MNEMONIC!;
+  const keyring = new Keyring({ type: 'sr25519' });
+  const owner = keyring.addFromMnemonic(mnemonic);
+  const signature = owner.sign(message);
+  return { message, signature: u8aToHex(signature)} ;
+}
+
+export function verifySignedMessage(message: string, signatureHex: string) {
+  const mnemonic = process.env.OWNER_MNEMONIC!;
+  const keyring = new Keyring({ type: 'sr25519' });
+  const owner = keyring.addFromMnemonic(mnemonic);
+  const signature = hexToU8a(signatureHex);
+  const isValid = owner.verify(message, signature, owner.publicKey);
+  return isValid;
+}
 
 export {
   getFullDidDetails,

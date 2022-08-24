@@ -1,7 +1,7 @@
 import { Did, DidResourceUri, DidUri } from '@kiltprotocol/sdk-js';
 import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
-import { formatDidUri, keyToDidUri } from '../kilt/utils';
+import { formatDidUri, keyToDidUri, signMessage, verifySignedMessage } from '../kilt/utils';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { buildRequestCredentialMessage } from '../kilt/account';
 import { ISessionInfo } from '../interfaces/sessionInfo';
@@ -13,9 +13,21 @@ import { didResourceUriRegex } from '../constants/regex';
 
 const VerifySignature = z.object({
   message: z.string(),
-  signature: z.string(),
+  ownerSignature: z.string(),
+  didSignature: z.string(),
   keyUri: z.string().regex(didResourceUriRegex),
 });
+
+export const getLoginInfo = async (req: Request, res: Response) => {
+  const { message, signature } = signMessage(UUID.generate());
+  console.log('getlogininfo', message, signature);
+  const data: ILoginInfo = {
+    message,
+    ownerSignature: signature 
+  };
+  return res.status(200).json({ data });
+}
+
 
 /**
  * Verifies the signature provided by the user to login with Did
@@ -37,11 +49,22 @@ export const verifySignature = async (req: Request, res: Response) => {
     });
   }
   
-  const { message, signature, keyUri } = parsed.data;
+  const { message, ownerSignature, didSignature, keyUri } = parsed.data;
+
+  // verifies that the message was signed by the app owner
+  const isValid = verifySignedMessage(message, ownerSignature);
+  if (!isValid) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Not a signed message'
+    });
+  }
+
+  // verifies that the message was signed by the logged user
   const result = await verifyDidSignature({
     message,
     signature: {
-      signature,
+      signature: didSignature,
       keyUri: keyUri as DidResourceUri
     }
   });
@@ -64,15 +87,6 @@ export const verifySignature = async (req: Request, res: Response) => {
     web3name,
     didUri
   });
-
-  return res.status(200).json({ success: true, msg: 'verified' });
-}
-
-export const getLoginInfo = async (req: Request, res: Response) => {
-  const data: ILoginInfo = {
-    message: UUID.generate()
-  };
-  return res.status(200).json({ data });
 }
 
 /**

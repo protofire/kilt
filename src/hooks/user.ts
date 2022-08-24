@@ -28,9 +28,9 @@ export default function useUser() {
   }
 
   async function sporranSignIn(sporran: any) {
-    const { message } = await getLoginInfo();
+    const { message, ownerSignature } = await getLoginInfo();
     const { didKeyUri, signature } = await sporran.signWithDid(message);
-    const result = await verifySignature(message, signature, didKeyUri);
+    const result = await verifySignature(message, ownerSignature, signature, didKeyUri);
     return result;
   }
 

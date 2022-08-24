@@ -2,6 +2,7 @@ import { apiConfig } from '../config';
 
 export interface ILoginInfo {
   message: string;
+  ownerSignature: string;
 }
 
 export const getLoginInfo = async () => {
