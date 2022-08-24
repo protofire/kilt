@@ -26,6 +26,7 @@ export const useAttesterRequests = () => {
   // the http connection on first render.
   useEffect(() => {
     const currentUser = user ?? loadUser();
+    if (!currentUser) return;
     setState(s => ({ ...s, loading: true }));
     Promise.all([
       onListRequests(currentUser.didUri),

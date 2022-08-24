@@ -14,6 +14,7 @@ import { verifyDidSignature } from '@kiltprotocol/did';
 import { UUID } from '@kiltprotocol/utils';
 import { z } from "zod";
 import { didResourceUriRegex } from '../constants/regex';
+import * as jwt from 'jsonwebtoken';
 
 const VerifySignature = z.object({
   message: z.string(),
@@ -51,9 +52,7 @@ export const getLoginInfo = async (req: Request, res: Response) => {
  * @returns { 
  *  success: boolean,
  *  msg: string,
- *  isAttester: boolean,
- *  web3name: string,
- *  didUri: string,
+ *  token: string,
  * }
  */
 export const verifySignature = async (
@@ -65,8 +64,8 @@ export const verifySignature = async (
   if(!parsed.success) {
     return res.status(400).json({
       success: false,
-      msg: `Wrong data please provide valid
-        message, signature and keyUri`
+      msg:
+        `Wrong data please provide valid message, signature and keyUri`
     });
   }
   
@@ -104,6 +103,13 @@ export const verifySignature = async (
     });
   }
 
+  if(!process.env.SECRET) {
+    return res.status(400).json({
+      success: false,
+      msg: 'You must set a SECRET env variable'
+    });
+  }
+
   const didUri = keyToDidUri(keyUri as DidResourceUri);
   const attester = attesterList.find(a => a === didUri);
   const isAttester = !!attester;
@@ -111,13 +117,17 @@ export const verifySignature = async (
   const web3name = await Did.Web3Names
     .queryWeb3NameForDid(didUri as DidUri) ??
     formatDidUri(didUri as DidUri);
-
-  return res.status(200).json({
-    success: true,
-    msg: 'verified',
+  
+  var token = jwt.sign({
     isAttester,
     web3name,
     didUri
+  }, process.env.SECRET);
+  
+  return res.status(200).json({
+    success: true,
+    msg: 'verified',
+    token
   });
 }
 
