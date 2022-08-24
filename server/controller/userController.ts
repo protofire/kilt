@@ -1,13 +1,17 @@
 import { Did, DidResourceUri, DidUri } from '@kiltprotocol/sdk-js';
 import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
-import { formatDidUri, keyToDidUri, signMessage, verifySignedMessage } from '../kilt/utils';
+import {
+  formatDidUri,
+  keyToDidUri,
+  signMessage,
+  verifySignedMessage
+} from '../kilt/utils';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { buildRequestCredentialMessage } from '../kilt/account';
 import { ISessionInfo } from '../interfaces/sessionInfo';
 import { verifyDidSignature } from '@kiltprotocol/did';
 import { UUID } from '@kiltprotocol/utils';
-import { ILoginInfo } from '../interfaces/loginInfo';
 import { z } from "zod";
 import { didResourceUriRegex } from '../constants/regex';
 
@@ -18,16 +22,29 @@ const VerifySignature = z.object({
   keyUri: z.string().regex(didResourceUriRegex),
 });
 
+const BuildMessage = z.object({
+  encryptionKeyId: z.string().regex(didResourceUriRegex),
+});
+
+/**
+ * Signs and sends a random message to the frontend
+ * for sign in using sporran wallet
+ * @returns { 
+ *  success: boolean,
+ *  msg: string,
+ *  message: string,
+ *  ownerSignature: string,
+ * }
+ */
 export const getLoginInfo = async (req: Request, res: Response) => {
   const { message, signature } = signMessage(UUID.generate());
-  console.log('getlogininfo', message, signature);
-  const data: ILoginInfo = {
+  return res.status(200).json({
+    success: true,
+    msg: '',
     message,
     ownerSignature: signature 
-  };
-  return res.status(200).json({ data });
+  });
 }
-
 
 /**
  * Verifies the signature provided by the user to login with Did
@@ -39,20 +56,32 @@ export const getLoginInfo = async (req: Request, res: Response) => {
  *  didUri: string,
  * }
  */
-export const verifySignature = async (req: Request, res: Response) => {
+export const verifySignature = async (
+  req: Request,
+  res: Response
+) => {
   const parsed = VerifySignature.safeParse(req.body);
 
   if(!parsed.success) {
     return res.status(400).json({
       success: false,
-      msg: 'Wrong data please provide valid message, signature and keyUri'
+      msg: `Wrong data please provide valid
+        message, signature and keyUri`
     });
   }
   
-  const { message, ownerSignature, didSignature, keyUri } = parsed.data;
+  const {
+    message,
+    ownerSignature,
+    didSignature,
+    keyUri
+  } = parsed.data;
 
   // verifies that the message was signed by the app owner
-  const isValid = verifySignedMessage(message, ownerSignature);
+  const isValid = verifySignedMessage(
+    message,
+    ownerSignature
+  );
   if (!isValid) {
     return res.status(400).json({
       success: false,
@@ -69,7 +98,10 @@ export const verifySignature = async (req: Request, res: Response) => {
     }
   });
   if (!result.verified) {
-    return res.status(400).json({ success: false, msg: 'Not verified' });
+    return res.status(400).json({
+      success: false,
+      msg: 'Not verified'
+    });
   }
 
   const didUri = keyToDidUri(keyUri as DidResourceUri);
@@ -102,7 +134,9 @@ export const getSessionInfo = async (req: Request, res: Response) => {
     });
   }
 
-  const fullDid = await Did.FullDidDetails.fromChainInfo(did as DidUri);
+  const fullDid = await Did
+    .FullDidDetails
+    .fromChainInfo(did as DidUri);
   if (!fullDid || !fullDid.encryptionKey) {
     return res.status(400).json({
       success: false,
@@ -110,7 +144,8 @@ export const getSessionInfo = async (req: Request, res: Response) => {
     });
   }
 
-  const dAppEncryptionKeyUri = fullDid.assembleKeyUri(fullDid.encryptionKey.id);
+  const dAppEncryptionKeyUri = fullDid
+    .assembleKeyUri(fullDid.encryptionKey.id);
 
   const data: ISessionInfo = {
     sessionId: randomAsHex(),
@@ -127,7 +162,16 @@ export const getSessionInfo = async (req: Request, res: Response) => {
  * @returns { data: { sessionInfo: ISessionInfo } }
  */
 export const buildMessage = async (req: Request, res: Response) => {
-  const { encryptionKeyId } = req.body;
+  const parsed = BuildMessage.safeParse(req.body);
+
+  if(!parsed.success) {
+    return res.status(400).json({
+      success: false,
+      msg: `Wrong data please provide valid encryptionKeyId`
+    });
+  }
+
+  const { encryptionKeyId } = parsed.data;
 
   const did = process.env.OWNER_DID;
   if (!did) {
@@ -146,7 +190,10 @@ export const buildMessage = async (req: Request, res: Response) => {
     });
   }
 
-  const message = await buildRequestCredentialMessage(fullDid, encryptionKeyId);
+  const message = await buildRequestCredentialMessage(
+    fullDid,
+    encryptionKeyId as DidResourceUri
+  );
   const data = { message };
   return res.status(200).json({ data });
 };

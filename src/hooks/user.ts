@@ -12,7 +12,9 @@ export default function useUser() {
 
   function loadUser() {
     const userString = localStorage.getItem('user');
-    const storedUser: IUser = userString ? JSON.parse(userString) : null;
+    const storedUser: IUser = userString
+      ? JSON.parse(userString)
+      : null;
     setUser(storedUser);
     return storedUser;
   }
@@ -29,8 +31,14 @@ export default function useUser() {
 
   async function sporranSignIn(sporran: any) {
     const { message, ownerSignature } = await getLoginInfo();
-    const { didKeyUri, signature } = await sporran.signWithDid(message);
-    const result = await verifySignature(message, ownerSignature, signature, didKeyUri);
+    const { didKeyUri, signature } = await sporran
+      .signWithDid(message);
+    const result = await verifySignature(
+      message,
+      ownerSignature,
+      signature,
+      didKeyUri
+    );
     return result;
   }
 

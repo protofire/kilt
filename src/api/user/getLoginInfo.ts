@@ -1,6 +1,7 @@
+import { IGenericResponse } from '../../interfaces/response';
 import { apiConfig } from '../config';
 
-export interface ILoginInfo {
+export interface ILoginInfo extends IGenericResponse {
   message: string;
   ownerSignature: string;
 }
@@ -8,6 +9,6 @@ export interface ILoginInfo {
 export const getLoginInfo = async () => {
   const { baseUrl } = apiConfig();
   const response = await fetch(`${baseUrl}/api/user/login`);
-  const { data } = await response.json();
-  return data as ILoginInfo;
+  const result = await response.json();
+  return result as ILoginInfo;
 };
