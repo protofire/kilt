@@ -27,6 +27,10 @@ const BuildMessage = z.object({
   encryptionKeyId: z.string().regex(didResourceUriRegex),
 });
 
+const CheckToken = z.object({
+  token: z.string(),
+});
+
 /**
  * Signs and sends a random message to the frontend
  * for sign in using sporran wallet
@@ -212,15 +216,24 @@ export const buildMessage = async (req: Request, res: Response) => {
  * Checks if the token is properly signed
  */
  export const checkToken = async (req: Request, res: Response) => {
-  const { token } = req.params;
+  const parsed = CheckToken.safeParse(req.params);
 
-  const secret = process.env.SECRET;
-  if (!secret) {
+  if (!parsed.success) {
     return res.status(400).json({
       success: false,
-      msg: 'Must you must set SECRET env variable'
+      msg: 'Must send token query string parameter'
     });
   }
+
+  if (!process.env.SECRET) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must set SECRET env variable'
+    });
+  }
+
+  const { token } = parsed.data;
+  const secret = process.env.SECRET;
 
   jwt.verify(token, secret, (err: any, user: any) => {
     if (err) {
