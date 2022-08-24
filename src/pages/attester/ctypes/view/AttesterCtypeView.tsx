@@ -21,7 +21,7 @@ function AttesterCtypeView() {
 
   return (
     <>
-      <Topbar></Topbar>
+      <Topbar/>
       <div className='wrapper'>
         <div className='center'>
           <div className='column page'>

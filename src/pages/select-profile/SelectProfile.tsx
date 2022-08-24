@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import EmojiButton from '../../components/EmojiButton/EmojiButton';
+import Topbar from '../../components/Topbar/Topbar';
 import useUser from '../../hooks/user';
 import { getDisplayName } from '../../utils/did';
 
@@ -12,6 +13,7 @@ function SelectProfile() {
 
   return (
     <div className='wrapper'>
+      <Topbar />
       <div className='center'>
         <div className='title' >
           <span>

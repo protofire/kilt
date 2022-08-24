@@ -3,9 +3,10 @@ import {
   buildMessage,
   getLoginInfo,
   getSessionInfo,
-  verifySignature
+  verifySignature,
+  checkToken
 } from '../controller/userController';
-import { errorHandler } from '../utils/middleware';
+import { errorHandler } from './middleware';
 
 const userRoutes = express.Router();
 
@@ -14,5 +15,6 @@ userRoutes.post('/verify', errorHandler(verifySignature));
 userRoutes.get('/session', errorHandler(getSessionInfo));
 userRoutes.get('/login', errorHandler(getLoginInfo));
 userRoutes.post('/message', errorHandler(buildMessage));
+userRoutes.get('/check/:token', errorHandler(checkToken));
 
 export { userRoutes };

@@ -7,8 +7,11 @@ export interface ILoginInfo extends IGenericResponse {
 }
 
 export const getLoginInfo = async () => {
-  const { baseUrl } = apiConfig();
-  const response = await fetch(`${baseUrl}/api/user/login`);
+  const { baseUrl, headers } = apiConfig();
+  const response = await fetch(
+    `${baseUrl}/api/user/login`,
+    { headers }
+  );
   const result = await response.json();
   return result as ILoginInfo;
 };

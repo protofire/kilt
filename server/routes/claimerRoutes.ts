@@ -4,7 +4,7 @@ import {
   getAttesterCtypesForClaimer
 } from '../controller/attesterCtypeController';
 import { createCredential, getCredentialById, getCredentialsByDid } from '../controller/claimerController';
-import { authenticateToken, errorHandler } from '../utils/middleware';
+import { authenticateToken, errorHandler } from './middleware';
 
 const claimerRoute = express.Router();
 

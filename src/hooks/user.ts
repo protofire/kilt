@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { verifySignature } from '../api/user/verifySignature';
 import { getLoginInfo } from '../api/user/getLoginInfo';
 import * as jwt from 'jose';
+import { checkToken } from '../api/user/checkToken';
 
 export default function useUser() {
   const navigate = useNavigate();
@@ -30,6 +31,13 @@ export default function useUser() {
     navigate('/');
   }
 
+  async function verify() {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+    const result = await checkToken(token);
+    return result;
+  }
+
   async function sporranSignIn(sporran: any) {
     const { message, ownerSignature } = await getLoginInfo();
     const { didKeyUri, signature } = await sporran
@@ -49,10 +57,6 @@ export default function useUser() {
     setUser(payload as IUser);
   };
 
-  function setAuthToken(token: string) {
-
-  }
-
   const login = useCallback(async (sporran: any) => {
     setLoading(true);
     try {
@@ -70,6 +74,7 @@ export default function useUser() {
     loadUser,
     login,
     logout,
-    loading
+    loading,
+    verify
   };
 }

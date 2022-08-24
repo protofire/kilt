@@ -11,7 +11,7 @@ import {
   getRequests,
   verifyRequest
 } from '../controller/attesterController';
-import { errorHandler, authenticateToken } from '../utils/middleware';
+import { errorHandler, authenticateToken } from './middleware';
 
 const attesterRoute = express.Router();
 

@@ -2,10 +2,17 @@ import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/user';
 import { getDisplayName } from '../../utils/did';
 import { ReactComponent as BackSvg } from '../../assets/back.svg';
+import { useEffect } from 'react';
 
 function Topbar() {
   const navigate = useNavigate();
-  const { user, logout } = useUser();
+  const { user, logout, verify } = useUser();
+
+  useEffect(() => {
+    verify().then((authorized) => {
+      if (!authorized) logout();
+    });
+  }, []);
 
   const goBack = () => navigate(-1);
 

@@ -8,8 +8,11 @@ export interface ISessionInfo {
 }
 
 export const getSessionInfo = async () => {
-  const { baseUrl } = apiConfig();
-  const response = await fetch(`${baseUrl}/api/user/session`);
+  const { baseUrl, headers } = apiConfig();
+  const response = await fetch(
+    `${baseUrl}/api/user/session`,
+    { headers }
+  );
   const { data } = await response.json();
   return data as ISessionInfo;
 };

@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createAttesterCtype } from '../../../../api/attester/createAttesterCtype';
 import { onListCtypes } from '../../../../api/attester/listCtypes';
+import Topbar from '../../../../components/Topbar/Topbar';
 import useUser from '../../../../hooks/user';
 
 function AttesterCtypeCreate() {
@@ -63,6 +64,7 @@ function AttesterCtypeCreate() {
 
   return (
     <div className='wrapper'>
+      <Topbar />
       <div className='center'>
         <div className='column'>
           <span className='title'>Create quote for CType</span>

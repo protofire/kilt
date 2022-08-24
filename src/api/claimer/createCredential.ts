@@ -8,7 +8,7 @@ export const createCredential = async (
   attesterCtype: IAttesterCtype,
   form: string
 ) => {
-  const { baseUrl } = apiConfig();
+  const { baseUrl, headers } = apiConfig();
   const response = await fetch(`${baseUrl}/api/claimer/credential`, {
     method: 'POST',
     body: JSON.stringify({
@@ -17,7 +17,7 @@ export const createCredential = async (
       attesterCtype,
       form
     }),
-    headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    headers
   });
   const { success } = await response.json();
   return success as boolean;
