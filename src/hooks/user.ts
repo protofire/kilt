@@ -25,7 +25,6 @@ export default function useUser() {
   }, []);
 
   async function logout() {
-    // TODO remove token.
     localStorage.removeItem('token');
     setUser(null);
     navigate('/');
@@ -50,6 +49,10 @@ export default function useUser() {
     setUser(payload as IUser);
   };
 
+  function setAuthToken(token: string) {
+
+  }
+
   const login = useCallback(async (sporran: any) => {
     setLoading(true);
     try {
@@ -64,7 +67,6 @@ export default function useUser() {
 
   return {
     user,
-    connected: !!user,
     loadUser,
     login,
     logout,

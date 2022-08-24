@@ -22,8 +22,6 @@ export const useAttesterRequests = () => {
     loading: false
   });
 
-  // handles the incoming requests through
-  // the http connection on first render.
   useEffect(() => {
     const currentUser = user ?? loadUser();
     if (!currentUser) return;

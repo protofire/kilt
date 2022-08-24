@@ -3,9 +3,9 @@ import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
 import { Status } from '../constants/status.enum';
-import { getOwnerKeyring } from '../kilt/account';
-import { createAttestation } from '../kilt/attestation';
-import { getFullDidDetails, getKeystoreSigner } from '../kilt/utils';
+import { getOwnerKeyring } from '../utils/account';
+import { createAttestation } from '../utils/attestation';
+import { getFullDidDetails, getKeystoreSigner } from '../utils/utils';
 import { AttesterCtype } from '../schemas/attesterCtype';
 import { ClaimerCredential, IClaimerCredential } from '../schemas/credential';
 

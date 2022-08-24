@@ -6,9 +6,9 @@ import {
   keyToDidUri,
   signMessage,
   verifySignedMessage
-} from '../kilt/utils';
+} from '../utils/utils';
 import { randomAsHex } from '@polkadot/util-crypto';
-import { buildRequestCredentialMessage } from '../kilt/account';
+import { buildRequestCredentialMessage } from '../utils/account';
 import { ISessionInfo } from '../interfaces/sessionInfo';
 import { verifyDidSignature } from '@kiltprotocol/did';
 import { UUID } from '@kiltprotocol/utils';

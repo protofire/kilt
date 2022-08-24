@@ -7,11 +7,11 @@ import {
   createRequest,
   getEndpointResponse,
   getEndpointsFromDid
-} from '../kilt/claimer';
+} from '../utils/claimer';
 import { ClaimerCredential, IClaimerCredential } from '../schemas/credential';
 import { websocket } from '../services/websocket';
 import { Status } from '../constants/status.enum';
-import { getFullDidDetails } from '../kilt/utils';
+import { getFullDidDetails } from '../utils/utils';
 import { ctypesList } from '../constants/ctypes';
 import { IAttesterCtype } from '../schemas/attesterCtype';
 
