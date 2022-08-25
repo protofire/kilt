@@ -128,8 +128,7 @@ export const verifySignature = async (
     didUri
   });
   const secret = process.env.SECRET;
-  const expiresIn = 3600;
-  var token = jwt.sign({ sub }, secret, { expiresIn });
+  var token = jwt.sign({ sub }, secret);
   
   return res.status(200).json({
     success: true,
