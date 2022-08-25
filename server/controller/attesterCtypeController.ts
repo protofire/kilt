@@ -2,15 +2,52 @@ import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
 import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
+import { z } from 'zod';
+import { UserSchema } from './claimerController';
+
+const CreateAttesterCtype = z.object({
+  ctypeId: z.string(),
+  quote: z.number(),
+  terms: z.string()
+});
+
+const GetAttesterCtypeDetail = z.object({
+  id: z.string()
+});
+
+const DeleteAttesterCtype = z.object({
+  id: z.string(),
+  user: UserSchema
+});
 
 /**
  * Creates a new attester ctype relationship in database.
  * @returns { data: IAttesterCtype }
  */
-export const createAttesterCtype = async (req: Request, res: Response) => {
-  const { attesterDidUri, attesterWeb3name, ctypeId, quote, terms } = req.body;
+export const createAttesterCtype = async (
+  req: Request,
+  res: Response
+) => {
+  const parsedBody = CreateAttesterCtype.safeParse(req.body);
+  const parsedUser = UserSchema.safeParse(req.params.user);
 
-  const attester = attesterList.find(a => a === attesterDidUri);
+  if (!parsedUser.success) {
+    return res.status(401).json({
+      success: false,
+      msg: 'Unauthorized user'
+    });
+  }
+
+  if (!parsedBody.success) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide valid ctypeId, quote and terms'
+    });
+  }
+  const { didUri, web3name } = parsedUser.data;
+  const { ctypeId, quote, terms } = parsedBody.data;
+
+  const attester = attesterList.find(a => a === didUri);
   if (!attester) {
     return res.status(400).json({
       success: false,
@@ -26,18 +63,11 @@ export const createAttesterCtype = async (req: Request, res: Response) => {
     });
   }
 
-  if (!quote || !terms) {
-    return res.status(400).json({
-      success: false,
-      msg: 'You must provide quote and terms'
-    });
-  }
-
   const ctypeName = ctype.schema.title;
 
   const attesterCtype = new AttesterCtype({
-    attesterWeb3name,
-    attesterDidUri,
+    web3name,
+    didUri,
     ctypeName,
     ctypeId,
     quote,
@@ -62,16 +92,16 @@ export const getAttesterCtypesForAttester = async (
   req: Request,
   res: Response
 ) => {
-  const { did } = req.params;
+  const parsedUser = UserSchema.safeParse(req.params.user);
 
-  if (!did) {
-    return res.status(400).json({
+  if (!parsedUser.success) {
+    return res.status(401).json({
       success: false,
-      msg: 'Must provide DiD Uri parameter'
+      msg: 'Unauthorized user'
     });
   }
-
-  const attester = attesterList.find(a => a === did);
+  const { didUri } = parsedUser.data; 
+  const attester = attesterList.find(a => a === didUri);
   if (!attester) {
     return res.status(400).json({
       success: false,
@@ -80,7 +110,7 @@ export const getAttesterCtypesForAttester = async (
   }
 
   const ctypes: IAttesterCtype[] = await AttesterCtype.find({
-    attesterDidUri: did
+    attesterDidUri: didUri
   });
   return res.status(200).json({ data: ctypes ?? [] });
 };
@@ -93,12 +123,12 @@ export const getAttesterCtypesForClaimer = async (
   req: Request,
   res: Response
 ) => {
-  const { did } = req.params;
+  const parsedUser = UserSchema.safeParse(req.params.user);
 
-  if (!did || !did.startsWith('did:kilt:')) {
-    return res.status(400).json({
+  if (!parsedUser.success) {
+    return res.status(401).json({
       success: false,
-      msg: 'You must provide a valid did.'
+      msg: 'Unauthorized user'
     });
   }
 
@@ -110,7 +140,10 @@ export const getAttesterCtypesForClaimer = async (
     });
   }
 
-  return res.status(200).json({ success: true, data: attesterCtypes });
+  return res.status(200).json({
+    success: true,
+    data: attesterCtypes
+  });
 };
 
 /**
@@ -118,15 +151,16 @@ export const getAttesterCtypesForClaimer = async (
  * @returns { success: boolean, data: AttesterCtype }
  */
 export async function getAttesterCtypeDetail(req: Request, res: Response) {
-  const { id } = req.params;
+  const parsed = GetAttesterCtypeDetail.safeParse(req.params);
 
-  if (!id) {
+  if (!parsed.success) {
     return res.status(400).json({
       success: false,
       msg: 'You must provide an id.'
     });
   }
 
+  const{ id } = parsed.data; 
   const attesterCtype = await AttesterCtype.findById(id);
   const ctype = ctypesList.find(c => c.schema.$id === attesterCtype?.ctypeId);
   if (!attesterCtype || !ctype) {
@@ -155,9 +189,17 @@ export async function getAttesterCtypeDetail(req: Request, res: Response) {
  * @returns { success: boolean }
  */
 export const deleteAttesterCtype = async (req: Request, res: Response) => {
-  const { did, id } = req.params;
+  const parsed = DeleteAttesterCtype.safeParse(req.params);
 
-  const attester = attesterList.find(a => a === did);
+  if (!parsed.success) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide a valid id'
+    });
+  }
+
+  const { user, id } = parsed.data;
+  const attester = attesterList.find(a => a === user.didUri);
   if (!attester) {
     return res.status(400).json({
       success: false,

@@ -15,8 +15,8 @@ export interface IAttester {
 
 export interface IAttesterCtype {
   readonly _id?: string;
-  readonly attesterDidUri: DidUri;
-  readonly attesterWeb3name: string | null;
+  readonly attesterDidUri?: DidUri;
+  readonly attesterWeb3name?: string | null;
   readonly ctypeName?: string;
   readonly ctypeId: string;
   readonly quote?: number;

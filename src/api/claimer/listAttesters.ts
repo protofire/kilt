@@ -1,11 +1,10 @@
-import { DidUri } from '@kiltprotocol/sdk-js';
 import { IAttesterCtype } from '../../interfaces/attesterCtype';
 import { apiConfig } from '../config';
 
-export const onListAttesters = async (didUri: DidUri) => {
+export const onListAttesters = async () => {
   const { baseUrl, headers } = apiConfig();
   const response = await fetch(
-    `${baseUrl}/api/claimer/attesters/${didUri}`,
+    `${baseUrl}/api/claimer/attesters`,
     { headers }
   );
   const { data } = await response.json();

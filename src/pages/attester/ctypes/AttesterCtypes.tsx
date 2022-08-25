@@ -4,12 +4,10 @@ import { onDeleteAttesterCtype } from '../../../api/attester/deleteAttesterCtype
 import { onListAttesterCtypes } from '../../../api/attester/listAttesterCtypes';
 import Table, { Row } from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
-import useUser from '../../../hooks/user';
 import { IAttesterCtype } from '../../../interfaces/attesterCtype';
 
 function AttesterCtypes() {
   const navigate = useNavigate();
-  const { user, loadUser } = useUser();
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState<Row[]>([]);
 
@@ -27,21 +25,18 @@ function AttesterCtypes() {
 
   const loadTable = async () => {
     setLoading(true);
-    const currentUser = user ?? loadUser();
-    if (!currentUser) return;
-    const ctypes = await onListAttesterCtypes(currentUser.didUri);
+    const ctypes = await onListAttesterCtypes();
     const ctypesRows = ctypes.map((c) => attesterCtypeToRow(c));
     setRows(ctypesRows);
     setLoading(false);
   };
 
   const onDelete = useCallback(async (id: string) => {
-    if (!user) return;
     setLoading(true);
-    await onDeleteAttesterCtype(user.didUri, id);
+    await onDeleteAttesterCtype(id);
     loadTable();
     setLoading(false);
-  }, [ user ]);
+  }, []);
 
   const onView = useCallback((id: string) => {
     navigate(`${id}`);

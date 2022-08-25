@@ -80,7 +80,7 @@ function ClaimForm() {
 
   const displayName = (attester: IAttesterCtype) => {
     return attester.attesterWeb3name ??
-      formatDidUri(attester.attesterDidUri);
+      formatDidUri(attester.attesterDidUri ?? '');
   };
 
   return (

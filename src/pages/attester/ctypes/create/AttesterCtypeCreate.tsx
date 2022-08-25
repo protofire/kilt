@@ -4,10 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { createAttesterCtype } from '../../../../api/attester/createAttesterCtype';
 import { onListCtypes } from '../../../../api/attester/listCtypes';
 import Topbar from '../../../../components/Topbar/Topbar';
-import useUser from '../../../../hooks/user';
 
 function AttesterCtypeCreate() {
-  const { user } = useUser();
   const navigate = useNavigate();
 
   const [ctypes, setCtypes] = useState<ICTypeSchema[]>([]);
@@ -17,14 +15,14 @@ function AttesterCtypeCreate() {
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    user && onListCtypes(user.didUri)
+    onListCtypes()
       .then((all) => {
         setCtypes(all.map(c => c.schema));
         if (all.length > 0) {
           setSelectedCtypeId(all[0].schema.$id);
         }
       });
-  }, [ user ]);
+  }, []);
 
   const handleCtypeChanged = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedCtypeId(e.target.value);
@@ -44,7 +42,7 @@ function AttesterCtypeCreate() {
 
   const onSubmit = async () => {
     const selectedCtype = ctypes.find(c => c.$id === selectedCtypeId);
-    if (!selectedCtypeId || !selectedCtype || !terms || !user?.didUri) return;
+    if (!selectedCtypeId || !selectedCtype || !terms) return;
     if (!quote || !validateQuote(quote)) {
       setError('Invalid quote, it must be a number between 0 and 290 millions (max KILT issuance)');
       return;
@@ -55,9 +53,7 @@ function AttesterCtypeCreate() {
       ctypeId: selectedCtypeId,
       ctypeName: selectedCtype.title,
       quote,
-      terms,
-      attesterDidUri: user?.didUri,
-      attesterWeb3name: user?.web3name
+      terms
     });
     if (success) navigate(-1);
   };

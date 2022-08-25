@@ -48,7 +48,10 @@ const CreateCredential = z.object({
  * request for attestation.
  * @returns { success: boolean, data: Document<IClaimerCredential> }
  */
-export async function createCredential(req: Request, res: Response) {
+export async function createCredential(
+  req: Request,
+  res: Response
+) {
   const bodyParsed = CreateCredential.safeParse(req.body);
   const userParsed = UserSchema.safeParse(req.params.user);
 
@@ -70,7 +73,9 @@ export async function createCredential(req: Request, res: Response) {
   const claimerWeb3name = userParsed.data.web3name;
   const { attesterCtype, form } = bodyParsed.data;
 
-  const ctype = ctypesList.find(c => c.schema.$id === attesterCtype.ctypeId);
+  const ctype = ctypesList.find(c =>
+    c.schema.$id === attesterCtype.ctypeId
+  );
   if (!ctype) {
     return res.status(400).json({
       success: false,
@@ -85,8 +90,13 @@ export async function createCredential(req: Request, res: Response) {
       msg: 'Could not load claimer DiD details'
     });
   }
-  const claim = createClaim(ctype.schema, fullDidDetails, JSON.parse(form));
-  const request: IRequestForAttestation = await createRequest(claim, fullDidDetails);
+  const claim = createClaim(
+    ctype.schema,
+    fullDidDetails,
+    JSON.parse(form)
+  );
+  const request: IRequestForAttestation =
+    await createRequest(claim, fullDidDetails);
   const credential = new ClaimerCredential({
     request,
     ctypeId: ctype.schema.$id,
@@ -129,7 +139,10 @@ export async function createCredential(req: Request, res: Response) {
  * Fetchs all saved credentials for a claimer.
  * @returns { success: boolean, data: ICredentialByDidResponse[] }
  */
-export async function getCredentialsByDid(req: Request, res: Response) {
+export async function getCredentialsByDid(
+  req: Request,
+  res: Response
+) {
   const parsedUser = UserSchema.safeParse(req.params.user);
 
   if (!parsedUser.success) {
@@ -159,7 +172,10 @@ export async function getCredentialsByDid(req: Request, res: Response) {
  * Fetchs a credential by id
  * @returns { success: boolean, data: ICredentialByDidResponse[] }
  */
- export async function getCredentialById(req: Request, res: Response) {
+ export async function getCredentialById(
+   req: Request,
+   res: Response
+  ) {
   const parsed = GetCredentialById.safeParse(req.params);
 
   if (!parsed.success) {
@@ -181,7 +197,10 @@ export async function getCredentialsByDid(req: Request, res: Response) {
  * Fetchs all endpoint credentials for a claimer.
  * @returns { success: boolean, data: ICredentialByDidResponse[] }
  */
-export async function getEndpointCredentialsByDid(req: Request, res: Response) {
+export async function getEndpointCredentialsByDid(
+  req: Request,
+  res: Response
+) {
   const parsedUser = UserSchema.safeParse(req.body);
 
   if (!parsedUser.success) {

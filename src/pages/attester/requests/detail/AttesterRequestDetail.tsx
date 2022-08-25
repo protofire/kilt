@@ -5,7 +5,6 @@ import { onLoadRequest } from '../../../../api/attester/requests';
 import { verifyAttesterRequest } from '../../../../api/attester/verifyAttesterRequest';
 import Topbar from '../../../../components/Topbar/Topbar';
 import { Status } from '../../../../constants/status';
-import useUser from '../../../../hooks/user';
 import { IAttesterRequestDetail } from '../../../../interfaces/attesterRequest';
 import { formatDidUri } from '../../../../utils/did';
 import { getColorByStatus, getLabelByStatus } from '../../../../utils/status';
@@ -13,43 +12,41 @@ import { getColorByStatus, getLabelByStatus } from '../../../../utils/status';
 function AttesterRequestDetail() {
   const params = useParams();
   const navigate = useNavigate();
-  const { user } = useUser();
 
   const [loading, setLoading] = useState(false);
   const [request, setRequest] = useState<IAttesterRequestDetail | null>(null);
 
   useEffect(() => {
     setLoading(true);
-    if (!user) return;
     if (!params.id) return goBack();
-    onLoadRequest(params.id, user.didUri)
+    onLoadRequest(params.id)
       .then(setRequest)
       .then(() => setLoading(false));
-  }, [ user, params ]);
+  }, [ params ]);
 
   const goBack = () => navigate(-1);
 
   const verify = useCallback(async () => {
-    if (!user || !params.id) return;
+    if (!params.id) return;
     const confirmed = confirm('Are you sure you want to verify?');
     if (confirmed) {
       setLoading(true);
-      await verifyAttesterRequest(params.id, user.didUri);
+      await verifyAttesterRequest(params.id);
       setLoading(false);
       goBack();
     }
-  }, [ user, params ]);
+  }, [ params ]);
 
   const confirmPayment = useCallback(async () => {
-    if (!user || !params.id) return;
+    if (!params.id) return;
     const confirmed = confirm('Are you sure you want to confirm?');
     if (confirmed) {
       setLoading(true);
-      await confirmPaymentCredential(params.id, user.didUri);
+      await confirmPaymentCredential(params.id);
       setLoading(false);
       goBack();
     }
-  }, [ params, user ]);
+  }, [ params]);
 
   const getActionByStatus = useCallback(() => {
     if (!request) return;

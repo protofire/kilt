@@ -1,7 +1,8 @@
 import { DidUri } from '@kiltprotocol/sdk-js';
 import { IUser } from '../interfaces/user';
 
-export const formatDidUri = (didUri: DidUri) => {
+export const formatDidUri = (didUri: DidUri | string) => {
+  if (!didUri) return '';
   const did = didUri.split('#')[0];
   const formattedDid = did.substring(0, 12) + '...' +
     did.substring(did.length - 5, did.length);

@@ -1,14 +1,11 @@
-
-import { DidUri } from '@kiltprotocol/sdk-js';
 import { apiConfig } from '../config';
 
 export const confirmPaymentCredential = async (
-  credentialId: string,
-  did: DidUri
+  credentialId: string
 ) => {
   const { baseUrl, headers } = apiConfig();
   const response = await fetch(
-    `${baseUrl}/api/attester/request/confirm/${credentialId}/${did}`, {
+    `${baseUrl}/api/attester/request/confirm/${credentialId}`, {
       method: 'POST',
       headers
     }

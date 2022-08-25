@@ -1,10 +1,10 @@
-import { DidUri, ICType } from '@kiltprotocol/sdk-js';
+import { ICType } from '@kiltprotocol/sdk-js';
 import { apiConfig } from '../config';
 
-export const onListCtypes = async (didUri: DidUri) => {
+export const onListCtypes = async () => {
   const { baseUrl, headers } = apiConfig();
   const response = await fetch(
-    `${baseUrl}/api/attester/ctypes/all/${didUri}`,
+    `${baseUrl}/api/attester/ctypes/all`,
     { headers }
   );
   const { data } = await response.json();

@@ -5,7 +5,6 @@ import { Row } from '../components/Table/Table';
 import { IAttesterRequest } from '../interfaces/attesterRequest';
 import { formatDidUri } from '../utils/did';
 import { getColorByStatus, getLabelByStatus } from '../utils/status';
-import useUser from './user';
 import useWebsocket from './websocket';
 
 interface HookState {
@@ -14,7 +13,6 @@ interface HookState {
 }
 
 export const useAttesterRequests = () => {
-  const { user, loadUser } = useUser();
   const { socket } = useWebsocket();
   const attesterCtypeIds = useRef<string[]>([]);
   const [state, setState] = useState<HookState>({
@@ -23,12 +21,10 @@ export const useAttesterRequests = () => {
   });
 
   useEffect(() => {
-    const currentUser = user ?? loadUser();
-    if (!currentUser) return;
     setState(s => ({ ...s, loading: true }));
     Promise.all([
-      onListRequests(currentUser.didUri),
-      onListAttesterCtypes(currentUser.didUri)
+      onListRequests(),
+      onListAttesterCtypes()
     ]).then(([requests, ctypes]) => {
       attesterCtypeIds.current = ctypes.map(c => c.ctypeId);
       setState({
@@ -36,7 +32,7 @@ export const useAttesterRequests = () => {
         loading: false
       });
     });
-  }, [ user ]);
+  }, []);
 
   // handles the incoming requests through
   // the websocket connection.

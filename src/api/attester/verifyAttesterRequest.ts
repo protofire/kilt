@@ -1,13 +1,11 @@
-import { DidUri } from '@kiltprotocol/sdk-js';
 import { apiConfig } from '../config';
 
 export const verifyAttesterRequest = async (
-  credentialId: string,
-  did: DidUri
+  credentialId: string
 ) => {
   const { baseUrl, headers } = apiConfig();
   const response = await fetch(
-    `${baseUrl}/api/attester/request/verify/${credentialId}/${did}`, {
+    `${baseUrl}/api/attester/request/verify/${credentialId}`, {
       method: 'POST',
       headers
     }

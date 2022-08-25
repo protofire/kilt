@@ -1,10 +1,9 @@
-import { DidUri } from '@kiltprotocol/sdk-js';
 import { apiConfig } from '../config';
 
-export const onDeleteAttesterCtype = async (didUri: DidUri, ctypeId: string) => {
+export const onDeleteAttesterCtype = async (ctypeId: string) => {
   const { baseUrl, headers } = apiConfig();
   const response = await fetch(
-    `${baseUrl}/api/attester/ctypes/${didUri}/${ctypeId}`, {
+    `${baseUrl}/api/attester/ctypes/${ctypeId}`, {
       method: 'DELETE',
       headers
     });

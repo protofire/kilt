@@ -8,16 +8,44 @@ import { createAttestation } from '../utils/attestation';
 import { getFullDidDetails, getKeystoreSigner } from '../utils/utils';
 import { AttesterCtype } from '../schemas/attesterCtype';
 import { ClaimerCredential, IClaimerCredential } from '../schemas/credential';
+import { UserSchema } from './claimerController';
+import { z } from 'zod';
+
+const GetRequestDetail = z.object({
+  id: z.string(),
+  user: UserSchema
+});
+
+const VerifyRequest = z.object({
+  id: z.string(),
+  user: UserSchema
+});
+
+const ConfirmRequest = z.object({
+  id: z.string(),
+  user: UserSchema
+});
 
 /**
  * List all the requests for credential
  * attestation for the current attester.
  * @returns { data: IClaimerCredential[] }
  */
-export const getRequests = async (req: Request, res: Response) => {
-  const { did } = req.params;
+export const getRequests = async (
+  req: Request,
+  res: Response
+) => {
+  const parsed = UserSchema.safeParse(req.params.user);
 
-  const attester = attesterList.find(a => a === did);
+  if (!parsed.success) {
+    return res.status(401).json({
+      success: false,
+      msg: 'Unauthorized access'
+    });
+  }
+  
+  const { didUri } = parsed.data;
+  const attester = attesterList.find(a => a === didUri);
   if (!attester) {
     return res.status(400).json({
       success: false,
@@ -26,7 +54,7 @@ export const getRequests = async (req: Request, res: Response) => {
   }
 
   const ctypesToAttest = await AttesterCtype.find({
-    attesterDidUri: did
+    attesterDidUri: didUri
   });
   if (!ctypesToAttest) {
     return res.status(400).json({
@@ -36,10 +64,17 @@ export const getRequests = async (req: Request, res: Response) => {
   }
   const ctypeIds = ctypesToAttest.map(cta => cta.ctypeId);
   const credentials: IClaimerCredential[] = await ClaimerCredential
-    .find({ status: { $ne: Status.verified }, ctypeId: { $in: ctypeIds } })
+    .find({
+      status:
+        { $ne: Status.verified },
+        ctypeId: { $in: ctypeIds }
+    })
     .sort({ _id: -1 }); // descending sort
 
-  return res.status(200).json({ success: true, data: credentials });
+  return res.status(200).json({
+    success: true,
+    data: credentials
+  });
 };
 
 /**
@@ -47,9 +82,20 @@ export const getRequests = async (req: Request, res: Response) => {
  * attestation for the current attester.
  * @returns { data: IClaimerCredential }
  */
-export const getRequestDetail = async (req: Request, res: Response) => {
-  const { id, did } = req.params;
+export const getRequestDetail = async (
+  req: Request,
+  res: Response
+) => {
+  const parsed = GetRequestDetail.safeParse(req.params);
 
+  if (!parsed.success) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide a valid id'
+    });
+  }
+
+  const { id, user } = parsed.data;
   const credential = await ClaimerCredential.findById(id);
   if (!credential) {
     return res.status(404).json({
@@ -60,7 +106,7 @@ export const getRequestDetail = async (req: Request, res: Response) => {
 
   const attesterCtype = await AttesterCtype.findOne({
     ctypeId: credential.ctypeId,
-    attesterDidUri: did
+    attesterDidUri: user.didUri
   });
   if (!attesterCtype) {
     return res.status(404).json({
@@ -69,7 +115,9 @@ export const getRequestDetail = async (req: Request, res: Response) => {
     });
   }
 
-  const ctype = ctypesList.find(c => c.schema.$id === credential.ctypeId);
+  const ctype = ctypesList.find(c =>
+    c.schema.$id === credential.ctypeId
+  );
   if (!ctype) {
     return res.status(400).json({
       success: false,
@@ -102,9 +150,20 @@ export const getRequestDetail = async (req: Request, res: Response) => {
  * request and sumits it to the blockchain
  * @returns { data: Credential }
  */
-export const verifyRequest = async (req: Request, res: Response) => {
-  const { id, did } = req.params;
+export const verifyRequest = async (
+  req: Request,
+  res: Response
+) => {
+  const parsed = VerifyRequest.safeParse(req.params);
 
+  if (!parsed.success) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide a valid id'
+    });
+  }
+
+  const { id, user } = parsed.data;
   const currentCredential = await ClaimerCredential.findById(id);
   if (!currentCredential?.request) {
     return res.status(404).json({
@@ -114,7 +173,8 @@ export const verifyRequest = async (req: Request, res: Response) => {
   }
 
   const keystoreSigner = getKeystoreSigner();
-  const attesterFullDid = await getFullDidDetails(did as DidUri);
+  const attesterFullDid =
+    await getFullDidDetails(user.didUri as DidUri);
   if (!attesterFullDid) {
     return res.status(404).json({
       success: false,
@@ -137,7 +197,8 @@ export const verifyRequest = async (req: Request, res: Response) => {
     keyring.pairs[0]
   );
 
-  const web3Name = await Did.Web3Names.queryWeb3NameForDid(attesterFullDid.uri);
+  const web3Name = await Did.Web3Names
+    .queryWeb3NameForDid(attesterFullDid.uri);
 
   currentCredential.status = Status.prendingPayment;
   currentCredential.credential = credential;
@@ -158,9 +219,17 @@ export const verifyRequest = async (req: Request, res: Response) => {
  * @returns { success: boolean }
  */
 export const confirmRequest = async (req: Request, res: Response) => {
-  const { did, id } = req.params;
+  const parsed = ConfirmRequest.safeParse(req.params);
 
-  const attester = attesterList.find(a => a === did);
+  if (!parsed.success) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide a valid id'
+    });
+  }
+
+  const { user, id } = parsed.data;
+  const attester = attesterList.find(a => a === user.didUri);
   if (!attester) {
     return res.status(400).json({
       success: false,
@@ -176,7 +245,7 @@ export const confirmRequest = async (req: Request, res: Response) => {
     });
   }
 
-  if (credential.credential.attestation.owner !== did) {
+  if (credential.credential.attestation.owner !== user.didUri) {
     return res.status(400).json({
       success: false,
       msg: 'The payment must be confirmed by the issuer attester.'
