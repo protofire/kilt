@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { onListCredentials } from '../../api/claimer/listCredentials';
 import Table, { Row } from '../../components/Table/Table';
 import Topbar from '../../components/Topbar/Topbar';
-import useUser from '../../hooks/user';
 import { ICredential } from '../../interfaces/credential';
 import { formatDidUri } from '../../utils/did';
 import { getColorByStatus, getLabelByStatus } from '../../utils/status';
@@ -11,14 +10,11 @@ import { getColorByStatus, getLabelByStatus } from '../../utils/status';
 function Claimer() {
   const navigate = useNavigate();
   const [ rows, setRows ] = useState<Row[]>([]);
-  const { user, loadUser } = useUser();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const currentUser = user ?? loadUser();
-    if (!currentUser) return;
     setLoading(true);
-    onListCredentials(currentUser.didUri)
+    onListCredentials()
       .then((credentials: ICredential[]) => {
         setRows([...credentials.map(credentialToRow)]);
         setLoading(false);

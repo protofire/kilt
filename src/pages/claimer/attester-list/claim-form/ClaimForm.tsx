@@ -49,7 +49,7 @@ function ClaimForm() {
   const goBack = () => navigate('/claimer', { replace: true });
 
   const onSubmit = useCallback(async () => {
-    if (!user || !attesterCtype) return;
+    if (!attesterCtype) return;
     const allDirty = properties.length === Object.keys(form).length;
     const allHaveValue = Object.keys(form).every(k => !!form[k]);
     if (!allDirty || !allHaveValue) {
@@ -59,8 +59,6 @@ function ClaimForm() {
     setError('');
     setLoading(true);
     await createCredential(
-      user.didUri,
-      user.web3name,
       attesterCtype,
       JSON.stringify(form)
     );

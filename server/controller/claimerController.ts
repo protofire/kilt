@@ -13,7 +13,35 @@ import { websocket } from '../services/websocket';
 import { Status } from '../constants/status.enum';
 import { getFullDidDetails } from '../utils/utils';
 import { ctypesList } from '../constants/ctypes';
-import { IAttesterCtype } from '../schemas/attesterCtype';
+import { z } from 'zod';
+import { didUriRegex } from '../constants/regex';
+
+export const UserSchema = z.object({
+  isAttester: z.boolean(),
+  web3name: z.string(),
+  didUri: z.string().regex(didUriRegex),
+});
+
+export const AttesterCtypeSchema = z.object({
+  attesterDidUri: z.string().regex(didUriRegex),
+  attesterWeb3name: z.string(),
+  ctypeId: z.string(),
+  ctypeName: z.string(),
+  quote: z.number(),
+  terms: z.string(),
+  _id: z.string().optional(),
+  properties: z.any(),
+});
+
+export const GetCredentialById = z.object({
+  id: z.string(),
+  user: UserSchema
+});
+
+const CreateCredential = z.object({
+  form: z.string(),
+  attesterCtype: AttesterCtypeSchema
+});
 
 /**
  * Creates and submits a new credential
@@ -21,19 +49,26 @@ import { IAttesterCtype } from '../schemas/attesterCtype';
  * @returns { success: boolean, data: Document<IClaimerCredential> }
  */
 export async function createCredential(req: Request, res: Response) {
-  const { claimerDidUri, claimerWeb3name, attesterCtype, form }: {
-    claimerDidUri: DidUri,
-    claimerWeb3name: string,
-    attesterCtype: IAttesterCtype,
-    form: string
-  } = req.body;
+  const bodyParsed = CreateCredential.safeParse(req.body);
+  const userParsed = UserSchema.safeParse(req.params.user);
 
-  if (!claimerDidUri || !attesterCtype || !form) {
-    return res.status(400).json({
+  if (!userParsed.success) {
+    return res.status(401).json({
       success: false,
-      msg: 'Must provide claimerDid, attesterCtype and form.'
+      msg: 'Unauthorized access'
     });
   }
+
+  if (!bodyParsed.success) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must provide attesterCtype and form.'
+    });
+  }
+
+  const claimerDidUri = userParsed.data.didUri as DidUri;
+  const claimerWeb3name = userParsed.data.web3name;
+  const { attesterCtype, form } = bodyParsed.data;
 
   const ctype = ctypesList.find(c => c.schema.$id === attesterCtype.ctypeId);
   if (!ctype) {
@@ -95,23 +130,19 @@ export async function createCredential(req: Request, res: Response) {
  * @returns { success: boolean, data: ICredentialByDidResponse[] }
  */
 export async function getCredentialsByDid(req: Request, res: Response) {
-  const { did } = req.params;
+  const parsedUser = UserSchema.safeParse(req.params.user);
 
-  if (!did) {
-    return res.status(400).json({
+  if (!parsedUser.success) {
+    return res.status(401).json({
       success: false,
-      msg: 'Must provide DiD parameter'
+      msg: 'Unauthorized user'
     });
   }
 
-  if (!did.startsWith('did:kilt:')) {
-    return res.status(400).json({
-      success: false,
-      msg: 'Wrong DiD format'
-    });
-  }
-
-  const savedCredentials = await ClaimerCredential.find({ claimerDid: did });
+  const { didUri } = parsedUser.data;
+  const savedCredentials = await ClaimerCredential.find({
+    claimerDid: didUri
+  });
 
   const credentials = savedCredentials.map((c) => ({
     _id: c._id,
@@ -129,16 +160,20 @@ export async function getCredentialsByDid(req: Request, res: Response) {
  * @returns { success: boolean, data: ICredentialByDidResponse[] }
  */
  export async function getCredentialById(req: Request, res: Response) {
-  const { id } = req.params;
+  const parsed = GetCredentialById.safeParse(req.params);
 
-  if (!id) {
+  if (!parsed.success) {
     return res.status(400).json({
       success: false,
       msg: 'Must provide an Id'
     });
   }
 
-  const credential = await ClaimerCredential.findById(id);
+  const { id, user } = parsed.data;
+  const credential = await ClaimerCredential.findOne({
+    _id: id,
+    claimerDid: user.didUri
+  });
   return res.status(200).json({ success: true, data: credential });
 }
 
@@ -147,23 +182,17 @@ export async function getCredentialsByDid(req: Request, res: Response) {
  * @returns { success: boolean, data: ICredentialByDidResponse[] }
  */
 export async function getEndpointCredentialsByDid(req: Request, res: Response) {
-  const { did } = req.params;
+  const parsedUser = UserSchema.safeParse(req.body);
 
-  if (!did) {
-    return res.status(400).json({
+  if (!parsedUser.success) {
+    return res.status(401).json({
       success: false,
-      msg: 'Must provide DiD parameter'
+      msg: 'Unauthorized access'
     });
   }
 
-  if (!did.startsWith('did:kilt:')) {
-    return res.status(400).json({
-      success: false,
-      msg: 'Wrong DiD format'
-    });
-  }
-
-  const endpoints = await getEndpointsFromDid(did as DidUri);
+  const { didUri } = parsedUser.data;
+  const endpoints = await getEndpointsFromDid(didUri as DidUri);
   if (!endpoints) {
     return res.status(200).json({ success: true, data: [] });
   }
