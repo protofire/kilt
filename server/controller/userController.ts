@@ -121,12 +121,15 @@ export const verifySignature = async (
   const web3name = await Did.Web3Names
     .queryWeb3NameForDid(didUri as DidUri) ??
     formatDidUri(didUri as DidUri);
-  
-  var token = jwt.sign({
+
+  const sub = JSON.stringify({
     isAttester,
     web3name,
     didUri
-  }, process.env.SECRET);
+  });
+  const secret = process.env.SECRET;
+  const expiresIn = 3600;
+  var token = jwt.sign({ sub }, secret, { expiresIn });
   
   return res.status(200).json({
     success: true,

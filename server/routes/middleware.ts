@@ -22,14 +22,14 @@ export const authenticateToken = (
     })
   }
   
-  jwt.verify(token, process.env.SECRET as string, (err: any, user: any) => {
+  jwt.verify(token, process.env.SECRET as string, (err: any, payload: any) => {
     if (err) {
       return res.status(401).json({
         success: false,
         msg: 'Unauthorized'
       });
     }
-    req.params.user = user
+    req.params.user = JSON.parse(payload.sub);
     next();
   })
 }

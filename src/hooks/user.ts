@@ -9,12 +9,14 @@ export default function useUser() {
   const [user, setUser] = useState<null | IUser>(null);
 
   function loadUser() {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
     try {
-      const payload: unknown = jwt.decodeJwt(token);
-      const storedUser = payload as IUser;
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const payload = jwt.decodeJwt(token);
+      if (!payload.sub) return;
+
+      const storedUser: IUser = JSON.parse(payload.sub);
       setUser(storedUser);
       return storedUser;
     } catch (err) {
