@@ -1,17 +1,13 @@
 {
   "files": {
-    "main.css": "/kilt/static/css/main.2cc2cebe.css",
-    "main.js": "/kilt/static/js/main.3385239f.js",
-    "static/js/787.f7cb4330.chunk.js": "/kilt/static/js/787.f7cb4330.chunk.js",
+    "main.css": "/kilt/static/css/main.f50b73d5.css",
+    "main.js": "/kilt/static/js/main.02b30fa7.js",
+    "static/js/27.842b19d5.chunk.js": "/kilt/static/js/27.842b19d5.chunk.js",
     "index.html": "/kilt/index.html",
-    "static/media/jsonabc.cjs": "/kilt/static/media/jsonabc.ccf846dbb353f0deb469.cjs",
-    "static/media/back.svg": "/kilt/static/media/back.c37d5b63556c99b43b9e0f0446f61d6b.svg",
-    "main.2cc2cebe.css.map": "/kilt/static/css/main.2cc2cebe.css.map",
-    "main.3385239f.js.map": "/kilt/static/js/main.3385239f.js.map",
-    "787.f7cb4330.chunk.js.map": "/kilt/static/js/787.f7cb4330.chunk.js.map"
+    "static/media/back.svg": "/kilt/static/media/back.c37d5b63556c99b43b9e0f0446f61d6b.svg"
   },
   "entrypoints": [
-    "static/css/main.2cc2cebe.css",
-    "static/js/main.3385239f.js"
+    "static/css/main.f50b73d5.css",
+    "static/js/main.02b30fa7.js"
   ]
 }
