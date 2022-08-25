@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { getLoginInfo } from '../api/user/getLoginInfo';
 import { getSessionInfo } from '../api/user/userSessionInfo';
+import { verifySignature } from '../api/user/verifySignature';
+import useUser from './user';
 
 export default function useSporran () {
-  const [ sporran, setSporran ] = useState<any>(null);
+  const [ loading, setLoading ] = useState(false);
   const [ session, setSession ] = useState<any>();
   const [ connecting, setConnecting ] = useState(false);
+  const { saveUser } = useUser();
 
   async function connect() {
-    if (!sporran) return;
+    const sporran = getSporran();
     setConnecting(true);
 
     const {
@@ -28,29 +32,39 @@ export default function useSporran () {
     return session;
   }
 
-  useEffect(() => {
-    const inState = !!sporran;
-    const inWindow = window.kilt && window.kilt.sporran;
-    if (!inState && inWindow) {
-      setSporran(window.kilt.sporran);
-    }
+  const sporranSignIn = async () => {
+    const sporran = getSporran();
+    const { message, ownerSignature } = await getLoginInfo();
+    const { didKeyUri, signature } = await sporran.signWithDid(message);
+    const result = await verifySignature(
+      message,
+      ownerSignature,
+      signature,
+      didKeyUri
+    );
+    return result;
+  };
 
-    if (!inState) {
-      window.kilt = new Proxy({}, {
-        set(target: any, prop, value) {
-          if (prop === 'sporran') {
-            setSporran(value);
-          }
-          return !!(target[prop] = value);
-        }
-      });
+  const login = async () => {
+    setLoading(true);
+    try {
+      const result = await sporranSignIn();
+      if (result.success) saveUser(result.token);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  });
+  };
+
+  const getSporran = () => window.kilt.sporran;
 
   return {
+    login,
     connect,
+    loading,
     session,
     connecting,
-    sporran
+    sporranSignIn
   };
 }

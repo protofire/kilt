@@ -7,9 +7,23 @@ import reportWebVitals from './reportWebVitals';
 declare global {
   // eslint-disable-next-line
   interface Window {
-    kilt: any;
+    kilt: {
+      sporran: any;
+    };
   }
 }
+
+window.onload = () => {
+  window.kilt = new Proxy({}, {
+    set(target: any, prop, value) {
+      if (prop === 'sporran') {
+        target[prop] = value;
+      }
+      return true;
+    }
+  });
+};
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
