@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 
-export const errorHandler = (fn: any) => (req: Request, res: Response) => {
+export const handleError = (fn: any) => (req: Request, res: Response) => {
   Promise.resolve(fn(req, res))
     .catch(err => {
       res.status(500).send({ msg: err.message });
     });
 };
 
-export const authenticateToken = (
+export const auth = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -22,14 +22,15 @@ export const authenticateToken = (
     })
   }
   
-  jwt.verify(token, process.env.SECRET as string, (err: any, payload: any) => {
-    if (err) {
-      return res.status(401).json({
-        success: false,
-        msg: 'Unauthorized'
-      });
-    }
-    req.params.user = JSON.parse(payload.sub);
-    next();
-  })
+  jwt.verify(token, process.env.SECRET as string,
+    (err: any, payload: any) => {
+      if (err) {
+        return res.status(401).json({
+          success: false,
+          msg: 'Unauthorized'
+        });
+      }
+      req.params.user = JSON.parse(payload.sub);
+      next();
+    })
 }

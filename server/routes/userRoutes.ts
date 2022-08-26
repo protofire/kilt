@@ -6,15 +6,14 @@ import {
   verifySignature,
   checkToken
 } from '../controller/userController';
-import { errorHandler } from './middleware';
+import { handleError } from './middleware/middleware';
 
 const userRoutes = express.Router();
 
-
-userRoutes.post('/verify', errorHandler(verifySignature));
-userRoutes.get('/session', errorHandler(getSessionInfo));
-userRoutes.get('/login', errorHandler(getLoginInfo));
-userRoutes.post('/message', errorHandler(buildMessage));
-userRoutes.get('/check/:token', errorHandler(checkToken));
+userRoutes.post('/verify', handleError(verifySignature));
+userRoutes.get('/session', handleError(getSessionInfo));
+userRoutes.get('/login', handleError(getLoginInfo));
+userRoutes.post('/message', handleError(buildMessage));
+userRoutes.get('/check/:token', handleError(checkToken));
 
 export { userRoutes };

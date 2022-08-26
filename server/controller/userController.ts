@@ -12,24 +12,8 @@ import { buildRequestCredentialMessage } from '../utils/account';
 import { ISessionInfo } from '../interfaces/sessionInfo';
 import { verifyDidSignature } from '@kiltprotocol/did';
 import { UUID } from '@kiltprotocol/utils';
-import { z } from "zod";
-import { didResourceUriRegex } from '../constants/regex';
 import * as jwt from 'jsonwebtoken';
-
-const VerifySignature = z.object({
-  message: z.string(),
-  ownerSignature: z.string(),
-  didSignature: z.string(),
-  keyUri: z.string().regex(didResourceUriRegex),
-});
-
-const BuildMessage = z.object({
-  encryptionKeyId: z.string().regex(didResourceUriRegex),
-});
-
-const CheckToken = z.object({
-  token: z.string(),
-});
+import { BuildMessage, CheckToken, VerifySignature } from './validation/user';
 
 /**
  * Signs and sends a random message to the frontend
@@ -237,7 +221,7 @@ export const buildMessage = async (req: Request, res: Response) => {
   const { token } = parsed.data;
   const secret = process.env.SECRET;
 
-  jwt.verify(token, secret, (err: any, user: any) => {
+  jwt.verify(token, secret, (err: any, payload: any) => {
     if (err) {
       return res.status(401).json({ success: false });
     }

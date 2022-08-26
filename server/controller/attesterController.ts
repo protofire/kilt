@@ -2,29 +2,14 @@ import { Did, DidUri } from '@kiltprotocol/sdk-js';
 import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
-import { Status } from '../constants/status.enum';
+import { Status } from '../constants/enum/status.enum';
 import { getOwnerKeyring } from '../utils/account';
 import { createAttestation } from '../utils/attestation';
 import { getFullDidDetails, getKeystoreSigner } from '../utils/utils';
 import { AttesterCtype } from '../schemas/attesterCtype';
 import { ClaimerCredential, IClaimerCredential } from '../schemas/credential';
-import { UserSchema } from './claimerController';
-import { z } from 'zod';
-
-const GetRequestDetail = z.object({
-  id: z.string(),
-  user: UserSchema
-});
-
-const VerifyRequest = z.object({
-  id: z.string(),
-  user: UserSchema
-});
-
-const ConfirmRequest = z.object({
-  id: z.string(),
-  user: UserSchema
-});
+import { ConfirmRequest, GetRequestDetail, VerifyRequest } from './validation/attester';
+import { UserSchema } from './validation/user';
 
 /**
  * List all the requests for credential

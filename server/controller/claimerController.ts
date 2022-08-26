@@ -10,38 +10,11 @@ import {
 } from '../utils/claimer';
 import { ClaimerCredential, IClaimerCredential } from '../schemas/credential';
 import { websocket } from '../services/websocket';
-import { Status } from '../constants/status.enum';
+import { Status } from '../constants/enum/status.enum';
 import { getFullDidDetails } from '../utils/utils';
 import { ctypesList } from '../constants/ctypes';
-import { z } from 'zod';
-import { didUriRegex } from '../constants/regex';
-
-export const UserSchema = z.object({
-  isAttester: z.boolean(),
-  web3name: z.string(),
-  didUri: z.string().regex(didUriRegex),
-});
-
-export const AttesterCtypeSchema = z.object({
-  attesterDidUri: z.string().regex(didUriRegex),
-  attesterWeb3name: z.string(),
-  ctypeId: z.string(),
-  ctypeName: z.string(),
-  quote: z.number(),
-  terms: z.string(),
-  _id: z.string().optional(),
-  properties: z.any(),
-});
-
-export const GetCredentialById = z.object({
-  id: z.string(),
-  user: UserSchema
-});
-
-const CreateCredential = z.object({
-  form: z.string(),
-  attesterCtype: AttesterCtypeSchema
-});
+import { CreateCredential, GetCredentialById } from './validation/claimer';
+import { UserSchema } from './validation/user';
 
 /**
  * Creates and submits a new credential

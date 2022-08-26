@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { onListAttesterCtypes } from '../api/attester/listAttesterCtypes';
-import { onListRequests } from '../api/attester/listRequests';
-import { Row } from '../components/Table/Table';
-import { IAttesterRequest } from '../interfaces/attesterRequest';
-import { formatDidUri } from '../utils/did';
-import { getColorByStatus, getLabelByStatus } from '../utils/status';
-import useWebsocket from './websocket';
+import { onListAttesterCtypes } from '../../api/attester/listAttesterCtypes';
+import { onListRequests } from '../../api/attester/listRequests';
+import { Row } from '../../components/Table/Table';
+import { IAttesterRequest } from '../../interfaces/attesterRequest';
+import { formatDidUri } from '../../utils/did';
+import { getColorByStatus, getLabelByStatus } from '../../utils/status';
+import useWebsocket from '../websocket';
 
 interface HookState {
   rows: Row[],

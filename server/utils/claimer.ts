@@ -13,7 +13,7 @@ import {
 } from '@kiltprotocol/sdk-js';
 import { UUID } from '@kiltprotocol/utils';
 import { FullDidDetails } from '@kiltprotocol/did';
-import { Status } from '../constants/status.enum';
+import { Status } from '../constants/enum/status.enum';
 import { getKeystoreSigner } from './utils';
 
 /**

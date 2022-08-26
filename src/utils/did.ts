@@ -4,9 +4,9 @@ import { IUser } from '../interfaces/user';
 export const formatDidUri = (didUri: DidUri | string) => {
   if (!didUri) return '';
   const did = didUri.split('#')[0];
-  const formattedDid = did.substring(0, 12) + '...' +
-    did.substring(did.length - 5, did.length);
-  return formattedDid;
+  const prefix = did.substring(0, 12);
+  const suffix = did.substring(did.length - 5, did.length);
+  return `${prefix} '...' ${suffix}`;
 };
 
 export const getDisplayName = (user: IUser) => {

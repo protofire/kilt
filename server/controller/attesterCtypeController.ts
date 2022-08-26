@@ -2,23 +2,12 @@ import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
 import { AttesterCtype, IAttesterCtype } from '../schemas/attesterCtype';
-import { z } from 'zod';
-import { UserSchema } from './claimerController';
-
-const CreateAttesterCtype = z.object({
-  ctypeId: z.string(),
-  quote: z.number(),
-  terms: z.string()
-});
-
-const GetAttesterCtypeDetail = z.object({
-  id: z.string()
-});
-
-const DeleteAttesterCtype = z.object({
-  id: z.string(),
-  user: UserSchema
-});
+import {
+  CreateAttesterCtype,
+  DeleteAttesterCtype,
+  GetAttesterCtypeDetail
+} from './validation/attesterCtype';
+import { UserSchema } from './validation/user';
 
 /**
  * Creates a new attester ctype relationship in database.

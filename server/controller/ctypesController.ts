@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
-import { UserSchema } from './claimerController';
+import { UserSchema } from './validation/user';
 
 /**
  * Gets all the ctypes

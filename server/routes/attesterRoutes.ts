@@ -11,19 +11,17 @@ import {
   getRequests,
   verifyRequest
 } from '../controller/attesterController';
-import { errorHandler, authenticateToken } from './middleware';
+import { handleError, auth } from './middleware/middleware';
 
 const attesterRoute = express.Router();
 
-attesterRoute.get('/ctypes/all', authenticateToken, errorHandler(getCtypes));
-attesterRoute.get('/ctypes', authenticateToken, errorHandler(getAttesterCtypesForAttester));
-attesterRoute.post('/ctypes', authenticateToken, errorHandler(createAttesterCtype));
-attesterRoute.delete('/ctypes/:id', authenticateToken, errorHandler(deleteAttesterCtype));
-attesterRoute.get('/request/detail/:id', authenticateToken, errorHandler(getRequestDetail));
-attesterRoute.post('/request/verify/:id', authenticateToken, errorHandler(verifyRequest));
-attesterRoute.post('/request/confirm/:id', authenticateToken, errorHandler(confirmRequest));
-attesterRoute.get('/request', authenticateToken, errorHandler(getRequests));
-
-
+attesterRoute.get('/ctypes/all', auth, handleError(getCtypes));
+attesterRoute.get('/ctypes', auth, handleError(getAttesterCtypesForAttester));
+attesterRoute.post('/ctypes', auth, handleError(createAttesterCtype));
+attesterRoute.delete('/ctypes/:id', auth, handleError(deleteAttesterCtype));
+attesterRoute.get('/request/detail/:id', auth, handleError(getRequestDetail));
+attesterRoute.post('/request/verify/:id', auth, handleError(verifyRequest));
+attesterRoute.post('/request/confirm/:id', auth, handleError(confirmRequest));
+attesterRoute.get('/request', auth, handleError(getRequests));
 
 export { attesterRoute };

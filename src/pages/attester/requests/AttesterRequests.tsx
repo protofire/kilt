@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Table from '../../../components/Table/Table';
 import Topbar from '../../../components/Topbar/Topbar';
-import { useAttesterRequests } from '../../../hooks/attesterRequests';
+import { useAttesterRequests } from '../../../hooks/ui/attesterRequests';
 
 function AttesterRequests() {
   const navigate = useNavigate();
