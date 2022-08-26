@@ -9,18 +9,30 @@ import {
 import { submitTx } from './utils';
 
 export const createAttestation = async (
-  keystore: KeystoreSigner,
   requestForAttestation: IRequestForAttestation,
   attester: Did.FullDidDetails,
-  submitterAccount: KeyringPair
 ): Promise<Credential> => {
-  // Create an attestation object and write its root hash on the chain
-  // using the provided attester's full DID.
   const attestation = Attestation.fromRequestAndDid(
     requestForAttestation,
     attester.uri
   );
 
+  return Credential.fromRequestAndAttestation(
+    requestForAttestation,
+    attestation
+  );
+};
+
+export const submitAttestation = async (
+  keystore: KeystoreSigner,
+  attester: Did.FullDidDetails,
+  requestForAttestation: IRequestForAttestation,
+  submitterAccount: KeyringPair
+) => {
+  const attestation = Attestation.fromRequestAndDid(
+    requestForAttestation,
+    attester.uri
+  );
   const storeTx = await attestation.getStoreTx();
   const attestationTx = await attester.authorizeExtrinsic(
     storeTx,
@@ -28,11 +40,4 @@ export const createAttestation = async (
     submitterAccount.address
   );
   await submitTx(attestationTx, submitterAccount);
-
-  // Return the credential, which is the combination of the original request for attestation
-  // plus the on-chain attestation info.
-  return Credential.fromRequestAndAttestation(
-    requestForAttestation,
-    attestation
-  );
 };

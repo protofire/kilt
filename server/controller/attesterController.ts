@@ -4,7 +4,7 @@ import { attesterList } from '../constants/attesters';
 import { ctypesList } from '../constants/ctypes';
 import { Status } from '../constants/enum/status.enum';
 import { getOwnerKeyring } from '../utils/account';
-import { createAttestation } from '../utils/attestation';
+import { createAttestation, submitAttestation } from '../utils/attestation';
 import { getFullDidDetails, getKeystoreSigner } from '../utils/utils';
 import { AttesterCtype } from '../schemas/attesterCtype';
 import { ClaimerCredential, IClaimerCredential } from '../schemas/credential';
@@ -157,7 +157,6 @@ export const verifyRequest = async (
     });
   }
 
-  const keystoreSigner = getKeystoreSigner();
   const attesterFullDid =
     await getFullDidDetails(user.didUri as DidUri);
   if (!attesterFullDid) {
@@ -167,19 +166,9 @@ export const verifyRequest = async (
     });
   }
 
-  const keyring = getOwnerKeyring();
-  if (keyring.pairs.length === 0) {
-    return res.status(400).json({
-      success: false,
-      msg: 'No keypairs for submitter account'
-    });
-  }
-
   const credential = await createAttestation(
-    keystoreSigner,
     currentCredential.request,
-    attesterFullDid,
-    keyring.pairs[0]
+    attesterFullDid
   );
 
   const web3Name = await Did.Web3Names
@@ -222,8 +211,18 @@ export const confirmRequest = async (req: Request, res: Response) => {
     });
   }
 
+  const attesterFullDid =
+    await getFullDidDetails(user.didUri as DidUri);
+  if (!attesterFullDid) {
+    return res.status(404).json({
+      success: false,
+      msg: 'Attester full DiD not found.'
+    });
+  }
+
   const credential = await ClaimerCredential.findById(id);
-  if (!credential?.credential?.attestation?.owner) {
+  if (!credential?.credential?.attestation?.owner ||
+      !credential?.request) {
     return res.status(404).json({
       success: false,
       msg: 'Request for attestation not found.'
@@ -236,6 +235,22 @@ export const confirmRequest = async (req: Request, res: Response) => {
       msg: 'The payment must be confirmed by the issuer attester.'
     });
   }
+
+  const keyring = getOwnerKeyring();
+  if (keyring.pairs.length === 0) {
+    return res.status(400).json({
+      success: false,
+      msg: 'No keypairs for submitter account'
+    });
+  }
+
+  const keystoreSigner = getKeystoreSigner();
+  await submitAttestation(
+    keystoreSigner,
+    attesterFullDid,
+    credential.request,
+    keyring.pairs[0]
+  );
 
   credential.status = Status.verified;
   await credential.save();
