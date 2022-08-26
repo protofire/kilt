@@ -55,8 +55,8 @@ export const createAttesterCtype = async (
   const ctypeName = ctype.schema.title;
 
   const attesterCtype = new AttesterCtype({
-    web3name,
-    didUri,
+    attesterDidUri: didUri,
+    attesterWeb3name: web3name,
     ctypeName,
     ctypeId,
     quote,
