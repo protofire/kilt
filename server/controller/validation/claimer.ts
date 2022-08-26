@@ -4,7 +4,7 @@ import { UserSchema } from './user';
 
 export const AttesterCtypeSchema = z.object({
   attesterDidUri: z.string().regex(didUriRegex),
-  attesterWeb3name: z.string(),
+  attesterWeb3name: z.string().optional(),
   ctypeId: z.string(),
   ctypeName: z.string(),
   quote: z.number(),
