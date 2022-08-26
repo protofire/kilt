@@ -134,6 +134,13 @@ export const getSessionInfo = async (req: Request, res: Response) => {
     });
   }
 
+  if (!process.env.DAPP_NAME) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Must set DAPP_NAME env variable'
+    });
+  }
+ 
   const fullDid = await Did
     .FullDidDetails
     .fromChainInfo(did as DidUri);
@@ -147,10 +154,11 @@ export const getSessionInfo = async (req: Request, res: Response) => {
   const dAppEncryptionKeyUri = fullDid
     .assembleKeyUri(fullDid.encryptionKey.id);
 
+  const dappName = process.env.DAPP_NAME;
   const data: ISessionInfo = {
     sessionId: randomAsHex(),
     challenge: randomAsHex(),
-    dappName: 'kilt',
+    dappName,
     dAppEncryptionKeyUri
   };
 
