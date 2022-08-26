@@ -3,14 +3,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { createCredential } from '../../../../api/claimer/createCredential';
 import { onLoadAttesterCtype } from '../../../../api/claimer/loadAttesterCtype';
 import Topbar from '../../../../components/Topbar/Topbar';
-import useUser from '../../../../hooks/user';
 import { IAttesterCtype } from '../../../../interfaces/attesterCtype';
 import { formatDidUri } from '../../../../utils/did';
+import { floatRegex, integerRegex } from '../../../../utils/regex';
 
 interface IProperty {
   name: string;
   type: string | undefined;
 }
+
+/* eslint-disable no-unused-vars */
+enum PropertyType {
+  integer = 'integer',
+  number = 'number',
+  string = 'string'
+}
+/* eslint-disable no-unused-vars */
 
 const propToInputType: Record<string, string> = {
   number: 'number',
@@ -21,7 +29,6 @@ const propToInputType: Record<string, string> = {
 function ClaimForm() {
   const params = useParams();
   const navigate = useNavigate();
-  const { user } = useUser();
 
   const [loading, setLoading] = useState(false);
   const [attesterCtype, setAttesterCtype] = useState<IAttesterCtype | null>(null);
@@ -48,12 +55,37 @@ function ClaimForm() {
 
   const goBack = () => navigate('/claimer', { replace: true });
 
+  const allDirty = () => properties.length === Object.keys(form).length;
+
+  const allHaveValue = () => Object.keys(form).every(key => !!form[key]);
+
+  const isNumeric = (type: string) =>
+    type === PropertyType.number ||
+    type === PropertyType.integer;
+
+  const checkTypes = () => Object.keys(form).every(key => {
+    const property = properties.find(p => p.name === key);
+    // checks that the integer properties only match with integers
+    if (property?.type === PropertyType.integer) {
+      const value = (form[key] as number).toString();
+      return value.match(integerRegex);
+    }
+    // checks that numeric properties only match with numbers
+    if (property?.type === PropertyType.number) {
+      const value = (form[key] as number).toString();
+      return value.match(floatRegex);
+    }
+    return true;
+  });
+
   const onSubmit = useCallback(async () => {
     if (!attesterCtype) return;
-    const allDirty = properties.length === Object.keys(form).length;
-    const allHaveValue = Object.keys(form).every(k => !!form[k]);
-    if (!allDirty || !allHaveValue) {
+    if (!allDirty() || !allHaveValue()) {
       setError('You must fill all the fields.');
+      return;
+    }
+    if (!checkTypes()) {
+      setError('You must provide the right input type for each field');
       return;
     }
     setError('');
@@ -64,16 +96,15 @@ function ClaimForm() {
     );
     setLoading(false);
     goBack();
-  }, [user, attesterCtype, properties, form]);
+  }, [attesterCtype, form]);
 
   const onChangeInput = useCallback((
     property: string,
     value: string,
     type?: string
   ) => {
-    const isNumeric = type === 'number' || type === 'integer';
     setForm((form: any) => {
-      form[property] = isNumeric ? Number(value) : value;
+      form[property] = type && isNumeric(type) ? Number(value) : value;
       return form;
     });
   }, []);
