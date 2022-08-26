@@ -6,7 +6,7 @@ export const formatDidUri = (didUri: DidUri | string) => {
   const did = didUri.split('#')[0];
   const prefix = did.substring(0, 12);
   const suffix = did.substring(did.length - 5, did.length);
-  return `${prefix} '...' ${suffix}`;
+  return `${prefix} ... ${suffix}`;
 };
 
 export const getDisplayName = (user: IUser) => {
